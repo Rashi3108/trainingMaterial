@@ -1,0 +1,29 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: slack-routing
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  route:
+    receiver: "slack"
+  receivers:
+    - name: "slack"
+      slackConfigs:
+        - channel: "#prometheus"             # change if your channel is different
+          sendResolved: true
+          apiURL:                        # reference the Secret you created
+            name: slack-webhook
+            key: url
+          title: >-
+            {{ .CommonLabels.alertname }} ({{ .Status }})
+          text: |-
+            {{ range .Alerts -}}
+            *Summary:* {{ .Annotations.summary }}
+            *Description:* {{ .Annotations.description }}
+            *Severity:* {{ .Labels.severity }}
+            *Instance:* {{ .Labels.instance }}
+            *StartsAt:* {{ .StartsAt }}
+            {{- end }}
+

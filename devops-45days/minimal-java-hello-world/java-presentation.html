@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Hello World - Complete Guide</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1in;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+            font-size: 12pt;
+        }
+
+        .page {
+            page-break-after: always;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .page:last-child {
+            page-break-after: avoid;
+        }
+
+        .title-page {
+            text-align: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            margin: -20px;
+            padding: 100px 20px;
+        }
+
+        .title-page h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .title-page h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .java-logo {
+            font-size: 4em;
+            margin: 30px 0;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            color: #e67e22;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #f39c12;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #d35400;
+            margin-bottom: 20px;
+            margin-top: 25px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: #e67e22;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-bottom: 15px;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border: 1px solid #34495e;
+            border-left: 4px solid #f39c12;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .two-column {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        .demo-box {
+            border: 2px solid #f39c12;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #fff8f0;
+            page-break-inside: avoid;
+        }
+
+        .step-number {
+            background: #f39c12;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+
+        .toc {
+            page-break-after: always;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #e67e22;
+        }
+
+        .toc a:hover {
+            color: #f39c12;
+        }
+
+        .output-box {
+            background: #2c3e50;
+            color: #2ecc71;
+            border: 1px solid #34495e;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        .folder-structure {
+            background: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .page {
+                page-break-after: always;
+            }
+            
+            .page:last-child {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Title Page -->
+    <div class="page title-page">
+        <div class="java-logo">☕</div>
+        <h1>Java Hello World</h1>
+        <h2>Complete Step-by-Step Guide</h2>
+        <p style="font-size: 1.2em; margin-top: 30px;">From Basic Java to Local Execution</p>
+        <div style="margin-top: 50px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+            <p><strong>What you'll learn:</strong></p>
+            <p>• Java fundamentals • Project structure • Compilation process • Local execution</p>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="page toc">
+        <h1>Table of Contents</h1>
+        <ul>
+            <li><a href="#what-is-java">1. What is Java?</a></li>
+            <li><a href="#java-vs-springboot">2. Java vs Spring Boot</a></li>
+            <li><a href="#project-structure">3. Project Structure</a></li>
+            <li><a href="#hello-world-code">4. Hello World Code Explanation</a></li>
+            <li><a href="#compilation-process">5. Compilation Process</a></li>
+            <li><a href="#running-locally">6. Running the Application Locally</a></li>
+            <li><a href="#understanding-output">7. Understanding the Output</a></li>
+            <li><a href="#file-structure">8. File Structure Analysis</a></li>
+            <li><a href="#java-basics">9. Java Basics Explained</a></li>
+            <li><a href="#next-steps">10. Next Steps</a></li>
+        </ul>
+    </div>
+
+    <!-- Page 1: What is Java -->
+    <div class="page" id="what-is-java">
+        <h1>What is Java?</h1>
+        <div style="text-align: center; font-size: 3em; margin: 20px 0;">☕</div>
+        
+        <p><strong>Java</strong> is a high-level, object-oriented programming language developed by Sun Microsystems (now owned by Oracle) in 1995. It's designed to be platform-independent, meaning "write once, run anywhere."</p>
+
+        <h2>Key Features of Java</h2>
+        <ul>
+            <li><strong>Platform Independent:</strong> Java code runs on any system with JVM</li>
+            <li><strong>Object-Oriented:</strong> Everything in Java is an object</li>
+            <li><strong>Simple and Secure:</strong> Easy to learn with built-in security features</li>
+            <li><strong>Robust:</strong> Strong memory management and error handling</li>
+            <li><strong>Multithreaded:</strong> Supports concurrent programming</li>
+        </ul>
+
+        <h2>Java Ecosystem</h2>
+        <div class="two-column">
+            <div class="column">
+                <h3>Core Components</h3>
+                <ul>
+                    <li><strong>JDK:</strong> Java Development Kit</li>
+                    <li><strong>JRE:</strong> Java Runtime Environment</li>
+                    <li><strong>JVM:</strong> Java Virtual Machine</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>Popular Frameworks</h3>
+                <ul>
+                    <li><strong>Spring Boot:</strong> Web applications</li>
+                    <li><strong>Hibernate:</strong> Database operations</li>
+                    <li><strong>Maven/Gradle:</strong> Build tools</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <p><strong>Why Java?</strong> Java is one of the most popular programming languages in the world, used by millions of developers for building enterprise applications, web services, mobile apps, and more.</p>
+        </div>
+    </div>
+
+    <!-- Page 2: Java vs Spring Boot -->
+    <div class="page" id="java-vs-springboot">
+        <h1>Java vs Spring Boot</h1>
+        
+        <h2>Understanding the Difference</h2>
+        <p>It's important to understand the relationship between Java and Spring Boot before we dive into our Hello World application.</p>
+
+        <table class="comparison-table">
+            <tr>
+                <th>Aspect</th>
+                <th>Pure Java</th>
+                <th>Spring Boot</th>
+            </tr>
+            <tr>
+                <td><strong>Definition</strong></td>
+                <td>Programming language and platform</td>
+                <td>Framework built on top of Java</td>
+            </tr>
+            <tr>
+                <td><strong>Complexity</strong></td>
+                <td>Simple, minimal setup</td>
+                <td>More complex but feature-rich</td>
+            </tr>
+            <tr>
+                <td><strong>Dependencies</strong></td>
+                <td>No external dependencies</td>
+                <td>Many dependencies and libraries</td>
+            </tr>
+            <tr>
+                <td><strong>Application Type</strong></td>
+                <td>Console applications, desktop apps</td>
+                <td>Web applications, REST APIs</td>
+            </tr>
+            <tr>
+                <td><strong>Learning Curve</strong></td>
+                <td>Easier to start with</td>
+                <td>Requires understanding of frameworks</td>
+            </tr>
+            <tr>
+                <td><strong>Use Cases</strong></td>
+                <td>Learning, simple programs</td>
+                <td>Enterprise applications, microservices</td>
+            </tr>
+        </table>
+
+        <h2>Our Approach</h2>
+        <div class="demo-box">
+            <h3>Why Start with Pure Java?</h3>
+            <p>We're starting with a minimal Java application because:</p>
+            <ul>
+                <li>It helps understand Java fundamentals</li>
+                <li>No complex setup or dependencies</li>
+                <li>Clear understanding of compilation and execution</li>
+                <li>Foundation for learning frameworks later</li>
+            </ul>
+        </div>
+
+        <div class="highlight">
+            <p><strong>Learning Path:</strong> Pure Java → Java with Libraries → Spring Framework → Spring Boot → Microservices</p>
+        </div>
+    </div>
+    <!-- Page 3: Project Structure -->
+    <div class="page" id="project-structure">
+        <h1>Project Structure</h1>
+        
+        <h2>Our Minimal Java Project</h2>
+        <p>Let's examine the structure of our simple Java Hello World application:</p>
+
+        <div class="folder-structure">
+            <pre>minimal-java-hello-world/
+├── HelloWorld.java          # Main Java source file
+├── HelloWorld.class         # Compiled bytecode (created after compilation)
+├── run.sh                   # Script to compile and run the application
+└── java-presentation.html   # This presentation file</pre>
+        </div>
+
+        <h2>File Descriptions</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>File</th>
+                <th>Purpose</th>
+                <th>Required?</th>
+            </tr>
+            <tr>
+                <td><strong>HelloWorld.java</strong></td>
+                <td>Source code file containing our Java program</td>
+                <td>✅ Yes</td>
+            </tr>
+            <tr>
+                <td><strong>HelloWorld.class</strong></td>
+                <td>Compiled bytecode that JVM can execute</td>
+                <td>✅ Yes (generated)</td>
+            </tr>
+            <tr>
+                <td><strong>run.sh</strong></td>
+                <td>Convenience script to compile and run</td>
+                <td>❌ No (helpful)</td>
+            </tr>
+            <tr>
+                <td><strong>java-presentation.html</strong></td>
+                <td>Documentation and presentation</td>
+                <td>❌ No (educational)</td>
+            </tr>
+        </table>
+
+        <h2>Comparison with Spring Boot Project</h2>
+        <div class="two-column">
+            <div class="column">
+                <h3>Minimal Java Project</h3>
+                <ul>
+                    <li>1 Java file</li>
+                    <li>No configuration files</li>
+                    <li>No dependencies</li>
+                    <li>Simple folder structure</li>
+                    <li>Manual compilation</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>Spring Boot Project</h3>
+                <ul>
+                    <li>Multiple Java files</li>
+                    <li>pom.xml or build.gradle</li>
+                    <li>application.properties</li>
+                    <li>Maven/Gradle structure</li>
+                    <li>Automated build process</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <p><strong>Key Point:</strong> Our minimal approach helps you understand the core concepts without the complexity of build tools and frameworks.</p>
+        </div>
+    </div>
+
+    <!-- Page 4: Hello World Code Explanation -->
+    <div class="page" id="hello-world-code">
+        <h1>Hello World Code Explanation</h1>
+        
+        <h2>Complete Source Code</h2>
+        <div class="code-block">
+            <pre>/**
+ * The most basic Java Hello World application
+ * This is a simple console application that prints "Hello, World!" to the terminal
+ */
+public class HelloWorld {
+    
+    /**
+     * The main method - entry point of any Java application
+     * @param args command line arguments (not used in this simple example)
+     */
+    public static void main(String[] args) {
+        // Print Hello World message to the console
+        System.out.println("Hello, World!");
+        System.out.println("This is a minimal Java application running locally.");
+        System.out.println("Java version: " + System.getProperty("java.version"));
+        System.out.println("Operating System: " + System.getProperty("os.name"));
+        System.out.println("User: " + System.getProperty("user.name"));
+    }
+}</pre>
+        </div>
+
+        <h2>Code Breakdown</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Code Element</th>
+                <th>Purpose</th>
+                <th>Explanation</th>
+            </tr>
+            <tr>
+                <td><strong>/** ... */</strong></td>
+                <td>Documentation comment</td>
+                <td>Javadoc comment explaining the class purpose</td>
+            </tr>
+            <tr>
+                <td><strong>public class HelloWorld</strong></td>
+                <td>Class declaration</td>
+                <td>Defines a public class named HelloWorld</td>
+            </tr>
+            <tr>
+                <td><strong>public static void main</strong></td>
+                <td>Main method</td>
+                <td>Entry point where program execution begins</td>
+            </tr>
+            <tr>
+                <td><strong>String[] args</strong></td>
+                <td>Command line arguments</td>
+                <td>Array to receive command line parameters</td>
+            </tr>
+            <tr>
+                <td><strong>System.out.println()</strong></td>
+                <td>Print statement</td>
+                <td>Outputs text to the console</td>
+            </tr>
+            <tr>
+                <td><strong>System.getProperty()</strong></td>
+                <td>System information</td>
+                <td>Retrieves system properties like Java version</td>
+            </tr>
+        </table>
+
+        <h2>Key Java Concepts</h2>
+        <div class="demo-box">
+            <h3>Important Points</h3>
+            <ul>
+                <li><strong>Class Name = File Name:</strong> HelloWorld.java must contain class HelloWorld</li>
+                <li><strong>main() Method:</strong> Every Java application needs a main method</li>
+                <li><strong>public static void:</strong> Required signature for the main method</li>
+                <li><strong>Case Sensitive:</strong> Java is case-sensitive (HelloWorld ≠ helloworld)</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Page 5: Compilation Process -->
+    <div class="page" id="compilation-process">
+        <h1>Compilation Process</h1>
+        
+        <h2>Java Compilation Steps</h2>
+        <p>Java follows a two-step process: compilation and execution. Let's understand each step:</p>
+
+        <div class="demo-box">
+            <h3>Step-by-Step Compilation</h3>
+            <p><span class="step-number">1</span><strong>Write Source Code:</strong> Create HelloWorld.java</p>
+            <p><span class="step-number">2</span><strong>Compile to Bytecode:</strong> javac HelloWorld.java → HelloWorld.class</p>
+            <p><span class="step-number">3</span><strong>Execute Bytecode:</strong> java HelloWorld</p>
+        </div>
+
+        <h2>Compilation Command</h2>
+        <div class="code-block">
+            <pre># Compile the Java source file
+javac HelloWorld.java
+
+# This creates HelloWorld.class file</pre>
+        </div>
+
+        <h2>What Happens During Compilation?</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Stage</th>
+                <th>Input</th>
+                <th>Process</th>
+                <th>Output</th>
+            </tr>
+            <tr>
+                <td><strong>Source Code</strong></td>
+                <td>HelloWorld.java</td>
+                <td>Human-readable Java code</td>
+                <td>Text file with .java extension</td>
+            </tr>
+            <tr>
+                <td><strong>Compilation</strong></td>
+                <td>HelloWorld.java</td>
+                <td>javac compiler converts to bytecode</td>
+                <td>HelloWorld.class</td>
+            </tr>
+            <tr>
+                <td><strong>Execution</strong></td>
+                <td>HelloWorld.class</td>
+                <td>JVM interprets bytecode</td>
+                <td>Program output</td>
+            </tr>
+        </table>
+
+        <h2>Understanding Bytecode</h2>
+        <div class="highlight">
+            <p><strong>Bytecode</strong> is an intermediate form of code that's platform-independent. The JVM on any operating system can execute Java bytecode, which is why Java is "write once, run anywhere."</p>
+        </div>
+
+        <h2>Common Compilation Errors</h2>
+        <ul>
+            <li><strong>Syntax Errors:</strong> Missing semicolons, brackets</li>
+            <li><strong>Class Name Mismatch:</strong> File name doesn't match class name</li>
+            <li><strong>Missing main Method:</strong> No entry point defined</li>
+            <li><strong>Import Issues:</strong> Missing or incorrect imports</li>
+        </ul>
+    </div>
+
+    <!-- Page 6: Running Locally -->
+    <div class="page" id="running-locally">
+        <h1>Running the Application Locally</h1>
+        
+        <h2>Execution Methods</h2>
+        <p>There are several ways to run our Java application locally:</p>
+
+        <h3>Method 1: Using Our Run Script</h3>
+        <div class="code-block">
+            <pre># Make the script executable
+chmod +x run.sh
+
+# Run the script
+./run.sh</pre>
+        </div>
+
+        <h3>Method 2: Manual Compilation and Execution</h3>
+        <div class="code-block">
+            <pre># Step 1: Compile the Java file
+javac HelloWorld.java
+
+# Step 2: Run the compiled class
+java HelloWorld</pre>
+        </div>
+
+        <h3>Method 3: One-liner (if Java is in PATH)</h3>
+        <div class="code-block">
+            <pre># Compile and run in one command
+javac HelloWorld.java && java HelloWorld</pre>
+        </div>
+
+        <h2>Our Run Script Explained</h2>
+        <div class="code-block">
+            <pre>#!/bin/bash
+# Set JAVA_HOME to the Java installation
+export JAVA_HOME="/opt/homebrew/Cellar/openjdk/24.0.1/libexec/openjdk.jdk/Contents/Home"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+# Check if Java is installed
+if ! command -v java &> /dev/null; then
+    echo "❌ Java is not installed."
+    exit 1
+fi
+
+# Compile and run
+javac HelloWorld.java && java HelloWorld</pre>
+        </div>
+
+        <h2>What Happens When We Run?</h2>
+        <div class="demo-box">
+            <h3>Execution Flow</h3>
+            <p><span class="step-number">1</span><strong>JVM Startup:</strong> Java Virtual Machine initializes</p>
+            <p><span class="step-number">2</span><strong>Class Loading:</strong> HelloWorld.class is loaded into memory</p>
+            <p><span class="step-number">3</span><strong>main() Execution:</strong> The main method is called</p>
+            <p><span class="step-number">4</span><strong>Output Generation:</strong> System.out.println() statements execute</p>
+            <p><span class="step-number">5</span><strong>Program Termination:</strong> JVM shuts down</p>
+        </div>
+
+        <div class="highlight">
+            <p><strong>Local Execution:</strong> Unlike web applications that run on servers and are accessed via browsers, our Java application runs directly on your local machine and outputs to the terminal.</p>
+        </div>
+    </div>
+    <!-- Page 7: Understanding the Output -->
+    <div class="page" id="understanding-output">
+        <h1>Understanding the Output</h1>
+        
+        <h2>Actual Program Output</h2>
+        <div class="output-box">
+            <pre>🚀 Minimal Java Hello World Application
+========================================
+✅ Java version: openjdk version "24.0.1" 2025-04-15
+✅ Java compiler version: javac 24.0.1
+
+📝 Compiling HelloWorld.java...
+✅ Compilation successful!
+
+🏃‍♂️ Running the application...
+================================
+Hello, World!
+This is a minimal Java application running locally.
+Java version: 24.0.1
+Operating System: Mac OS X
+User: ashu.rana
+================================
+✅ Application executed successfully!
+
+📁 Files created:
+-rw-r--r--@ 1 ashu.rana  staff  1147  7 Aug 13:59 HelloWorld.class</pre>
+        </div>
+
+        <h2>Output Analysis</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Output Section</th>
+                <th>Source</th>
+                <th>Explanation</th>
+            </tr>
+            <tr>
+                <td><strong>Script Messages</strong></td>
+                <td>run.sh script</td>
+                <td>Status messages from our bash script</td>
+            </tr>
+            <tr>
+                <td><strong>"Hello, World!"</strong></td>
+                <td>System.out.println()</td>
+                <td>First print statement in our Java code</td>
+            </tr>
+            <tr>
+                <td><strong>Java version: 24.0.1</strong></td>
+                <td>System.getProperty("java.version")</td>
+                <td>Runtime Java version information</td>
+            </tr>
+            <tr>
+                <td><strong>Operating System: Mac OS X</strong></td>
+                <td>System.getProperty("os.name")</td>
+                <td>Current operating system name</td>
+            </tr>
+            <tr>
+                <td><strong>User: ashu.rana</strong></td>
+                <td>System.getProperty("user.name")</td>
+                <td>Current system user name</td>
+            </tr>
+            <tr>
+                <td><strong>HelloWorld.class</strong></td>
+                <td>javac compiler</td>
+                <td>Generated bytecode file</td>
+            </tr>
+        </table>
+
+        <h2>Key Observations</h2>
+        <div class="demo-box">
+            <h3>What We Learned</h3>
+            <ul>
+                <li><strong>Compilation Success:</strong> Our Java code compiled without errors</li>
+                <li><strong>Runtime Information:</strong> Java can access system properties</li>
+                <li><strong>Local Execution:</strong> Program ran on our local machine</li>
+                <li><strong>File Generation:</strong> Compiler created a .class file</li>
+                <li><strong>Console Output:</strong> All output appeared in the terminal</li>
+            </ul>
+        </div>
+
+        <div class="highlight">
+            <p><strong>Important:</strong> This is a console application, not a web application. It doesn't run on localhost:8080 like Spring Boot applications - it runs directly in the terminal.</p>
+        </div>
+    </div>
+
+    <!-- Page 8: File Structure Analysis -->
+    <div class="page" id="file-structure">
+        <h1>File Structure Analysis</h1>
+        
+        <h2>Before and After Compilation</h2>
+        
+        <div class="two-column">
+            <div class="column">
+                <h3>Before Compilation</h3>
+                <div class="folder-structure">
+                    <pre>minimal-java-hello-world/
+├── HelloWorld.java
+├── run.sh
+└── java-presentation.html</pre>
+                </div>
+            </div>
+            <div class="column">
+                <h3>After Compilation</h3>
+                <div class="folder-structure">
+                    <pre>minimal-java-hello-world/
+├── HelloWorld.java
+├── HelloWorld.class  ← New!
+├── run.sh
+└── java-presentation.html</pre>
+                </div>
+            </div>
+        </div>
+
+        <h2>File Details</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>File</th>
+                <th>Size</th>
+                <th>Type</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td><strong>HelloWorld.java</strong></td>
+                <td>~800 bytes</td>
+                <td>Source code</td>
+                <td>Human-readable Java code</td>
+            </tr>
+            <tr>
+                <td><strong>HelloWorld.class</strong></td>
+                <td>~1147 bytes</td>
+                <td>Bytecode</td>
+                <td>JVM-executable compiled code</td>
+            </tr>
+            <tr>
+                <td><strong>run.sh</strong></td>
+                <td>~1.2 KB</td>
+                <td>Shell script</td>
+                <td>Automation script for compilation and execution</td>
+            </tr>
+        </table>
+
+        <h2>Understanding .class Files</h2>
+        <div class="demo-box">
+            <h3>Bytecode Characteristics</h3>
+            <ul>
+                <li><strong>Binary Format:</strong> Not human-readable</li>
+                <li><strong>Platform Independent:</strong> Runs on any JVM</li>
+                <li><strong>Optimized:</strong> More efficient than source code</li>
+                <li><strong>Portable:</strong> Can be distributed without source</li>
+            </ul>
+        </div>
+
+        <h2>Comparison with Web Applications</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Aspect</th>
+                <th>Console Application</th>
+                <th>Web Application</th>
+            </tr>
+            <tr>
+                <td><strong>Execution</strong></td>
+                <td>Terminal/Command line</td>
+                <td>Web browser</td>
+            </tr>
+            <tr>
+                <td><strong>Access Method</strong></td>
+                <td>Direct execution</td>
+                <td>HTTP requests (localhost:8080)</td>
+            </tr>
+            <tr>
+                <td><strong>Output</strong></td>
+                <td>Console text</td>
+                <td>HTML pages</td>
+            </tr>
+            <tr>
+                <td><strong>User Interface</strong></td>
+                <td>Command line</td>
+                <td>Web interface</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Page 9: Java Basics Explained -->
+    <div class="page" id="java-basics">
+        <h1>Java Basics Explained</h1>
+        
+        <h2>Core Java Concepts</h2>
+        
+        <h3>1. Classes and Objects</h3>
+        <div class="code-block">
+            <pre>public class HelloWorld {  // Class definition
+    // Class contains methods and variables
+}</pre>
+        </div>
+        <p><strong>Class:</strong> A blueprint or template for creating objects. In our case, HelloWorld is a class.</p>
+
+        <h3>2. Methods</h3>
+        <div class="code-block">
+            <pre>public static void main(String[] args) {  // Method definition
+    // Method body contains executable code
+}</pre>
+        </div>
+        <p><strong>Method:</strong> A block of code that performs a specific task. The main method is the entry point.</p>
+
+        <h3>3. Access Modifiers</h3>
+        <ul>
+            <li><strong>public:</strong> Accessible from anywhere</li>
+            <li><strong>private:</strong> Accessible only within the same class</li>
+            <li><strong>protected:</strong> Accessible within package and subclasses</li>
+            <li><strong>default:</strong> Accessible within the same package</li>
+        </ul>
+
+        <h3>4. Static Keyword</h3>
+        <div class="highlight">
+            <p><strong>static:</strong> Means the method belongs to the class itself, not to any instance. You can call static methods without creating an object of the class.</p>
+        </div>
+
+        <h3>5. Data Types</h3>
+        <table class="comparison-table">
+            <tr>
+                <th>Type</th>
+                <th>Example</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><strong>String</strong></td>
+                <td>"Hello, World!"</td>
+                <td>Text data</td>
+            </tr>
+            <tr>
+                <td><strong>int</strong></td>
+                <td>42</td>
+                <td>Integer numbers</td>
+            </tr>
+            <tr>
+                <td><strong>double</strong></td>
+                <td>3.14</td>
+                <td>Decimal numbers</td>
+            </tr>
+            <tr>
+                <td><strong>boolean</strong></td>
+                <td>true/false</td>
+                <td>True or false values</td>
+            </tr>
+        </table>
+
+        <h3>6. System.out.println()</h3>
+        <div class="demo-box">
+            <h3>Breaking Down System.out.println()</h3>
+            <ul>
+                <li><strong>System:</strong> Built-in Java class</li>
+                <li><strong>out:</strong> Static field representing standard output</li>
+                <li><strong>println():</strong> Method to print a line of text</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Page 10: Next Steps -->
+    <div class="page" id="next-steps">
+        <h1>Next Steps</h1>
+        
+        <h2>Learning Path</h2>
+        <p>Now that you understand basic Java, here's your learning progression:</p>
+
+        <div class="demo-box">
+            <h3>Immediate Next Steps</h3>
+            <p><span class="step-number">1</span><strong>Variables and Data Types:</strong> Learn to store and manipulate data</p>
+            <p><span class="step-number">2</span><strong>Control Structures:</strong> if/else, loops, switch statements</p>
+            <p><span class="step-number">3</span><strong>Methods:</strong> Create reusable code blocks</p>
+            <p><span class="step-number">4</span><strong>Object-Oriented Programming:</strong> Classes, objects, inheritance</p>
+        </div>
+
+        <h2>From Console to Web Applications</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Stage</th>
+                <th>Technology</th>
+                <th>What You'll Learn</th>
+            </tr>
+            <tr>
+                <td><strong>1. Core Java</strong></td>
+                <td>Pure Java</td>
+                <td>Syntax, OOP, data structures</td>
+            </tr>
+            <tr>
+                <td><strong>2. Build Tools</strong></td>
+                <td>Maven/Gradle</td>
+                <td>Project management, dependencies</td>
+            </tr>
+            <tr>
+                <td><strong>3. Web Basics</strong></td>
+                <td>Servlets, JSP</td>
+                <td>HTTP, web requests/responses</td>
+            </tr>
+            <tr>
+                <td><strong>4. Frameworks</strong></td>
+                <td>Spring Framework</td>
+                <td>Dependency injection, MVC pattern</td>
+            </tr>
+            <tr>
+                <td><strong>5. Modern Development</strong></td>
+                <td>Spring Boot</td>
+                <td>Rapid application development</td>
+            </tr>
+        </table>
+
+        <h2>Practice Exercises</h2>
+        <div class="two-column">
+            <div class="column">
+                <h3>Beginner Exercises</h3>
+                <ul>
+                    <li>Calculator program</li>
+                    <li>Number guessing game</li>
+                    <li>Simple text processor</li>
+                    <li>File reader/writer</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>Intermediate Projects</h3>
+                <ul>
+                    <li>Student management system</li>
+                    <li>Library management</li>
+                    <li>Banking application</li>
+                    <li>REST API with Spring Boot</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Resources for Learning</h2>
+        <div class="highlight">
+            <h3>Recommended Resources</h3>
+            <ul>
+                <li><strong>Oracle Java Documentation:</strong> Official Java documentation</li>
+                <li><strong>Spring.io:</strong> Official Spring Framework documentation</li>
+                <li><strong>Baeldung:</strong> Comprehensive Java and Spring tutorials</li>
+                <li><strong>GitHub:</strong> Open source Java projects for reference</li>
+            </ul>
+        </div>
+
+        <div class="demo-box">
+            <h3>🎉 Congratulations!</h3>
+            <p>You've successfully created, compiled, and executed your first Java application! You now understand the fundamental concepts of Java programming and the difference between console applications and web applications.</p>
+            <p><strong>Keep practicing and building!</strong> Every expert was once a beginner.</p>
+        </div>
+    </div>
+
+</body>
+</html>

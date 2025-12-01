@@ -1,0 +1,207 @@
+AWS SERVICES MCQ QUESTIONS
+===========================
+Coverage: AWS Overview, IAM, S3, Lambda & Glue
+
+=============================
+
+1. Which AWS service provides a virtual network dedicated to your AWS account?
+A) Amazon EC2
+B) Amazon VPC
+C) Amazon S3
+D) Amazon RDS
+Answer: B
+
+2. What is the AWS Free Tier?
+A) A paid support plan
+B) A program that offers free usage of AWS services within specified limits
+C) A certification program
+D) A premium service offering
+Answer: B
+
+3. Which of the following is a principle of the AWS Well-Architected Framework?
+A) Operational Excellence
+B) Cost Optimization
+C) Security
+D) All of the above
+Answer: D
+
+4. What does "elasticity" mean in cloud computing?
+A) The ability to stretch physical servers
+B) The ability to automatically scale resources up or down based on demand
+C) The flexibility of payment options
+D) The durability of data storage
+Answer: B
+
+5. Which AWS service is used for content delivery and caching?
+A) Amazon S3
+B) Amazon CloudFront
+C) Amazon EC2
+D) Amazon RDS
+Answer: B
+
+6. What does IAM stand for?
+A) Internet Access Management
+B) Identity and Access Management
+C) Internal Application Management
+D) Infrastructure and Asset Management
+Answer: B
+
+7. Which IAM entity represents a person or application that can authenticate with AWS?
+A) IAM Role
+B) IAM Policy
+C) IAM User
+D) IAM Group
+Answer: C
+
+8. What is the principle of least privilege in IAM?
+A) Giving users maximum permissions for convenience
+B) Granting only the minimum permissions necessary to perform a task
+C) Allowing all users to access all resources
+D) Restricting access to only administrators
+Answer: B
+
+9. Which IAM feature allows you to grant temporary access to AWS resources?
+A) IAM Users
+B) IAM Groups
+C) IAM Roles
+D) IAM Policies
+Answer: C
+
+10. What is Multi-Factor Authentication (MFA) in AWS?
+A) Using multiple passwords
+B) An additional layer of security requiring a second form of authentication
+C) Having multiple user accounts
+D) Using multiple AWS regions
+Answer: B
+
+11. Which of the following is a managed policy in IAM?
+A) A policy created and maintained by AWS
+B) A policy that cannot be modified
+C) A policy that applies to all users automatically
+D) A policy that costs extra to use
+Answer: A
+
+12. Which S3 storage class is designed for frequently accessed data?
+A) S3 Glacier
+B) S3 Standard
+C) S3 Infrequent Access
+D) S3 Deep Archive
+Answer: B
+
+13. What is S3 bucket versioning?
+A) Creating multiple copies of buckets
+B) Keeping multiple versions of objects in the same bucket
+C) Updating the S3 service version
+D) Organizing buckets by version numbers
+Answer: B
+
+13. What is the durability of S3 Standard storage class?
+A) 99.9%
+B) 99.99%
+C) 99.999999999% (11 9's)
+D) 99.9999999% (9 9's)
+Answer: C
+
+15. Which S3 feature automatically moves objects between storage classes based on rules?
+A) S3 Versioning
+B) S3 Lifecycle Management
+C) S3 Cross-Region Replication
+D) S3 Transfer Acceleration
+Answer: B
+
+16. What is the minimum storage duration for S3 Glacier storage class?
+A) 30 days
+B) 90 days
+C) 180 days
+D) 365 days
+Answer: B
+
+
+17. What type of computing service is AWS Lambda?
+A) Infrastructure as a Service (IaaS)
+B) Platform as a Service (PaaS)
+C) Serverless computing
+D) Container orchestration
+Answer: C
+
+18. What is the maximum execution time for a Lambda function?
+A) 5 minutes
+B) 15 minutes
+C) 30 minutes
+D) 1 hour
+Answer: B
+
+19. Which programming languages are supported by AWS Lambda?
+A) Python, Java, Node.js
+B) C#, Go, Ruby
+C) PowerShell, Custom Runtime
+D) All of the above
+Answer: D
+
+20. What triggers a Lambda function execution?
+A) Events from AWS services
+B) HTTP requests via API Gateway
+C) Scheduled events
+D) All of the above
+Answer: D
+
+21. What is a Lambda Layer?
+A) A way to package libraries and dependencies separately from function code
+B) A security feature for Lambda functions
+C) A monitoring tool for Lambda
+D) A type of Lambda trigger
+Answer: A
+
+22. What happens during a "cold start" in Lambda?
+A) The function fails to execute
+B) AWS initializes a new execution environment
+C) The function runs faster than usual
+D) The function automatically scales down
+Answer: B
+
+
+23. What type of service is AWS Glue?
+A) Database service
+B) ETL (Extract, Transform, Load) service
+C) Compute service
+D) Storage service
+Answer: B
+
+24. What is the AWS Glue Data Catalog?
+A) A data storage service
+B) A central metadata repository
+C) A data visualization tool
+D) A data backup service
+Answer: B
+
+25. What are AWS Glue Crawlers used for?
+A) Monitoring data quality
+B) Automatically discovering and cataloging data schemas
+C) Encrypting data
+D) Compressing data files
+Answer: B
+
+26. Which Apache framework does AWS Glue use for data processing?
+A) Apache Hadoop
+B) Apache Spark
+C) Apache Kafka
+D) Apache Airflow
+Answer: B
+
+27. What programming languages can you use to write Glue ETL jobs?
+A) Python and Scala
+B) Java and C#
+C) JavaScript and Ruby
+D) Go and Rust
+Answer: A
+
+28. What is the purpose of Glue Job Bookmarks?
+A) To save job configurations
+B) To track processed data and prevent reprocessing
+C) To schedule job executions
+D) To monitor job performance
+Answer: B
+
+
+
+

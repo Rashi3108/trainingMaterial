@@ -1,0 +1,47 @@
+# deployment-config.yml.template - Complete this deployment configuration
+# Remove this template suffix and fill in the required values
+
+---
+# Deployment Strategy
+deployment:
+  strategy: # TODO: Choose strategy (rolling/blue-green/canary)
+  # TODO: Add strategy-specific parameters
+
+# Container Configuration
+container:
+  # TODO: Add container image details
+  # Include: image, tag, registry, pull_policy
+
+# Networking
+networking:
+  # TODO: Add port mappings and network configuration
+  # Include: ports, protocols, load_balancer_settings
+
+# Storage
+storage:
+  # TODO: Add volume mounts and storage configuration
+  # Include: volumes, mount_points, storage_class
+
+# Environment Variables
+environment:
+  # TODO: Add environment variables
+  # Include: app-specific and system variables
+
+# Health Checks
+health_checks:
+  # TODO: Add health check configuration
+  # Include: endpoints, timeouts, retry_policies
+
+# Scaling
+scaling:
+  # TODO: Add scaling parameters
+  # Include: min_replicas, max_replicas, scaling_triggers
+
+# Rollback Configuration
+rollback:
+  # TODO: Add rollback settings
+  # Include: enabled, retention_count, automatic_triggers
+
+# CHALLENGE: Implement different deployment strategies
+# CHALLENGE: Add comprehensive health check configuration
+# CHALLENGE: Include resource quotas and limits

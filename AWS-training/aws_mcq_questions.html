@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Services MCQ Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #FF9900;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #232F3E;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 5px solid #FF9900;
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: #232F3E;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .options {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .options li {
+            margin-bottom: 8px;
+            padding: 8px 15px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .options li:hover {
+            background: #e2e8f0;
+            border-color: #FF9900;
+        }
+
+        .correct-answer {
+            background: #f0fdf4 !important;
+            border-color: #22c55e !important;
+            font-weight: bold;
+        }
+
+        .section-header {
+            font-size: 1.8rem;
+            color: #232F3E;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FF9900;
+        }
+
+        .answer-key {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f0fdf4;
+            border-radius: 8px;
+            border-left: 5px solid #22c55e;
+        }
+
+        .answer-key h3 {
+            color: #232F3E;
+            margin-bottom: 15px;
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .answer-item {
+            padding: 5px 10px;
+            background: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AWS Services MCQ Questions</h1>
+            <p>Comprehensive Assessment: AWS Overview, IAM, S3, Lambda & Glue</p>
+            <p><strong>Total Questions: 40 | Time: 60 minutes</strong></p>
+        </div>
+
+        <h2 class="section-header">AWS Overview (Questions 1-8)</h2>
+
+        <div class="question">
+            <div class="question-number">Question 1:</div>
+            <div class="question-text">What does AWS stand for?</div>
+            <ul class="options">
+                <li>A) Amazon Web Store</li>
+                <li>B) Amazon Web Services</li>
+                <li>C) Amazon World Services</li>
+                <li>D) Amazon Web Solutions</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 2:</div>
+            <div class="question-text">Which of the following is NOT one of the six advantages of cloud computing according to AWS?</div>
+            <ul class="options">
+                <li>A) Trade capital expense for variable expense</li>
+                <li>B) Benefit from massive economies of scale</li>
+                <li>C) Eliminate the need for data backups</li>
+                <li>D) Go global in minutes</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 3:</div>
+            <div class="question-text">What is an AWS Region?</div>
+            <ul class="options">
+                <li>A) A single data center</li>
+                <li>B) A geographical area with multiple Availability Zones</li>
+                <li>C) A virtual private network</li>
+                <li>D) A type of EC2 instance</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 4:</div>
+            <div class="question-text">Which AWS service provides a virtual network dedicated to your AWS account?</div>
+            <ul class="options">
+                <li>A) Amazon EC2</li>
+                <li>B) Amazon VPC</li>
+                <li>C) Amazon S3</li>
+                <li>D) Amazon RDS</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 5:</div>
+            <div class="question-text">What is the AWS Free Tier?</div>
+            <ul class="options">
+                <li>A) A paid support plan</li>
+                <li>B) A program that offers free usage of AWS services within specified limits</li>
+                <li>C) A certification program</li>
+                <li>D) A premium service offering</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 6:</div>
+            <div class="question-text">Which of the following is a principle of the AWS Well-Architected Framework?</div>
+            <ul class="options">
+                <li>A) Operational Excellence</li>
+                <li>B) Cost Optimization</li>
+                <li>C) Security</li>
+                <li>D) All of the above</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 7:</div>
+            <div class="question-text">What does "elasticity" mean in cloud computing?</div>
+            <ul class="options">
+                <li>A) The ability to stretch physical servers</li>
+                <li>B) The ability to automatically scale resources up or down based on demand</li>
+                <li>C) The flexibility of payment options</li>
+                <li>D) The durability of data storage</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 8:</div>
+            <div class="question-text">Which AWS service is used for content delivery and caching?</div>
+            <ul class="options">
+                <li>A) Amazon S3</li>
+                <li>B) Amazon CloudFront</li>
+                <li>C) Amazon EC2</li>
+                <li>D) Amazon RDS</li>
+            </ul>
+        </div>
+
+        <h2 class="section-header">AWS IAM (Questions 9-16)</h2>
+
+        <div class="question">
+            <div class="question-number">Question 9:</div>
+            <div class="question-text">What does IAM stand for?</div>
+            <ul class="options">
+                <li>A) Internet Access Management</li>
+                <li>B) Identity and Access Management</li>
+                <li>C) Internal Application Management</li>
+                <li>D) Infrastructure and Asset Management</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 11:</div>
+            <div class="question-text">What is the principle of least privilege in IAM?</div>
+            <ul class="options">
+                <li>A) Giving users maximum permissions for convenience</li>
+                <li>B) Granting only the minimum permissions necessary to perform a task</li>
+                <li>C) Allowing all users to access all resources</li>
+                <li>D) Restricting access to only administrators</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 12:</div>
+            <div class="question-text">Which IAM feature allows you to grant temporary access to AWS resources?</div>
+            <ul class="options">
+                <li>A) IAM Users</li>
+                <li>B) IAM Groups</li>
+                <li>C) IAM Roles</li>
+                <li>D) IAM Policies</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 13:</div>
+            <div class="question-text">What is Multi-Factor Authentication (MFA) in AWS?</div>
+            <ul class="options">
+                <li>A) Using multiple passwords</li>
+                <li>B) An additional layer of security requiring a second form of authentication</li>
+                <li>C) Having multiple user accounts</li>
+                <li>D) Using multiple AWS regions</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 14:</div>
+            <div class="question-text">Which of the following is a managed policy in IAM?</div>
+            <ul class="options">
+                <li>A) A policy created and maintained by AWS</li>
+                <li>B) A policy that cannot be modified</li>
+                <li>C) A policy that applies to all users automatically</li>
+                <li>D) A policy that costs extra to use</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 15:</div>
+            <div class="question-text">What is the AWS root account?</div>
+            <ul class="options">
+                <li>A) A special IAM user with limited permissions</li>
+                <li>B) The account created when you first sign up for AWS with complete access</li>
+                <li>C) An account used only for billing</li>
+                <li>D) A backup account for emergencies</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 16:</div>
+            <div class="question-text">Which IAM policy type is written in JSON format?</div>
+            <ul class="options">
+                <li>A) Identity-based policies</li>
+                <li>B) Resource-based policies</li>
+                <li>C) Both A and B</li>
+                <li>D) Neither A nor B</li>
+            </ul>
+        </div>
+
+        <h2 class="section-header">Amazon S3 (Questions 17-24)</h2>
+
+        <div class="question">
+            <div class="question-number">Question 17:</div>
+            <div class="question-text">What does S3 stand for?</div>
+            <ul class="options">
+                <li>A) Simple Storage Service</li>
+                <li>B) Secure Storage System</li>
+                <li>C) Scalable Storage Solution</li>
+                <li>D) Standard Storage Service</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 18:</div>
+            <div class="question-text">What is the maximum size of a single object that can be stored in S3?</div>
+            <ul class="options">
+                <li>A) 5 GB</li>
+                <li>B) 5 TB</li>
+                <li>C) 500 GB</li>
+                <li>D) 50 TB</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 19:</div>
+            <div class="question-text">Which S3 storage class is designed for frequently accessed data?</div>
+            <ul class="options">
+                <li>A) S3 Glacier</li>
+                <li>B) S3 Standard</li>
+                <li>C) S3 Infrequent Access</li>
+                <li>D) S3 Deep Archive</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 20:</div>
+            <div class="question-text">What is S3 bucket versioning?</div>
+            <ul class="options">
+                <li>A) Creating multiple copies of buckets</li>
+                <li>B) Keeping multiple versions of objects in the same bucket</li>
+                <li>C) Updating the S3 service version</li>
+                <li>D) Organizing buckets by version numbers</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 21:</div>
+            <div class="question-text">Which feature helps protect against accidental deletion of S3 objects?</div>
+            <ul class="options">
+                <li>A) S3 Transfer Acceleration</li>
+                <li>B) S3 Cross-Region Replication</li>
+                <li>C) S3 MFA Delete</li>
+                <li>D) S3 Lifecycle Management</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 22:</div>
+            <div class="question-text">What is the durability of S3 Standard storage class?</div>
+            <ul class="options">
+                <li>A) 99.9%</li>
+                <li>B) 99.99%</li>
+                <li>C) 99.999999999% (11 9's)</li>
+                <li>D) 99.9999999% (9 9's)</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 23:</div>
+            <div class="question-text">Which S3 feature automatically moves objects between storage classes based on rules?</div>
+            <ul class="options">
+                <li>A) S3 Versioning</li>
+                <li>B) S3 Lifecycle Management</li>
+                <li>C) S3 Cross-Region Replication</li>
+                <li>D) S3 Transfer Acceleration</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 24:</div>
+            <div class="question-text">What is the minimum storage duration for S3 Glacier storage class?</div>
+            <ul class="options">
+                <li>A) 30 days</li>
+                <li>B) 90 days</li>
+                <li>C) 180 days</li>
+                <li>D) 365 days</li>
+            </ul>
+        </div>
+
+        <h2 class="section-header">AWS Lambda (Questions 25-32)</h2>
+
+        <div class="question">
+            <div class="question-number">Question 25:</div>
+            <div class="question-text">What type of computing service is AWS Lambda?</div>
+            <ul class="options">
+                <li>A) Infrastructure as a Service (IaaS)</li>
+                <li>B) Platform as a Service (PaaS)</li>
+                <li>C) Serverless computing</li>
+                <li>D) Container orchestration</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 26:</div>
+            <div class="question-text">What is the maximum execution time for a Lambda function?</div>
+            <ul class="options">
+                <li>A) 5 minutes</li>
+                <li>B) 15 minutes</li>
+                <li>C) 30 minutes</li>
+                <li>D) 1 hour</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 27:</div>
+            <div class="question-text">Which programming languages are supported by AWS Lambda?</div>
+            <ul class="options">
+                <li>A) Python, Java, Node.js</li>
+                <li>B) C#, Go, Ruby</li>
+                <li>C) PowerShell, Custom Runtime</li>
+                <li>D) All of the above</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 28:</div>
+            <div class="question-text">What triggers a Lambda function execution?</div>
+            <ul class="options">
+                <li>A) Events from AWS services</li>
+                <li>B) HTTP requests via API Gateway</li>
+                <li>C) Scheduled events</li>
+                <li>D) All of the above</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 29:</div>
+            <div class="question-text">What is the maximum memory allocation for a Lambda function?</div>
+            <ul class="options">
+                <li>A) 1 GB</li>
+                <li>B) 3 GB</li>
+                <li>C) 10 GB</li>
+                <li>D) 16 GB</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 30:</div>
+            <div class="question-text">What is a Lambda Layer?</div>
+            <ul class="options">
+                <li>A) A way to package libraries and dependencies separately from function code</li>
+                <li>B) A security feature for Lambda functions</li>
+                <li>C) A monitoring tool for Lambda</li>
+                <li>D) A type of Lambda trigger</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 31:</div>
+            <div class="question-text">What happens during a "cold start" in Lambda?</div>
+            <ul class="options">
+                <li>A) The function fails to execute</li>
+                <li>B) AWS initializes a new execution environment</li>
+                <li>C) The function runs faster than usual</li>
+                <li>D) The function automatically scales down</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 32:</div>
+            <div class="question-text">Which AWS service is commonly used with Lambda for building serverless APIs?</div>
+            <ul class="options">
+                <li>A) Amazon EC2</li>
+                <li>B) Amazon API Gateway</li>
+                <li>C) Amazon RDS</li>
+                <li>D) Amazon CloudFront</li>
+            </ul>
+        </div>
+
+        <h2 class="section-header">AWS Glue (Questions 33-40)</h2>
+
+        <div class="question">
+            <div class="question-number">Question 33:</div>
+            <div class="question-text">What type of service is AWS Glue?</div>
+            <ul class="options">
+                <li>A) Database service</li>
+                <li>B) ETL (Extract, Transform, Load) service</li>
+                <li>C) Compute service</li>
+                <li>D) Storage service</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 34:</div>
+            <div class="question-text">What is the AWS Glue Data Catalog?</div>
+            <ul class="options">
+                <li>A) A data storage service</li>
+                <li>B) A central metadata repository</li>
+                <li>C) A data visualization tool</li>
+                <li>D) A data backup service</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 35:</div>
+            <div class="question-text">What are AWS Glue Crawlers used for?</div>
+            <ul class="options">
+                <li>A) Monitoring data quality</li>
+                <li>B) Automatically discovering and cataloging data schemas</li>
+                <li>C) Encrypting data</li>
+                <li>D) Compressing data files</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 36:</div>
+            <div class="question-text">Which Apache framework does AWS Glue use for data processing?</div>
+            <ul class="options">
+                <li>A) Apache Hadoop</li>
+                <li>B) Apache Spark</li>
+                <li>C) Apache Kafka</li>
+                <li>D) Apache Airflow</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 37:</div>
+            <div class="question-text">What programming languages can you use to write Glue ETL jobs?</div>
+            <ul class="options">
+                <li>A) Python and Scala</li>
+                <li>B) Java and C#</li>
+                <li>C) JavaScript and Ruby</li>
+                <li>D) Go and Rust</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 38:</div>
+            <div class="question-text">What is the purpose of Glue Job Bookmarks?</div>
+            <ul class="options">
+                <li>A) To save job configurations</li>
+                <li>B) To track processed data and prevent reprocessing</li>
+                <li>C) To schedule job executions</li>
+                <li>D) To monitor job performance</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 39:</div>
+            <div class="question-text">Which AWS Glue feature provides a visual interface for creating ETL jobs?</div>
+            <ul class="options">
+                <li>A) Glue Console</li>
+                <li>B) Glue Studio</li>
+                <li>C) Glue DataBrew</li>
+                <li>D) Glue Crawler</li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <div class="question-number">Question 40:</div>
+            <div class="question-text">What is Zero ETL integration in AWS?</div>
+            <ul class="options">
+                <li>A) ETL jobs that cost nothing to run</li>
+                <li>B) Near real-time data replication without building ETL pipelines</li>
+                <li>C) ETL jobs that process zero records</li>
+                <li>D) A type of Glue crawler</li>
+            </ul>
+        </div>
+
+        <div class="answer-key">
+            <h3>Answer Key</h3>
+            <div class="answer-grid">
+                <div class="answer-item">1. B</div>
+                <div class="answer-item">2. C</div>
+                <div class="answer-item">3. B</div>
+                <div class="answer-item">4. B</div>
+                <div class="answer-item">5. B</div>
+                <div class="answer-item">6. D</div>
+                <div class="answer-item">7. B</div>
+                <div class="answer-item">8. B</div>
+                <div class="answer-item">9. B</div>
+                <div class="answer-item">10. C</div>
+                <div class="answer-item">11. B</div>
+                <div class="answer-item">12. C</div>
+                <div class="answer-item">13. B</div>
+                <div class="answer-item">14. A</div>
+                <div class="answer-item">15. B</div>
+                <div class="answer-item">16. C</div>
+                <div class="answer-item">17. A</div>
+                <div class="answer-item">18. B</div>
+                <div class="answer-item">19. B</div>
+                <div class="answer-item">20. B</div>
+                <div class="answer-item">21. C</div>
+                <div class="answer-item">22. C</div>
+                <div class="answer-item">23. B</div>
+                <div class="answer-item">24. B</div>
+                <div class="answer-item">25. C</div>
+                <div class="answer-item">26. B</div>
+                <div class="answer-item">27. D</div>
+                <div class="answer-item">28. D</div>
+                <div class="answer-item">29. C</div>
+                <div class="answer-item">30. A</div>
+                <div class="answer-item">31. B</div>
+                <div class="answer-item">32. B</div>
+                <div class="answer-item">33. B</div>
+                <div class="answer-item">34. B</div>
+                <div class="answer-item">35. B</div>
+                <div class="answer-item">36. B</div>
+                <div class="answer-item">37. A</div>
+                <div class="answer-item">38. B</div>
+                <div class="answer-item">39. B</div>
+                <div class="answer-item">40. B</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #f0f9ff; border-radius: 8px; border-left: 5px solid #0ea5e9;">
+            <h3 style="color: #232F3E; margin-bottom: 15px;">Scoring Guide:</h3>
+            <ul style="margin-left: 20px;">
+                <li><strong>36-40 correct:</strong> Excellent understanding of AWS services</li>
+                <li><strong>30-35 correct:</strong> Good grasp with some areas for improvement</li>
+                <li><strong>24-29 correct:</strong> Fair understanding, recommend additional study</li>
+                <li><strong>Below 24:</strong> Needs significant review of AWS fundamentals</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script>
+        // Optional: Add click functionality to highlight selected answers
+        document.querySelectorAll('.options li').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove previous selection in the same question
+                this.parentNode.querySelectorAll('li').forEach(li => {
+                    li.style.backgroundColor = '';
+                    li.style.borderColor = '#e2e8f0';
+                });
+                
+                // Highlight selected option
+                this.style.backgroundColor = '#dbeafe';
+                this.style.borderColor = '#3b82f6';
+            });
+        });
+    </script>
+</body>
+</html>

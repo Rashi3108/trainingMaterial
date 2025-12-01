@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS IAM: Identity and Access Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .slide:last-child {
+            page-break-after: auto;
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .slide-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #232F3E 0%, #FF9900 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide .slide-title {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .slide-subtitle {
+            font-size: 1.5rem;
+            color: #FFD700;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #FF9900;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f3f4f6;
+            border-left: 5px solid #FF9900;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #232F3E;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f3f4f6;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid #FF9900;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .lab-section {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .lab-section h3 {
+            color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 20px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0ea5e9;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.95rem;
+        }
+
+        .json-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .workflow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .workflow-phase {
+            background: #232F3E;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            text-align: center;
+            min-width: 120px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #232F3E;
+            margin: 0 10px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .danger-box {
+            background: #fee2e2;
+            border-left: 5px solid #ef4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .architecture-diagram {
+            background: #f8fafc;
+            border: 2px solid #232F3E;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .component-box {
+            background: #232F3E;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .aws-orange {
+            color: #FF9900;
+            font-weight: bold;
+        }
+
+        .aws-blue {
+            color: #232F3E;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .slide {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title Slide -->
+<div class="slide title-slide">
+    <div class="content">
+        <h1 class="slide-title">AWS IAM: Identity and Access Management</h1>
+        <p class="slide-subtitle">Secure Access Control for AWS Resources - From Basic to Associate Level</p>
+    </div>
+    <div class="slide-footer" style="color: #FFD700;">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 2: What is AWS IAM -->
+<div class="slide">
+    <div class="content">
+        <h2>What is AWS IAM</h2>
+        
+        <div class="highlight-box">
+            <p><strong>AWS Identity and Access Management (IAM)</strong> is a web service that helps you securely control access to AWS resources. You use IAM to control who is authenticated (signed in) and authorized (has permissions) to use resources.</p>
+        </div>
+
+        <h3>Core Purpose</h3>
+        <ul>
+            <li><strong>Authentication:</strong> Verify who is trying to access AWS resources</li>
+            <li><strong>Authorization:</strong> Determine what actions authenticated users can perform</li>
+            <li><strong>Access Control:</strong> Manage permissions to AWS services and resources</li>
+            <li><strong>Security:</strong> Implement principle of least privilege</li>
+        </ul>
+
+        <h3>Key Benefits</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Centralized Control</h4>
+                <p>Manage access to all AWS services from a single location</p>
+            </div>
+            <div class="feature-card">
+                <h4>Fine-grained Permissions</h4>
+                <p>Control access at the resource and action level</p>
+            </div>
+            <div class="feature-card">
+                <h4>Secure by Default</h4>
+                <p>Deny access by default, grant only necessary permissions</p>
+            </div>
+            <div class="feature-card">
+                <h4>No Additional Cost</h4>
+                <p>IAM is provided at no additional charge</p>
+            </div>
+        </div>
+
+        <h3>IAM vs Traditional Access Control</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Traditional Systems</th>
+                    <th>AWS IAM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Scope</strong></td>
+                    <td>Single system or application</td>
+                    <td>All AWS services and resources</td>
+                </tr>
+                <tr>
+                    <td><strong>Granularity</strong></td>
+                    <td>Role-based, limited flexibility</td>
+                    <td>Action and resource-level control</td>
+                </tr>
+                <tr>
+                    <td><strong>Integration</strong></td>
+                    <td>Manual setup for each system</td>
+                    <td>Native integration with all AWS services</td>
+                </tr>
+                <tr>
+                    <td><strong>Scalability</strong></td>
+                    <td>Limited by system capacity</td>
+                    <td>Scales with AWS infrastructure</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>IAM Architecture Overview</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #FF9900;">Users & Groups</div>
+                <div class="component-box" style="background: #FF9900;">Roles</div>
+                <div class="component-box" style="background: #FF9900;">Policies</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #232F3E;">control access to</div>
+            <div>
+                <div class="component-box">EC2</div>
+                <div class="component-box">S3</div>
+                <div class="component-box">RDS</div>
+                <div class="component-box">Lambda</div>
+                <div class="component-box">All AWS Services</div>
+            </div>
+        </div>
+
+        <h3>Real-World Use Cases</h3>
+        <ul>
+            <li><strong>Employee Access:</strong> Grant developers access to development resources only</li>
+            <li><strong>Application Security:</strong> Allow applications to access only required AWS services</li>
+            <li><strong>Cross-Account Access:</strong> Enable secure access between different AWS accounts</li>
+            <li><strong>Temporary Access:</strong> Provide time-limited access for contractors or partners</li>
+            <li><strong>Compliance:</strong> Meet regulatory requirements for access control and auditing</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Key Principle:</strong> IAM follows the <span class="aws-orange">principle of least privilege</span> - users and applications should have only the minimum permissions necessary to perform their tasks.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 3: IAM Core Components -->
+<div class="slide">
+    <div class="content">
+        <h2>IAM Core Components</h2>
+        
+        <div class="highlight-box">
+            <p>AWS IAM consists of four main components that work together to provide comprehensive access control: <strong>Users, Groups, Roles, and Policies</strong>.</p>
+        </div>
+
+        <h3>The Four Pillars of IAM</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Users</h4>
+                <p>Individual identities with unique credentials for accessing AWS resources</p>
+            </div>
+            <div class="feature-card">
+                <h4>Groups</h4>
+                <p>Collections of users that share common permissions and access patterns</p>
+            </div>
+            <div class="feature-card">
+                <h4>Roles</h4>
+                <p>Temporary identities that can be assumed by users, applications, or services</p>
+            </div>
+            <div class="feature-card">
+                <h4>Policies</h4>
+                <p>JSON documents that define permissions and access rules</p>
+            </div>
+        </div>
+
+        <h3>Component Relationships</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Users</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Groups</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Policies</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">AWS Resources</div>
+        </div>
+
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Applications</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Roles</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Policies</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">AWS Resources</div>
+        </div>
+
+        <h3>Component Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Purpose</th>
+                    <th>Best Used For</th>
+                    <th>Credentials</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Users</strong></td>
+                    <td>Individual access</td>
+                    <td>Human users, long-term access</td>
+                    <td>Username/Password, Access Keys</td>
+                </tr>
+                <tr>
+                    <td><strong>Groups</strong></td>
+                    <td>Organize users</td>
+                    <td>Team-based permissions</td>
+                    <td>Inherit from users</td>
+                </tr>
+                <tr>
+                    <td><strong>Roles</strong></td>
+                    <td>Temporary access</td>
+                    <td>Applications, cross-account access</td>
+                    <td>Temporary security tokens</td>
+                </tr>
+                <tr>
+                    <td><strong>Policies</strong></td>
+                    <td>Define permissions</td>
+                    <td>Access control rules</td>
+                    <td>Not applicable</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>IAM Hierarchy</h3>
+        <div class="json-block">
+AWS Account (Root)
+├── IAM Users
+│   ├── User 1 (with attached policies)
+│   ├── User 2 (member of groups)
+│   └── User N
+├── IAM Groups
+│   ├── Developers Group (with policies)
+│   ├── Admins Group (with policies)
+│   └── ReadOnly Group (with policies)
+├── IAM Roles
+│   ├── EC2-S3-Access-Role
+│   ├── Lambda-Execution-Role
+│   └── Cross-Account-Role
+└── IAM Policies
+    ├── Managed Policies (AWS/Customer)
+    └── Inline Policies (attached directly)
+        </div>
+
+        <h3>Best Practices for Component Usage</h3>
+        <ul>
+            <li><strong>Users:</strong> Create individual users for each person, avoid sharing credentials</li>
+            <li><strong>Groups:</strong> Use groups to assign permissions to multiple users efficiently</li>
+            <li><strong>Roles:</strong> Prefer roles over users for applications and services</li>
+            <li><strong>Policies:</strong> Use managed policies for reusability, inline for specific cases</li>
+        </ul>
+
+        <div class="warning-box">
+            <p><strong>Security Note:</strong> Never use the AWS root account for daily tasks. Create IAM users with appropriate permissions instead.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 4: IAM Users -->
+<div class="slide">
+    <div class="content">
+        <h2>IAM Users</h2>
+        
+        <div class="highlight-box">
+            <p><strong>IAM Users</strong> represent individual identities within your AWS account. Each user has unique credentials and can be granted specific permissions to access AWS resources.</p>
+        </div>
+
+        <h3>User Characteristics</h3>
+        <ul>
+            <li><strong>Unique Identity:</strong> Each user has a unique name within the AWS account</li>
+            <li><strong>Permanent Credentials:</strong> Long-term access keys and passwords</li>
+            <li><strong>Individual Permissions:</strong> Can have policies attached directly</li>
+            <li><strong>Group Membership:</strong> Can belong to multiple groups</li>
+            <li><strong>Console and API Access:</strong> Can access both AWS Management Console and APIs</li>
+        </ul>
+
+        <h3>User Credential Types</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Console Password</h4>
+                <p>For AWS Management Console access with optional MFA</p>
+            </div>
+            <div class="feature-card">
+                <h4>Access Keys</h4>
+                <p>For programmatic access via AWS CLI, SDKs, and APIs</p>
+            </div>
+            <div class="feature-card">
+                <h4>SSH Keys</h4>
+                <p>For AWS CodeCommit Git repository access</p>
+            </div>
+            <div class="feature-card">
+                <h4>Server Certificates</h4>
+                <p>For SSL/TLS certificates used with AWS services</p>
+            </div>
+        </div>
+
+        <h3>User Creation Process</h3>
+        <ol class="step-list">
+            <li><strong>Create User:</strong> Define username and select credential types</li>
+            <li><strong>Set Permissions:</strong> Attach policies directly or add to groups</li>
+            <li><strong>Configure Access:</strong> Set up console password and/or access keys</li>
+            <li><strong>Enable MFA:</strong> Add multi-factor authentication for enhanced security</li>
+            <li><strong>Provide Credentials:</strong> Securely share login information with the user</li>
+        </ol>
+
+        <h3>User Management Best Practices</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Practice</th>
+                    <th>Description</th>
+                    <th>Benefit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Individual Users</strong></td>
+                    <td>Create separate user for each person</td>
+                    <td>Accountability and audit trails</td>
+                </tr>
+                <tr>
+                    <td><strong>Strong Passwords</strong></td>
+                    <td>Enforce password policy requirements</td>
+                    <td>Prevent unauthorized access</td>
+                </tr>
+                <tr>
+                    <td><strong>MFA Enabled</strong></td>
+                    <td>Require multi-factor authentication</td>
+                    <td>Additional security layer</td>
+                </tr>
+                <tr>
+                    <td><strong>Regular Rotation</strong></td>
+                    <td>Rotate access keys periodically</td>
+                    <td>Limit exposure of compromised keys</td>
+                </tr>
+                <tr>
+                    <td><strong>Least Privilege</strong></td>
+                    <td>Grant minimum required permissions</td>
+                    <td>Reduce security risk</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>User Limits and Considerations</h3>
+        <ul>
+            <li><strong>Account Limit:</strong> 5,000 users per AWS account (can be increased)</li>
+            <li><strong>Group Membership:</strong> User can belong to up to 10 groups</li>
+            <li><strong>Managed Policies:</strong> Up to 10 managed policies per user</li>
+            <li><strong>Inline Policy Size:</strong> Maximum 2,048 characters per inline policy</li>
+            <li><strong>Access Keys:</strong> Maximum 2 access keys per user</li>
+        </ul>
+
+        <h3>Common User Scenarios</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Developer Access</h4>
+                <p>Console and programmatic access to development resources</p>
+            </div>
+            <div class="feature-card">
+                <h4>Admin User</h4>
+                <p>Full administrative access with MFA requirement</p>
+            </div>
+            <div class="feature-card">
+                <h4>Service Account</h4>
+                <p>Programmatic access only for applications (consider roles instead)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Auditor Access</h4>
+                <p>Read-only access for compliance and monitoring</p>
+            </div>
+        </div>
+
+        <h3>User Security Considerations</h3>
+        <div class="danger-box">
+            <p><strong>Security Risks:</strong></p>
+            <ul>
+                <li>Long-term credentials can be compromised</li>
+                <li>Shared user accounts reduce accountability</li>
+                <li>Unused users with active credentials pose security risks</li>
+                <li>Overprivileged users violate least privilege principle</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Best Practice:</strong> Use IAM roles for applications and services instead of creating users with long-term credentials. Reserve users for human access only.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 5: IAM Groups -->
+<div class="slide">
+    <div class="content">
+        <h2>IAM Groups</h2>
+        
+        <div class="highlight-box">
+            <p><strong>IAM Groups</strong> are collections of IAM users that make it easier to manage permissions for multiple users. Groups allow you to specify permissions for multiple users at once.</p>
+        </div>
+
+        <h3>Group Characteristics</h3>
+        <ul>
+            <li><strong>User Collections:</strong> Contain multiple IAM users with similar access needs</li>
+            <li><strong>Policy Attachment:</strong> Policies attached to groups apply to all members</li>
+            <li><strong>No Credentials:</strong> Groups themselves don't have credentials</li>
+            <li><strong>Nested Groups:</strong> Groups cannot contain other groups</li>
+            <li><strong>Multiple Membership:</strong> Users can belong to multiple groups</li>
+        </ul>
+
+        <h3>Benefits of Using Groups</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Simplified Management</h4>
+                <p>Manage permissions for multiple users simultaneously</p>
+            </div>
+            <div class="feature-card">
+                <h4>Consistency</h4>
+                <p>Ensure users with similar roles have identical permissions</p>
+            </div>
+            <div class="feature-card">
+                <h4>Scalability</h4>
+                <p>Easy to add/remove users and modify group permissions</p>
+            </div>
+            <div class="feature-card">
+                <h4>Organization</h4>
+                <p>Logical grouping based on job functions or departments</p>
+            </div>
+        </div>
+
+        <h3>Common Group Patterns</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Group Name</th>
+                    <th>Purpose</th>
+                    <th>Typical Permissions</th>
+                    <th>Members</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Administrators</strong></td>
+                    <td>Full AWS access</td>
+                    <td>AdministratorAccess</td>
+                    <td>IT administrators, DevOps leads</td>
+                </tr>
+                <tr>
+                    <td><strong>Developers</strong></td>
+                    <td>Development resources</td>
+                    <td>EC2, S3, Lambda, CloudWatch</td>
+                    <td>Software developers, engineers</td>
+                </tr>
+                <tr>
+                    <td><strong>ReadOnlyUsers</strong></td>
+                    <td>View-only access</td>
+                    <td>ReadOnlyAccess</td>
+                    <td>Auditors, managers, analysts</td>
+                </tr>
+                <tr>
+                    <td><strong>DatabaseAdmins</strong></td>
+                    <td>Database management</td>
+                    <td>RDS, DynamoDB, ElastiCache</td>
+                    <td>Database administrators</td>
+                </tr>
+                <tr>
+                    <td><strong>SecurityTeam</strong></td>
+                    <td>Security services</td>
+                    <td>IAM, CloudTrail, GuardDuty</td>
+                    <td>Security engineers, compliance</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Group Management Workflow</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Create Group</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Attach Policies</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Add Users</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Monitor Access</div>
+        </div>
+
+        <h3>Group Limits and Constraints</h3>
+        <ul>
+            <li><strong>Account Limit:</strong> 300 groups per AWS account</li>
+            <li><strong>User Membership:</strong> User can belong to up to 10 groups</li>
+            <li><strong>Managed Policies:</strong> Up to 10 managed policies per group</li>
+            <li><strong>No Nesting:</strong> Groups cannot contain other groups</li>
+            <li><strong>No Direct Login:</strong> Cannot log in as a group</li>
+        </ul>
+
+        <h3>Group vs Individual User Permissions</h3>
+        <div class="json-block">
+Permission Evaluation Order:
+1. Explicit Deny in any policy → DENY
+2. Explicit Allow in any policy → ALLOW
+3. No explicit Allow → DENY (implicit)
+
+User's Effective Permissions = 
+  User's Inline Policies 
+  + User's Managed Policies 
+  + All Group Policies (from all groups user belongs to)
+        </div>
+
+        <h3>Best Practices for Groups</h3>
+        <ul>
+            <li><strong>Job Function Groups:</strong> Create groups based on job roles and responsibilities</li>
+            <li><strong>Environment Groups:</strong> Separate groups for dev, staging, and production access</li>
+            <li><strong>Managed Policies:</strong> Use AWS managed policies when possible for common permissions</li>
+            <li><strong>Regular Review:</strong> Periodically review group memberships and permissions</li>
+            <li><strong>Naming Convention:</strong> Use clear, descriptive names for groups</li>
+        </ul>
+
+        <h3>Example Group Structure</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #FF9900;">Development Team</div>
+            </div>
+            <div style="margin: 10px 0;">
+                <div class="component-box" style="background: #0ea5e9;">Dev-FullAccess</div>
+                <div class="component-box" style="background: #0ea5e9;">Dev-ReadOnly</div>
+                <div class="component-box" style="background: #0ea5e9;">Dev-S3Access</div>
+            </div>
+            <div style="margin: 20px 0; font-size: 1rem; color: #232F3E;">Users can belong to multiple groups</div>
+            <div>
+                <div class="component-box" style="background: #10b981;">Alice: Dev-FullAccess + Dev-S3Access</div>
+                <div class="component-box" style="background: #10b981;">Bob: Dev-ReadOnly</div>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Recommendation:</strong> Always use groups to assign permissions to users. This makes permission management much easier and more maintainable as your organization grows.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 6: IAM Roles -->
+<div class="slide">
+    <div class="content">
+        <h2>IAM Roles</h2>
+        
+        <div class="highlight-box">
+            <p><strong>IAM Roles</strong> are temporary identities that can be assumed by users, applications, or AWS services. Roles provide temporary security credentials and are the preferred way to grant access to AWS resources.</p>
+        </div>
+
+        <h3>Role Characteristics</h3>
+        <ul>
+            <li><strong>Temporary Credentials:</strong> Provide short-term access tokens instead of permanent credentials</li>
+            <li><strong>Assumable:</strong> Can be assumed by users, applications, or AWS services</li>
+            <li><strong>No Passwords:</strong> Roles don't have passwords or access keys</li>
+            <li><strong>Cross-Account:</strong> Can be assumed across different AWS accounts</li>
+            <li><strong>Federated Access:</strong> Support for external identity providers</li>
+        </ul>
+
+        <h3>Types of IAM Roles</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Service Roles</h4>
+                <p>For AWS services like EC2, Lambda, or ECS to access other AWS services</p>
+            </div>
+            <div class="feature-card">
+                <h4>Cross-Account Roles</h4>
+                <p>Allow users from one AWS account to access resources in another account</p>
+            </div>
+            <div class="feature-card">
+                <h4>Identity Provider Roles</h4>
+                <p>For federated users from external identity providers (SAML, OIDC)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Instance Profiles</h4>
+                <p>Special container for roles that can be attached to EC2 instances</p>
+            </div>
+        </div>
+
+        <h3>Role Components</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Purpose</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Trust Policy</strong></td>
+                    <td>Defines who can assume the role</td>
+                    <td>EC2 service, specific AWS account</td>
+                </tr>
+                <tr>
+                    <td><strong>Permission Policies</strong></td>
+                    <td>Defines what the role can do</td>
+                    <td>S3 read access, DynamoDB write access</td>
+                </tr>
+                <tr>
+                    <td><strong>Role ARN</strong></td>
+                    <td>Unique identifier for the role</td>
+                    <td>arn:aws:iam::123456789012:role/MyRole</td>
+                </tr>
+                <tr>
+                    <td><strong>Session Duration</strong></td>
+                    <td>How long credentials are valid</td>
+                    <td>1 hour to 12 hours (default: 1 hour)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Role Assumption Process</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Request</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Trust Policy Check</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Temporary Credentials</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Access Resources</div>
+        </div>
+
+        <h3>Common Role Use Cases</h3>
+        <ul>
+            <li><strong>EC2 Instance Access:</strong> Allow EC2 instances to access S3, DynamoDB, etc.</li>
+            <li><strong>Lambda Function Execution:</strong> Grant Lambda functions permissions to AWS services</li>
+            <li><strong>Cross-Account Access:</strong> Allow users from Account A to access resources in Account B</li>
+            <li><strong>Application Access:</strong> Enable applications to access AWS services without hardcoded credentials</li>
+            <li><strong>Federated Access:</strong> Allow corporate users to access AWS using existing credentials</li>
+        </ul>
+
+        <h3>Trust Policy Example</h3>
+        <div class="json-block">
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Effect": "Allow",<br>
+      "Principal": {<br>
+        "Service": "ec2.amazonaws.com"<br>
+      },<br>
+      "Action": "sts:AssumeRole"<br>
+    },<br>
+    {<br>
+      "Effect": "Allow",<br>
+      "Principal": {<br>
+        "AWS": "arn:aws:iam::123456789012:user/Alice"<br>
+      },<br>
+      "Action": "sts:AssumeRole",<br>
+      "Condition": {<br>
+        "Bool": {<br>
+          "aws:MultiFactorAuthPresent": "true"<br>
+        }<br>
+      }<br>
+    }<br>
+  ]<br>
+}<br>
+        </div>
+
+        <h3>Roles vs Users Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>IAM Users</th>
+                    <th>IAM Roles</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Credentials</strong></td>
+                    <td>Permanent (passwords, access keys)</td>
+                    <td>Temporary (security tokens)</td>
+                </tr>
+                <tr>
+                    <td><strong>Best For</strong></td>
+                    <td>Human users</td>
+                    <td>Applications, services, cross-account</td>
+                </tr>
+                <tr>
+                    <td><strong>Security</strong></td>
+                    <td>Risk of credential exposure</td>
+                    <td>Automatic credential rotation</td>
+                </tr>
+                <tr>
+                    <td><strong>Scalability</strong></td>
+                    <td>Limited by user count</td>
+                    <td>Unlimited assumptions</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="success-box">
+            <p><strong>Best Practice:</strong> Use IAM roles instead of users for applications, services, and cross-account access. Roles provide better security through temporary credentials and automatic rotation.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 7: IAM Policies -->
+<div class="slide">
+    <div class="content">
+        <h2>IAM Policies</h2>
+        
+        <div class="highlight-box">
+            <p><strong>IAM Policies</strong> are JSON documents that define permissions. They specify what actions are allowed or denied on which resources and under what conditions.</p>
+        </div>
+
+        <h3>Policy Types</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>AWS Managed Policies</h4>
+                <p>Pre-built policies created and maintained by AWS</p>
+            </div>
+            <div class="feature-card">
+                <h4>Customer Managed Policies</h4>
+                <p>Custom policies created and maintained by you</p>
+            </div>
+            <div class="feature-card">
+                <h4>Inline Policies</h4>
+                <p>Policies directly embedded in a single user, group, or role</p>
+            </div>
+            <div class="feature-card">
+                <h4>Resource-Based Policies</h4>
+                <p>Policies attached to resources (S3 buckets, KMS keys, etc.)</p>
+            </div>
+        </div>
+
+        <h3>Policy Structure</h3>
+        <div class="json-block">
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Sid": "AllowS3ReadAccess",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "s3:GetObject",<br>
+        "s3:ListBucket"<br>
+      ],<br>
+      "Resource": [<br>
+        "arn:aws:s3:::my-bucket",<br>
+        "arn:aws:s3:::my-bucket/*"<br>
+      ],<br>
+      "Condition": {<br>
+        "StringEquals": {<br>
+          "s3:prefix": "documents/"<br>
+        }<br>
+      }<br>
+    }<br>
+  ]<br>
+}<br>
+        </div>
+
+        <h3>Policy Elements</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Element</th>
+                    <th>Required</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Version</strong></td>
+                    <td>Yes</td>
+                    <td>Policy language version</td>
+                    <td>"2012-10-17"</td>
+                </tr>
+                <tr>
+                    <td><strong>Statement</strong></td>
+                    <td>Yes</td>
+                    <td>Array of permission statements</td>
+                    <td>[{...}, {...}]</td>
+                </tr>
+                <tr>
+                    <td><strong>Effect</strong></td>
+                    <td>Yes</td>
+                    <td>Allow or Deny</td>
+                    <td>"Allow", "Deny"</td>
+                </tr>
+                <tr>
+                    <td><strong>Action</strong></td>
+                    <td>Yes*</td>
+                    <td>API actions to allow/deny</td>
+                    <td>"s3:GetObject"</td>
+                </tr>
+                <tr>
+                    <td><strong>Resource</strong></td>
+                    <td>Yes*</td>
+                    <td>Resources the action applies to</td>
+                    <td>"arn:aws:s3:::bucket/*"</td>
+                </tr>
+                <tr>
+                    <td><strong>Condition</strong></td>
+                    <td>No</td>
+                    <td>When the policy applies</td>
+                    <td>IP address, time, MFA</td>
+                </tr>
+                <tr>
+                    <td><strong>Principal</strong></td>
+                    <td>No**</td>
+                    <td>Who the policy applies to</td>
+                    <td>User, role, account</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="font-size: 0.9rem; color: #666;">* Either Action or NotAction required<br>** Required for resource-based policies</p>
+
+        <h3>Policy Evaluation Logic</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Request</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Explicit Deny?</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Explicit Allow?</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Default Deny</div>
+        </div>
+
+        <h3>Common Policy Patterns</h3>
+        <ul>
+            <li><strong>Service-Specific Access:</strong> Grant access to specific AWS services</li>
+            <li><strong>Resource-Specific Access:</strong> Limit access to specific resources</li>
+            <li><strong>Conditional Access:</strong> Apply conditions based on time, IP, MFA, etc.</li>
+            <li><strong>Cross-Account Access:</strong> Allow access from other AWS accounts</li>
+            <li><strong>Temporary Access:</strong> Time-limited permissions</li>
+        </ul>
+
+        <h3>Policy Best Practices</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Least Privilege</h4>
+                <p>Grant only the minimum permissions needed</p>
+            </div>
+            <div class="feature-card">
+                <h4>Use Managed Policies</h4>
+                <p>Prefer AWS managed policies when available</p>
+            </div>
+            <div class="feature-card">
+                <h4>Version Control</h4>
+                <p>Track changes to custom policies</p>
+            </div>
+            <div class="feature-card">
+                <h4>Regular Review</h4>
+                <p>Periodically review and update policies</p>
+            </div>
+        </div>
+
+        <h3>Example Policies</h3>
+        <div class="json-block">
+// Read-only S3 access<br>
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "s3:GetObject",<br>
+        "s3:ListBucket"<br>
+      ],<br>
+      "Resource": "*"<br>
+    }<br>
+  ]<br>
+}<br><br>
+
+// EC2 start/stop with conditions<br>
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "ec2:StartInstances",<br>
+        "ec2:StopInstances"<br>
+      ],<br>
+      "Resource": "*",<br>
+      "Condition": {<br>
+        "StringEquals": {<br>
+          "ec2:ResourceTag/Environment": "Development"<br>
+        }<br>
+      }<br>
+    }<br>
+  ]<br>
+}<br>
+        </div>
+
+        <div class="warning-box">
+            <p><strong>Important:</strong> Always test policies in a safe environment before applying them to production. Use the IAM Policy Simulator to validate policy behavior.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 8: IAM Security Features -->
+<div class="slide">
+    <div class="content">
+        <h2>IAM Security Features</h2>
+        
+        <div class="highlight-box">
+            <p>AWS IAM provides multiple layers of security features to protect your AWS resources and ensure secure access management.</p>
+        </div>
+
+        <h3>Multi-Factor Authentication (MFA)</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Virtual MFA</h4>
+                <p>Software-based MFA using apps like Google Authenticator or Authy</p>
+            </div>
+            <div class="feature-card">
+                <h4>Hardware MFA</h4>
+                <p>Physical devices like YubiKey or Gemalto tokens</p>
+            </div>
+            <div class="feature-card">
+                <h4>SMS MFA</h4>
+                <p>Text message-based authentication (less secure, not recommended)</p>
+            </div>
+            <div class="feature-card">
+                <h4>U2F Security Keys</h4>
+                <p>FIDO U2F compatible hardware security keys</p>
+            </div>
+        </div>
+
+        <h3>Password Policies</h3>
+        <ul>
+            <li><strong>Minimum Length:</strong> Require passwords of specific minimum length</li>
+            <li><strong>Character Requirements:</strong> Require uppercase, lowercase, numbers, symbols</li>
+            <li><strong>Password Expiration:</strong> Force regular password changes</li>
+            <li><strong>Password Reuse:</strong> Prevent reusing previous passwords</li>
+            <li><strong>Account Lockout:</strong> Lock accounts after failed login attempts</li>
+        </ul>
+
+        <h3>Access Keys Security</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Security Measure</th>
+                    <th>Description</th>
+                    <th>Best Practice</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Key Rotation</strong></td>
+                    <td>Regularly change access keys</td>
+                    <td>Rotate every 90 days or less</td>
+                </tr>
+                <tr>
+                    <td><strong>Key Deactivation</strong></td>
+                    <td>Disable unused access keys</td>
+                    <td>Deactivate immediately when not needed</td>
+                </tr>
+                <tr>
+                    <td><strong>Last Used Information</strong></td>
+                    <td>Track when keys were last used</td>
+                    <td>Monitor and remove unused keys</td>
+                </tr>
+                <tr>
+                    <td><strong>Secure Storage</strong></td>
+                    <td>Store keys securely</td>
+                    <td>Use AWS Secrets Manager or similar</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>CloudTrail Integration</h3>
+        <ul>
+            <li><strong>API Logging:</strong> Log all IAM API calls and changes</li>
+            <li><strong>User Activity:</strong> Track user login and access patterns</li>
+            <li><strong>Policy Changes:</strong> Monitor modifications to policies and permissions</li>
+            <li><strong>Compliance:</strong> Maintain audit trails for regulatory requirements</li>
+        </ul>
+
+        <h3>IAM Access Analyzer</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>External Access Detection</h4>
+                <p>Identify resources accessible from outside your account</p>
+            </div>
+            <div class="feature-card">
+                <h4>Policy Validation</h4>
+                <p>Validate policies against AWS best practices</p>
+            </div>
+            <div class="feature-card">
+                <h4>Unused Access</h4>
+                <p>Find unused permissions and roles</p>
+            </div>
+            <div class="feature-card">
+                <h4>Policy Generation</h4>
+                <p>Generate policies based on actual usage</p>
+            </div>
+        </div>
+
+        <h3>Credential Report</h3>
+        <div class="json-block">
+IAM Credential Report includes:
+- User creation date
+- Password last used
+- Password last changed
+- Password next rotation
+- MFA active status
+- Access key 1 & 2 status
+- Access key last used date
+- Access key last used service
+- Certificate status and dates
+        </div>
+
+        <h3>Security Token Service (STS)</h3>
+        <ul>
+            <li><strong>Temporary Credentials:</strong> Issue short-term access credentials</li>
+            <li><strong>Role Assumption:</strong> Enable secure role switching</li>
+            <li><strong>Federation:</strong> Support external identity providers</li>
+            <li><strong>Cross-Account Access:</strong> Secure access between AWS accounts</li>
+        </ul>
+
+        <h3>IAM Conditions for Enhanced Security</h3>
+        <div class="json-block">
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Effect": "Allow",<br>
+      "Action": "*",<br>
+      "Resource": "*",<br>
+      "Condition": {<br>
+        "Bool": {<br>
+          "aws:MultiFactorAuthPresent": "true"<br>
+        },<br>
+        "IpAddress": {<br>
+          "aws:SourceIp": "203.0.113.0/24"<br>
+        },<br>
+        "DateGreaterThan": {<br>
+          "aws:CurrentTime": "2023-01-01T00:00:00Z"<br>
+        },<br>
+        "DateLessThan": {<br>
+          "aws:CurrentTime": "2023-12-31T23:59:59Z"<br>
+        }<br>
+      }<br>
+    }<br>
+  ]<br>
+}<br>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Security Recommendation:</strong> Enable MFA for all users with console access, especially those with administrative privileges. Use IAM Access Analyzer regularly to review and optimize permissions.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 9: IAM Best Practices -->
+<div class="slide">
+    <div class="content">
+        <h2>IAM Best Practices</h2>
+        
+        <div class="highlight-box">
+            <p>Following IAM best practices is crucial for maintaining a secure and well-managed AWS environment. These practices help minimize security risks and improve operational efficiency.</p>
+        </div>
+
+        <h3>Fundamental Security Principles</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Principle of Least Privilege</h4>
+                <p>Grant only the minimum permissions necessary to perform required tasks</p>
+            </div>
+            <div class="feature-card">
+                <h4>Defense in Depth</h4>
+                <p>Use multiple layers of security controls and monitoring</p>
+            </div>
+            <div class="feature-card">
+                <h4>Zero Trust Model</h4>
+                <p>Never trust, always verify - authenticate and authorize every request</p>
+            </div>
+            <div class="feature-card">
+                <h4>Regular Auditing</h4>
+                <p>Continuously monitor and review access patterns and permissions</p>
+            </div>
+        </div>
+
+        <h3>Account and Root User Security</h3>
+        <ul>
+            <li><strong>Secure Root Account:</strong> Enable MFA and use strong password for root account</li>
+            <li><strong>Avoid Root Usage:</strong> Don't use root account for daily tasks</li>
+            <li><strong>Root Access Keys:</strong> Never create access keys for root account</li>
+            <li><strong>Account Contacts:</strong> Keep account contact information up to date</li>
+            <li><strong>Billing Alerts:</strong> Set up billing alerts to detect unusual activity</li>
+        </ul>
+
+        <h3>User and Access Management</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Practice</th>
+                    <th>Implementation</th>
+                    <th>Benefit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Individual Users</strong></td>
+                    <td>Create separate IAM user for each person</td>
+                    <td>Accountability and audit trails</td>
+                </tr>
+                <tr>
+                    <td><strong>Use Groups</strong></td>
+                    <td>Assign permissions through groups</td>
+                    <td>Simplified permission management</td>
+                </tr>
+                <tr>
+                    <td><strong>Strong Passwords</strong></td>
+                    <td>Enforce password policy requirements</td>
+                    <td>Prevent brute force attacks</td>
+                </tr>
+                <tr>
+                    <td><strong>Enable MFA</strong></td>
+                    <td>Require MFA for console access</td>
+                    <td>Additional authentication layer</td>
+                </tr>
+                <tr>
+                    <td><strong>Regular Reviews</strong></td>
+                    <td>Audit user access and permissions</td>
+                    <td>Remove unnecessary access</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Role and Policy Best Practices</h3>
+        <ul>
+            <li><strong>Prefer Roles:</strong> Use roles instead of users for applications and services</li>
+            <li><strong>Managed Policies:</strong> Use AWS managed policies when available</li>
+            <li><strong>Policy Versioning:</strong> Version control custom policies</li>
+            <li><strong>Specific Resources:</strong> Avoid using "*" for resources when possible</li>
+            <li><strong>Condition Usage:</strong> Use conditions to restrict access further</li>
+            <li><strong>Policy Testing:</strong> Test policies before production deployment</li>
+        </ul>
+
+        <h3>Monitoring and Auditing</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">CloudTrail</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Access Analyzer</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Credential Report</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Regular Review</div>
+        </div>
+
+        <h3>Operational Best Practices</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Credential Rotation</h4>
+                <p>Regularly rotate access keys and passwords</p>
+            </div>
+            <div class="feature-card">
+                <h4>Remove Unused Access</h4>
+                <p>Deactivate unused users, roles, and policies</p>
+            </div>
+            <div class="feature-card">
+                <h4>Monitor Activity</h4>
+                <p>Set up alerts for suspicious activities</p>
+            </div>
+            <div class="feature-card">
+                <h4>Document Policies</h4>
+                <p>Maintain clear documentation for custom policies</p>
+            </div>
+        </div>
+
+        <h3>Common Security Mistakes to Avoid</h3>
+        <div class="danger-box">
+            <p><strong>Security Anti-Patterns:</strong></p>
+            <ul>
+                <li><strong>Overprivileged Users:</strong> Granting more permissions than necessary</li>
+                <li><strong>Shared Credentials:</strong> Multiple people using the same user account</li>
+                <li><strong>Hardcoded Keys:</strong> Embedding access keys in application code</li>
+                <li><strong>No MFA:</strong> Not enabling MFA for privileged accounts</li>
+                <li><strong>Unused Resources:</strong> Keeping inactive users and roles</li>
+                <li><strong>Broad Policies:</strong> Using "*" for actions and resources unnecessarily</li>
+            </ul>
+        </div>
+
+        <h3>IAM Security Checklist</h3>
+        <ol class="step-list">
+            <li><strong>Root Account:</strong> Secure root account with MFA, avoid daily use</li>
+            <li><strong>Users:</strong> Create individual users, enforce strong passwords</li>
+            <li><strong>MFA:</strong> Enable MFA for all console users</li>
+            <li><strong>Groups:</strong> Use groups to assign permissions</li>
+            <li><strong>Roles:</strong> Use roles for applications and cross-account access</li>
+            <li><strong>Policies:</strong> Apply least privilege principle</li>
+            <li><strong>Monitoring:</strong> Enable CloudTrail and regular auditing</li>
+            <li><strong>Maintenance:</strong> Regular cleanup and access reviews</li>
+        </ol>
+
+        <h3>Compliance and Governance</h3>
+        <ul>
+            <li><strong>Access Reviews:</strong> Quarterly review of user access and permissions</li>
+            <li><strong>Policy Documentation:</strong> Document business justification for policies</li>
+            <li><strong>Change Management:</strong> Implement approval process for IAM changes</li>
+            <li><strong>Incident Response:</strong> Have procedures for compromised credentials</li>
+            <li><strong>Training:</strong> Regular security awareness training for users</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Golden Rule:</strong> Start with no permissions and add only what's needed. It's easier to grant additional permissions than to remove excessive ones without breaking functionality.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 10: Lab - Creating IAM Users and Groups -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Creating IAM Users and Groups</h2>
+        
+        <div class="lab-section">
+            <h3>Hands-on Lab: IAM User and Group Management</h3>
+            <p>Create IAM users, organize them into groups, and assign appropriate permissions using the AWS Management Console.</p>
+        </div>
+
+        <h3>Lab Objectives</h3>
+        <ul>
+            <li>Create IAM users with different access types</li>
+            <li>Set up IAM groups with specific permissions</li>
+            <li>Configure password policies and MFA</li>
+            <li>Test user access and permissions</li>
+        </ul>
+
+        <h3>Prerequisites</h3>
+        <ul>
+            <li>AWS account with administrative access</li>
+            <li>Access to AWS Management Console</li>
+            <li>Mobile device for MFA setup (optional)</li>
+        </ul>
+
+        <h3>Step 1: Configure Account Password Policy</h3>
+        <ol class="step-list">
+            <li><strong>Navigate to IAM:</strong> Go to IAM service in AWS Console</li>
+            <li><strong>Account Settings:</strong> Click on "Account settings" in left navigation</li>
+            <li><strong>Password Policy:</strong> Click "Change password policy"</li>
+            <li><strong>Configure Policy:</strong> Set minimum length, character requirements</li>
+            <li><strong>Save Changes:</strong> Apply the new password policy</li>
+        </ol>
+
+        <h3>Step 2: Create IAM Groups</h3>
+        <div class="code-block">
+# Groups to create:
+
+1. Administrators
+   - Policy: AdministratorAccess
+   
+2. Developers  
+   - Policies: AmazonEC2FullAccess, AmazonS3FullAccess
+   
+3. ReadOnlyUsers
+   - Policy: ReadOnlyAccess
+   
+4. DatabaseAdmins
+   - Policies: AmazonRDSFullAccess, AmazonDynamoDBFullAccess
+        </div>
+
+        <h3>Step 3: Create IAM Users</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>User Name</th>
+                    <th>Access Type</th>
+                    <th>Group</th>
+                    <th>MFA Required</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>admin-user</strong></td>
+                    <td>Console + Programmatic</td>
+                    <td>Administrators</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>dev-alice</strong></td>
+                    <td>Console + Programmatic</td>
+                    <td>Developers</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>readonly-bob</strong></td>
+                    <td>Console only</td>
+                    <td>ReadOnlyUsers</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>dba-charlie</strong></td>
+                    <td>Console + Programmatic</td>
+                    <td>DatabaseAdmins</td>
+                    <td>Yes</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Step 4: User Creation Process</h3>
+        <ol class="step-list">
+            <li><strong>Add User:</strong> Click "Add user" in IAM Users section</li>
+            <li><strong>User Details:</strong> Enter username and select access type</li>
+            <li><strong>Permissions:</strong> Add user to appropriate group</li>
+            <li><strong>Tags:</strong> Add tags for organization (optional)</li>
+            <li><strong>Review:</strong> Review settings and create user</li>
+            <li><strong>Credentials:</strong> Download credentials CSV file</li>
+        </ol>
+
+        <h3>Step 5: Configure MFA for Admin User</h3>
+        <ol class="step-list">
+            <li><strong>Select User:</strong> Click on admin-user in users list</li>
+            <li><strong>Security Credentials:</strong> Go to Security credentials tab</li>
+            <li><strong>Assign MFA:</strong> Click "Assign MFA device"</li>
+            <li><strong>Device Type:</strong> Choose Virtual MFA device</li>
+            <li><strong>Setup App:</strong> Use Google Authenticator or similar app</li>
+            <li><strong>Verify:</strong> Enter two consecutive MFA codes</li>
+        </ol>
+
+        <h3>Step 6: Test User Access</h3>
+        <div class="code-block">
+# Test console access:
+1. Open incognito/private browser window
+2. Go to AWS Console sign-in page
+3. Use account ID and user credentials
+4. Verify access to appropriate services
+
+# Test programmatic access:
+aws configure --profile dev-alice
+aws s3 ls --profile dev-alice
+aws ec2 describe-instances --profile dev-alice
+
+# Test MFA requirement:
+aws sts get-session-token --serial-number arn:aws:iam::ACCOUNT:mfa/admin-user --token-code 123456
+        </div>
+
+        <h3>Expected Results</h3>
+        <ul>
+            <li><strong>Admin User:</strong> Full access to all AWS services with MFA</li>
+            <li><strong>Developer:</strong> Access to EC2 and S3, denied for other services</li>
+            <li><strong>ReadOnly User:</strong> Can view resources but cannot modify</li>
+            <li><strong>DBA User:</strong> Access to RDS and DynamoDB only</li>
+        </ul>
+
+        <h3>Verification Checklist</h3>
+        <div class="success-box">
+            <ul>
+                <li>✓ Password policy is enforced for all users</li>
+                <li>✓ Users can only access services permitted by their groups</li>
+                <li>✓ MFA is working for designated users</li>
+                <li>✓ Access keys work for programmatic access</li>
+                <li>✓ Users cannot perform actions outside their permissions</li>
+            </ul>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 11: Lab - Working with IAM Roles -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Working with IAM Roles</h2>
+        
+        <div class="lab-section">
+            <h3>Hands-on Lab: IAM Roles and Cross-Account Access</h3>
+            <p>Create and configure IAM roles for different use cases including EC2 instance roles and cross-account access.</p>
+        </div>
+
+        <h3>Lab Objectives</h3>
+        <ul>
+            <li>Create service roles for EC2 instances</li>
+            <li>Set up cross-account access roles</li>
+            <li>Configure role assumption and trust policies</li>
+            <li>Test role functionality and permissions</li>
+        </ul>
+
+        <h3>Step 1: Create EC2 Service Role</h3>
+        <ol class="step-list">
+            <li><strong>Create Role:</strong> Go to IAM → Roles → Create role</li>
+            <li><strong>Trusted Entity:</strong> Select "AWS service" → "EC2"</li>
+            <li><strong>Permissions:</strong> Attach AmazonS3ReadOnlyAccess policy</li>
+            <li><strong>Role Name:</strong> EC2-S3-ReadOnly-Role</li>
+            <li><strong>Create Role:</strong> Review and create the role</li>
+        </ol>
+
+        <h3>Step 2: Create Custom Policy for Role</h3>
+        <div class="json-block">
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Sid": "AllowS3BucketAccess",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "s3:GetObject",<br>
+        "s3:PutObject",<br>
+        "s3:DeleteObject"<br>
+      ],<br>
+      "Resource": "arn:aws:s3:::my-app-bucket/*"<br>
+    },<br>
+    {<br>
+      "Sid": "AllowS3BucketList",<br>
+      "Effect": "Allow",<br>
+      "Action": "s3:ListBucket",<br>
+      "Resource": "arn:aws:s3:::my-app-bucket"<br>
+    },<br>
+    {<br>
+      "Sid": "AllowCloudWatchLogs",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "logs:CreateLogGroup",<br>
+        "logs:CreateLogStream",<br>
+        "logs:PutLogEvents"<br>
+      ],<br>
+      "Resource": "*"<br>
+    }<br>
+  ]<br>
+}<br>
+        </div>
+
+        <h3>Step 3: Create Lambda Execution Role</h3>
+        <div class="code-block">
+# Role Configuration:
+Role Name: Lambda-S3-CloudWatch-Role
+Trusted Entity: lambda.amazonaws.com
+Policies:
+- AWSLambdaBasicExecutionRole (AWS Managed)
+- Custom policy created in Step 2
+
+# Trust Policy (automatically created):
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+        </div>
+
+        <h3>Step 4: Create Cross-Account Access Role</h3>
+        <ol class="step-list">
+            <li><strong>Create Role:</strong> Select "Another AWS account" as trusted entity</li>
+            <li><strong>Account ID:</strong> Enter the external AWS account ID</li>
+            <li><strong>External ID:</strong> Add external ID for additional security</li>
+            <li><strong>MFA Required:</strong> Optionally require MFA for role assumption</li>
+            <li><strong>Permissions:</strong> Attach appropriate policies</li>
+            <li><strong>Role Name:</strong> CrossAccount-ReadOnly-Role</li>
+        </ol>
+
+        <h3>Step 5: Test EC2 Instance Role</h3>
+        <div class="code-block">
+# Launch EC2 instance with role:
+1. Launch EC2 instance
+2. In "Configure Instance Details":
+   - IAM role: EC2-S3-ReadOnly-Role
+3. Connect to instance via SSH
+4. Test AWS CLI access:
+
+# On EC2 instance:
+aws sts get-caller-identity
+aws s3 ls
+aws s3 cp s3://my-app-bucket/test.txt ./
+aws ec2 describe-instances  # Should fail - no EC2 permissions
+        </div>
+
+        <h3>Step 6: Test Role Assumption</h3>
+        <div class="code-block">
+# Assume role from CLI:
+aws sts assume-role \
+  --role-arn arn:aws:iam::ACCOUNT-ID:role/CrossAccount-ReadOnly-Role \
+  --role-session-name test-session \
+  --external-id unique-external-id
+
+# Use temporary credentials:
+export AWS_ACCESS_KEY_ID=ASIA...
+export AWS_SECRET_ACCESS_KEY=...
+export AWS_SESSION_TOKEN=...
+
+# Test access with assumed role:
+aws sts get-caller-identity
+aws s3 ls
+        </div>
+
+        <h3>Step 7: Create Role for Cross-Service Access</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Role Name</th>
+                    <th>Trusted Service</th>
+                    <th>Use Case</th>
+                    <th>Policies</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ECS-Task-Role</strong></td>
+                    <td>ecs-tasks.amazonaws.com</td>
+                    <td>ECS container access</td>
+                    <td>S3, DynamoDB access</td>
+                </tr>
+                <tr>
+                    <td><strong>CodeBuild-Role</strong></td>
+                    <td>codebuild.amazonaws.com</td>
+                    <td>Build project access</td>
+                    <td>S3, ECR, CloudWatch</td>
+                </tr>
+                <tr>
+                    <td><strong>API-Gateway-Role</strong></td>
+                    <td>apigateway.amazonaws.com</td>
+                    <td>API Gateway logging</td>
+                    <td>CloudWatch Logs</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Role Best Practices Demonstrated</h3>
+        <ul>
+            <li><strong>Specific Permissions:</strong> Roles have only necessary permissions</li>
+            <li><strong>Service-Specific:</strong> Different roles for different services</li>
+            <li><strong>External ID:</strong> Used for cross-account access security</li>
+            <li><strong>Session Names:</strong> Descriptive names for role sessions</li>
+            <li><strong>Time Limits:</strong> Temporary credentials with expiration</li>
+        </ul>
+
+        <h3>Troubleshooting Common Issues</h3>
+        <div class="warning-box">
+            <p><strong>Common Problems:</strong></p>
+            <ul>
+                <li><strong>Trust Policy:</strong> Ensure correct service or account in trust policy</li>
+                <li><strong>Permissions:</strong> Verify role has necessary permissions</li>
+                <li><strong>Instance Profile:</strong> EC2 roles need instance profile attachment</li>
+                <li><strong>External ID:</strong> Must match exactly for cross-account access</li>
+                <li><strong>MFA:</strong> Provide MFA token if required by trust policy</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Lab Complete:</strong> You've successfully created and tested various IAM roles for different AWS services and use cases. Roles provide secure, temporary access without long-term credentials.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 12: Lab - IAM Policies and Permissions -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: IAM Policies and Permissions</h2>
+        
+        <div class="lab-section">
+            <h3>Hands-on Lab: Creating and Testing IAM Policies</h3>
+            <p>Create custom IAM policies with various conditions and test their effectiveness using the IAM Policy Simulator.</p>
+        </div>
+
+        <h3>Lab Objectives</h3>
+        <ul>
+            <li>Create custom managed policies</li>
+            <li>Use policy conditions for enhanced security</li>
+            <li>Test policies with IAM Policy Simulator</li>
+            <li>Understand policy evaluation logic</li>
+        </ul>
+
+        <h3>Step 1: Create S3 Bucket Access Policy</h3>
+        <div class="json-block">
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Sid": "AllowListBucket",<br>
+      "Effect": "Allow",<br>
+      "Action": "s3:ListBucket",<br>
+      "Resource": "arn:aws:s3:::my-company-documents",<br>
+      "Condition": {<br>
+        "StringLike": {<br>
+          "s3:prefix": [<br>
+            "public/*",<br>
+            "shared/*"<br>
+          ]<br>
+        }<br>
+      }<br>
+    },<br>
+    {<br>
+      "Sid": "AllowObjectAccess",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "s3:GetObject",<br>
+        "s3:PutObject"<br>
+      ],<br>
+      "Resource": [<br>
+        "arn:aws:s3:::my-company-documents/public/*",<br>
+        "arn:aws:s3:::my-company-documents/shared/*"<br>
+      ]<br>
+    },<br>
+    {<br>
+      "Sid": "DenyDeleteOperations",<br>
+      "Effect": "Deny",<br>
+      "Action": [<br>
+        "s3:DeleteObject",<br>
+        "s3:DeleteBucket"<br>
+      ],<br>
+      "Resource": [<br>
+        "arn:aws:s3:::my-company-documents",<br>
+        "arn:aws:s3:::my-company-documents/*"<br>
+      ]<br>
+    }<br>
+  ]<br>
+}<br>
+        </div>
+
+        <h3>Step 2: Create Time-Based Access Policy</h3>
+        <div class="json-block">
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Sid": "AllowBusinessHoursAccess",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "ec2:StartInstances",<br>
+        "ec2:StopInstances",<br>
+        "ec2:RebootInstances"<br>
+      ],<br>
+      "Resource": "*",<br>
+      "Condition": {<br>
+        "DateGreaterThan": {<br>
+          "aws:RequestedRegion": "us-east-1"<br>
+        },<br>
+        "IpAddress": {<br>
+          "aws:SourceIp": [<br>
+            "203.0.113.0/24",<br>
+            "198.51.100.0/24"<br>
+          ]<br>
+        },<br>
+        "StringEquals": {<br>
+          "ec2:ResourceTag/Environment": "Development"<br>
+        }<br>
+      }<br>
+    }<br>
+  ]<br>
+}<br>
+        </div>
+
+        <h3>Step 3: Create MFA-Required Policy</h3>
+        <div class="json-block">
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Sid": "AllowViewAccountInfo",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "iam:GetAccountPasswordPolicy",<br>
+        "iam:ListVirtualMFADevices"<br>
+      ],<br>
+      "Resource": "*"<br>
+    },<br>
+    {<br>
+      "Sid": "AllowManageOwnPasswords",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "iam:ChangePassword",<br>
+        "iam:GetUser"<br>
+      ],<br>
+      "Resource": "arn:aws:iam::*:user/${aws:username}"<br>
+    },<br>
+    {<br>
+      "Sid": "AllowManageOwnMFA",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "iam:CreateVirtualMFADevice",<br>
+        "iam:EnableMFADevice",<br>
+        "iam:ResyncMFADevice"<br>
+      ],<br>
+      "Resource": [<br>
+        "arn:aws:iam::*:mfa/${aws:username}",<br>
+        "arn:aws:iam::*:user/${aws:username}"<br>
+      ]<br>
+    },<br>
+    {<br>
+      "Sid": "DenyAllExceptUnlessSignedInWithMFA",<br>
+      "Effect": "Deny",<br>
+      "NotAction": [<br>
+        "iam:CreateVirtualMFADevice",<br>
+        "iam:EnableMFADevice",<br>
+        "iam:GetUser",<br>
+        "iam:ListMFADevices",<br>
+        "iam:ListVirtualMFADevices",<br>
+        "iam:ResyncMFADevice",<br>
+        "sts:GetSessionToken"<br>
+      ],<br>
+      "Resource": "*",<br>
+      "Condition": {<br>
+        "BoolIfExists": {<br>
+          "aws:MultiFactorAuthPresent": "false"<br>
+        }<br>
+      }<br>
+    }<br>
+  ]<br>
+}<br>
+        </div>
+
+        <h3>Step 4: Test Policies with Policy Simulator</h3>
+        <ol class="step-list">
+            <li><strong>Access Simulator:</strong> Go to IAM → Policy Simulator</li>
+            <li><strong>Select User/Role:</strong> Choose the entity to test</li>
+            <li><strong>Select Service:</strong> Choose AWS service (e.g., S3, EC2)</li>
+            <li><strong>Select Actions:</strong> Choose specific actions to test</li>
+            <li><strong>Specify Resources:</strong> Enter resource ARNs</li>
+            <li><strong>Add Conditions:</strong> Set context conditions if needed</li>
+            <li><strong>Run Simulation:</strong> Execute the simulation</li>
+        </ol>
+
+        <h3>Step 5: Policy Testing Scenarios</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Test Scenario</th>
+                    <th>Action</th>
+                    <th>Resource</th>
+                    <th>Expected Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>S3 Read Access</strong></td>
+                    <td>s3:GetObject</td>
+                    <td>arn:aws:s3:::my-company-documents/public/file.txt</td>
+                    <td>Allow</td>
+                </tr>
+                <tr>
+                    <td><strong>S3 Delete Attempt</strong></td>
+                    <td>s3:DeleteObject</td>
+                    <td>arn:aws:s3:::my-company-documents/public/file.txt</td>
+                    <td>Deny</td>
+                </tr>
+                <tr>
+                    <td><strong>EC2 Start (Wrong IP)</strong></td>
+                    <td>ec2:StartInstances</td>
+                    <td>arn:aws:ec2:us-east-1:*:instance/*</td>
+                    <td>Deny</td>
+                </tr>
+                <tr>
+                    <td><strong>IAM without MFA</strong></td>
+                    <td>iam:CreateUser</td>
+                    <td>*</td>
+                    <td>Deny</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Step 6: Create Policy with Variables</h3>
+        <div class="json-block">
+{<br>
+  "Version": "2012-10-17",<br>
+  "Statement": [<br>
+    {<br>
+      "Sid": "AllowUserToManageTheirOwnProfile",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "iam:GetUser",<br>
+        "iam:ChangePassword",<br>
+        "iam:CreateAccessKey",<br>
+        "iam:DeleteAccessKey",<br>
+        "iam:ListAccessKeys",<br>
+        "iam:UpdateAccessKey"<br>
+      ],<br>
+      "Resource": "arn:aws:iam::*:user/${aws:username}"<br>
+    },<br>
+    {<br>
+      "Sid": "AllowUserToListTheirOwnMFA",<br>
+      "Effect": "Allow",<br>
+      "Action": [<br>
+        "iam:ListMFADevices"<br>
+      ],<br>
+      "Resource": [<br>
+        "arn:aws:iam::*:user/${aws:username}",<br>
+        "arn:aws:iam::*:mfa/${aws:username}"<br>
+      ]<br>
+    }<br>
+  ]<br>
+}<br>
+        </div>
+
+        <h3>Step 7: Validate Policy Syntax</h3>
+        <div class="code-block">
+# Using AWS CLI to validate policy:
+aws iam simulate-principal-policy \
+  --policy-source-arn arn:aws:iam::123456789012:user/testuser \
+  --action-names s3:GetObject \
+  --resource-arns arn:aws:s3:::my-company-documents/public/test.txt
+
+# Using policy validator:
+aws iam create-policy \
+  --policy-name TestPolicy \
+  --policy-document file://policy.json \
+  --dry-run
+        </div>
+
+        <h3>Common Policy Conditions</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>IP Address</h4>
+                <p>aws:SourceIp - Restrict by IP range</p>
+            </div>
+            <div class="feature-card">
+                <h4>Time-based</h4>
+                <p>aws:CurrentTime - Time-based access</p>
+            </div>
+            <div class="feature-card">
+                <h4>MFA</h4>
+                <p>aws:MultiFactorAuthPresent - Require MFA</p>
+            </div>
+            <div class="feature-card">
+                <h4>Resource Tags</h4>
+                <p>aws:ResourceTag - Tag-based access</p>
+            </div>
+        </div>
+
+        <h3>Policy Troubleshooting Tips</h3>
+        <ul>
+            <li><strong>JSON Syntax:</strong> Validate JSON format and structure</li>
+            <li><strong>ARN Format:</strong> Ensure correct ARN syntax for resources</li>
+            <li><strong>Action Names:</strong> Use correct service:action format</li>
+            <li><strong>Condition Logic:</strong> Understand AND/OR logic in conditions</li>
+            <li><strong>Policy Size:</strong> Stay within size limits (2048 chars for inline)</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Policy Mastery:</strong> You've created sophisticated IAM policies with conditions and tested them thoroughly. These skills are essential for implementing fine-grained access control in AWS.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 13: IAM Monitoring and Compliance -->
+<div class="slide">
+    <div class="content">
+        <h2>IAM Monitoring and Compliance</h2>
+        
+        <div class="highlight-box">
+            <p>Effective monitoring and compliance practices are essential for maintaining secure and compliant AWS environments.</p>
+        </div>
+
+        <h3>CloudTrail for IAM Auditing</h3>
+        <ul>
+            <li><strong>API Logging:</strong> Log all IAM API calls and changes</li>
+            <li><strong>User Activity:</strong> Track user login attempts and access patterns</li>
+            <li><strong>Policy Changes:</strong> Monitor modifications to policies and permissions</li>
+            <li><strong>Role Assumptions:</strong> Track when and by whom roles are assumed</li>
+            <li><strong>Failed Attempts:</strong> Log failed authentication and authorization attempts</li>
+        </ul>
+
+        <h3>Key CloudTrail Events for IAM</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Description</th>
+                    <th>Security Relevance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ConsoleLogin</strong></td>
+                    <td>User login to AWS Console</td>
+                    <td>Track user access patterns</td>
+                </tr>
+                <tr>
+                    <td><strong>AssumeRole</strong></td>
+                    <td>Role assumption events</td>
+                    <td>Monitor cross-account access</td>
+                </tr>
+                <tr>
+                    <td><strong>CreateUser</strong></td>
+                    <td>New user creation</td>
+                    <td>Track user provisioning</td>
+                </tr>
+                <tr>
+                    <td><strong>AttachUserPolicy</strong></td>
+                    <td>Policy attachment to user</td>
+                    <td>Monitor permission changes</td>
+                </tr>
+                <tr>
+                    <td><strong>CreateAccessKey</strong></td>
+                    <td>Access key creation</td>
+                    <td>Track programmatic access setup</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>IAM Credential Report</h3>
+        <div class="json-block">
+Credential Report Contents:
+- User creation date and age
+- Password last used and last changed
+- Password next rotation date
+- MFA active status and device info
+- Access key 1 & 2 active status
+- Access key last used date and service
+- Access key last rotated date
+- Cert 1 & 2 active status and dates
+        </div>
+
+        <h3>Automated Compliance Monitoring</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>AWS Config Rules</h4>
+                <p>Monitor IAM configuration compliance automatically</p>
+            </div>
+            <div class="feature-card">
+                <h4>CloudWatch Alarms</h4>
+                <p>Alert on suspicious IAM activities</p>
+            </div>
+            <div class="feature-card">
+                <h4>AWS Security Hub</h4>
+                <p>Centralized security findings dashboard</p>
+            </div>
+            <div class="feature-card">
+                <h4>AWS GuardDuty</h4>
+                <p>Detect malicious IAM activities</p>
+            </div>
+        </div>
+
+        <h3>Common Config Rules for IAM</h3>
+        <ul>
+            <li><strong>iam-password-policy:</strong> Check password policy compliance</li>
+            <li><strong>iam-user-mfa-enabled:</strong> Ensure MFA is enabled for users</li>
+            <li><strong>iam-root-access-key-check:</strong> Detect root access keys</li>
+            <li><strong>iam-user-unused-credentials-check:</strong> Find unused credentials</li>
+            <li><strong>iam-policy-no-statements-with-admin-access:</strong> Detect overly permissive policies</li>
+        </ul>
+
+        <h3>CloudWatch Metrics for IAM</h3>
+        <div class="code-block">
+# Example CloudWatch alarm for failed console logins
+aws cloudwatch put-metric-alarm \
+  --alarm-name "IAM-Failed-Console-Logins" \
+  --alarm-description "Alert on failed console login attempts" \
+  --metric-name "ConsoleLoginFailures" \
+  --namespace "AWS/IAM" \
+  --statistic "Sum" \
+  --period 300 \
+  --threshold 5 \
+  --comparison-operator "GreaterThanThreshold" \
+  --evaluation-periods 1
+        </div>
+
+        <h3>Regular Audit Tasks</h3>
+        <ol class="step-list">
+            <li><strong>User Review:</strong> Quarterly review of all IAM users and their access</li>
+            <li><strong>Permission Audit:</strong> Review and validate user permissions</li>
+            <li><strong>Credential Rotation:</strong> Ensure regular rotation of access keys</li>
+            <li><strong>Unused Resources:</strong> Remove unused users, roles, and policies</li>
+            <li><strong>Policy Review:</strong> Validate custom policies against best practices</li>
+            <li><strong>MFA Compliance:</strong> Ensure MFA is enabled for appropriate users</li>
+        </ol>
+
+        <h3>Compliance Frameworks</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Framework</th>
+                    <th>IAM Requirements</th>
+                    <th>Key Controls</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SOC 2</strong></td>
+                    <td>Access controls and monitoring</td>
+                    <td>User access reviews, logging</td>
+                </tr>
+                <tr>
+                    <td><strong>PCI DSS</strong></td>
+                    <td>Strong access control measures</td>
+                    <td>Unique IDs, MFA, least privilege</td>
+                </tr>
+                <tr>
+                    <td><strong>HIPAA</strong></td>
+                    <td>Access controls for PHI</td>
+                    <td>User authentication, audit logs</td>
+                </tr>
+                <tr>
+                    <td><strong>ISO 27001</strong></td>
+                    <td>Information security management</td>
+                    <td>Access management, monitoring</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Incident Response for IAM</h3>
+        <ul>
+            <li><strong>Compromised Credentials:</strong> Immediate deactivation and rotation</li>
+            <li><strong>Unauthorized Access:</strong> Review CloudTrail logs and affected resources</li>
+            <li><strong>Policy Changes:</strong> Investigate unexpected permission modifications</li>
+            <li><strong>Failed Logins:</strong> Analyze patterns and potential brute force attacks</li>
+            <li><strong>Privilege Escalation:</strong> Review role assumptions and policy attachments</li>
+        </ul>
+
+        <h3>Automation Tools for IAM Management</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>AWS CLI Scripts</h4>
+                <p>Automate routine IAM tasks and audits</p>
+            </div>
+            <div class="feature-card">
+                <h4>Lambda Functions</h4>
+                <p>Event-driven IAM automation</p>
+            </div>
+            <div class="feature-card">
+                <h4>CloudFormation</h4>
+                <p>Infrastructure as Code for IAM resources</p>
+            </div>
+            <div class="feature-card">
+                <h4>Third-party Tools</h4>
+                <p>Specialized IAM management solutions</p>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Monitoring Best Practice:</strong> Implement continuous monitoring of IAM activities using CloudTrail, Config, and CloudWatch. Regular audits and automated compliance checks help maintain a secure environment.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 14: Summary and Next Steps -->
+<div class="slide">
+    <div class="content">
+        <h2>Summary and Next Steps</h2>
+        
+        <h3>Key Concepts Mastered</h3>
+        <div class="highlight-box">
+            <ul>
+                <li>Understanding of IAM fundamentals and core components</li>
+                <li>Comprehensive knowledge of Users, Groups, Roles, and Policies</li>
+                <li>Security features including MFA, password policies, and access keys</li>
+                <li>Best practices for secure IAM implementation</li>
+                <li>Hands-on experience with IAM management and policy creation</li>
+                <li>Monitoring, compliance, and auditing practices</li>
+                <li>Cross-account access using IAM roles</li>
+            </ul>
+        </div>
+
+        <h3>Practical Skills Gained</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>User Management</h4>
+                <p>Create and manage IAM users with appropriate permissions</p>
+            </div>
+            <div class="feature-card">
+                <h4>Group Organization</h4>
+                <p>Organize users into groups for efficient permission management</p>
+            </div>
+            <div class="feature-card">
+                <h4>Role Implementation</h4>
+                <p>Create and configure roles for various AWS services and use cases</p>
+            </div>
+            <div class="feature-card">
+                <h4>Policy Creation</h4>
+                <p>Write custom policies with conditions and test them effectively</p>
+            </div>
+        </div>
+
+        <h3>Lab Accomplishments</h3>
+        <ul>
+            <li><strong>User and Group Setup:</strong> Created users, groups, and configured password policies</li>
+            <li><strong>Role Configuration:</strong> Set up service roles and cross-account access</li>
+            <li><strong>Policy Development:</strong> Created custom policies with advanced conditions</li>
+            <li><strong>Security Implementation:</strong> Configured MFA and tested access controls</li>
+            <li><strong>Testing and Validation:</strong> Used Policy Simulator to validate permissions</li>
+        </ul>
+
+        <h3>IAM Security Checklist</h3>
+        <ol class="step-list">
+            <li><strong>Root Account Security:</strong> MFA enabled, no access keys, minimal usage</li>
+            <li><strong>User Management:</strong> Individual users, strong passwords, MFA where needed</li>
+            <li><strong>Permission Strategy:</strong> Least privilege principle, group-based permissions</li>
+            <li><strong>Role Usage:</strong> Roles for applications, cross-account access</li>
+            <li><strong>Policy Management:</strong> Regular review, managed policies preferred</li>
+            <li><strong>Monitoring:</strong> CloudTrail enabled, regular credential reports</li>
+            <li><strong>Compliance:</strong> Regular audits, automated compliance checks</li>
+        </ol>
+
+        <h3>Associate-Level Exam Topics Covered</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Domain</th>
+                    <th>Topics Covered</th>
+                    <th>Exam Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Security</strong></td>
+                    <td>IAM users, groups, roles, policies, MFA</td>
+                    <td>30%</td>
+                </tr>
+                <tr>
+                    <td><strong>Identity & Access Management</strong></td>
+                    <td>Access control, federation, cross-account</td>
+                    <td>16%</td>
+                </tr>
+                <tr>
+                    <td><strong>Management & Governance</strong></td>
+                    <td>CloudTrail, monitoring, compliance</td>
+                    <td>12%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Advanced Topics for Further Learning</h3>
+        <ul>
+            <li><strong>AWS Organizations:</strong> Multi-account management and Service Control Policies</li>
+            <li><strong>AWS SSO:</strong> Centralized single sign-on solution</li>
+            <li><strong>Identity Federation:</strong> SAML, OIDC, and external identity providers</li>
+            <li><strong>Permission Boundaries:</strong> Advanced permission management</li>
+            <li><strong>AWS Secrets Manager:</strong> Secure credential storage and rotation</li>
+            <li><strong>AWS Systems Manager:</strong> Parameter Store for configuration management</li>
+        </ul>
+
+        <h3>Real-World Implementation Tips</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Start Small</h4>
+                <p>Begin with basic user/group structure, expand gradually</p>
+            </div>
+            <div class="feature-card">
+                <h4>Document Everything</h4>
+                <p>Maintain clear documentation of policies and access patterns</p>
+            </div>
+            <div class="feature-card">
+                <h4>Regular Reviews</h4>
+                <p>Schedule quarterly access reviews and cleanup</p>
+            </div>
+            <div class="feature-card">
+                <h4>Automation</h4>
+                <p>Automate routine tasks and compliance checks</p>
+            </div>
+        </div>
+
+        <h3>Common Pitfalls to Avoid</h3>
+        <div class="danger-box">
+            <p><strong>Avoid These Mistakes:</strong></p>
+            <ul>
+                <li>Using root account for daily operations</li>
+                <li>Creating overly permissive policies</li>
+                <li>Sharing user credentials between team members</li>
+                <li>Hardcoding access keys in application code</li>
+                <li>Ignoring unused users and roles</li>
+                <li>Not enabling CloudTrail for audit logging</li>
+            </ul>
+        </div>
+
+        <h3>Recommended Next Steps</h3>
+        <ol class="step-list">
+            <li><strong>Practice:</strong> Set up IAM in your own AWS account and experiment</li>
+            <li><strong>Certification:</strong> Prepare for AWS Certified Solutions Architect Associate</li>
+            <li><strong>Advanced Learning:</strong> Explore AWS Organizations and advanced security services</li>
+            <li><strong>Real Projects:</strong> Apply IAM knowledge in actual cloud projects</li>
+            <li><strong>Stay Updated:</strong> Follow AWS security best practices and new features</li>
+        </ol>
+
+        <h3>Additional Resources</h3>
+        <ul>
+            <li><strong>AWS Documentation:</strong> IAM User Guide and Best Practices</li>
+            <li><strong>AWS Training:</strong> Security specialty and advanced courses</li>
+            <li><strong>AWS Well-Architected:</strong> Security pillar guidelines</li>
+            <li><strong>AWS Security Blog:</strong> Latest security updates and practices</li>
+            <li><strong>Community:</strong> AWS forums and user groups</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Congratulations!</strong> You've mastered AWS IAM fundamentals and are well-prepared for associate-level AWS certifications. Continue practicing with real-world scenarios and stay updated with AWS security best practices.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+</body>
+</html>

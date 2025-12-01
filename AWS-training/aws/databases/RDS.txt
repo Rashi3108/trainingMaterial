@@ -1,0 +1,20 @@
+1. Amazon RDS is a relational database service
+2. Key Point: AWS handles provisioning, backups, patching, scaling, and high availability.
+3. Supported Engines:
+- MySQL
+- PostgreSQL
+- MarisDB
+- Oracle
+- SQL server
+- Amazon Aurora - MySQL as well as Postgres
+
+4. Core Concepts:
+4.1: DB instance - A running database environment in the cloud - has CPU, RAM and storage.
+4.2: DB Engine: the type of relational databse you choose
+4.3: Availability Options - Single AZ or Multi AZ
+4.4: Read Replicas - can be promoted to standalone database
+
+5. Backups and maintenance
+5.1 Automated Backups -> enabled by default -> can restore to any point in time(up to 35 days retention)
+5.2 Snapshots: Manual backups -> persist until explicitly deleted
+5.3 Maintenance Windows: AWS applies minor version upgrades, security patches automatically

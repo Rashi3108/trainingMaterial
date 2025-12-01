@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Auto Scaling, Launch Templates & Elastic Load Balancers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .slide:last-child {
+            page-break-after: auto;
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #232F3E 0%, #FF9900 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .slide-subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            color: #232F3E;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #FF9900;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: #232F3E;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #FF9900;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.6rem;
+            color: #232F3E;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            color: #FF9900;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f3f4f6;
+            border-left: 5px solid #FF9900;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #232F3E;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f3f4f6;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .grid-item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .grid-item h4 {
+            color: #232F3E;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 20px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .warning-box {
+            background: #fef2f2;
+            border-left: 5px solid #ef4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #f0fdf4;
+            border-left: 5px solid #22c55e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        @media print {
+            .slide {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Title Slide -->
+    <div class="slide title-slide">
+        <div class="content">
+            <h1 class="slide-title">AWS Auto Scaling & Load Balancing</h1>
+            <p class="slide-subtitle">Auto Scaling Groups, Launch Templates & Elastic Load Balancers</p>
+            <div style="margin-top: 50px; font-size: 1.2rem;">
+                <p>Complete Guide to AWS Scalability and High Availability</p>
+            </div>
+        </div>
+        <div class="slide-footer" style="color: #FFD700;">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="slide">
+        <div class="content">
+            <h2>Table of Contents</h2>
+            
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>🚀 Launch Templates</h4>
+                    <ul>
+                        <li>Introduction & Benefits</li>
+                        <li>Configuration Options</li>
+                        <li>Best Practices</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>📈 Auto Scaling Groups</h4>
+                    <ul>
+                        <li>Core Concepts</li>
+                        <li>Scaling Policies</li>
+                        <li>Health Checks</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>⚖️ Elastic Load Balancers</h4>
+                    <ul>
+                        <li>Application Load Balancer</li>
+                        <li>Network Load Balancer</li>
+                        <li>Gateway Load Balancer</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🔧 Integration & Best Practices</h4>
+                    <ul>
+                        <li>ASG + ELB Integration</li>
+                        <li>Monitoring & Troubleshooting</li>
+                        <li>Cost Optimization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+    <!-- Launch Templates Introduction -->
+    <div class="slide">
+        <div class="content">
+            <h2>AWS Launch Templates</h2>
+            
+            <p>Launch Templates are a newer and more advanced way to specify instance configuration for Auto Scaling Groups, providing versioning and more advanced features compared to Launch Configurations.</p>
+            
+            <div class="highlight-box">
+                <h3>Key Benefits of Launch Templates</h3>
+                <ul>
+                    <li><strong>Versioning:</strong> Create multiple versions and track changes</li>
+                    <li><strong>Parameter Overrides:</strong> Override specific parameters at launch</li>
+                    <li><strong>Mixed Instance Types:</strong> Support for Spot and On-Demand instances</li>
+                    <li><strong>Advanced Features:</strong> T2/T3 unlimited, placement groups, dedicated hosts</li>
+                    <li><strong>Source Templates:</strong> Create templates from existing instances</li>
+                </ul>
+            </div>
+
+            <div class="comparison-table">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Launch Configuration</th>
+                            <th>Launch Template</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Versioning</td>
+                            <td>❌ No</td>
+                            <td>✅ Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Mixed Instance Types</td>
+                            <td>❌ No</td>
+                            <td>✅ Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Spot Instances</td>
+                            <td>❌ Limited</td>
+                            <td>✅ Full Support</td>
+                        </tr>
+                        <tr>
+                            <td>T2/T3 Unlimited</td>
+                            <td>❌ No</td>
+                            <td>✅ Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Newer Instance Types</td>
+                            <td>❌ Limited</td>
+                            <td>✅ All Types</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+    <!-- Launch Template Configuration -->
+    <div class="slide">
+        <div class="content">
+            <h2>Launch Template Configuration</h2>
+            
+            <h3>Essential Configuration Parameters</h3>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>🖥️ Instance Details</h4>
+                    <ul>
+                        <li>AMI ID</li>
+                        <li>Instance Type</li>
+                        <li>Key Pair</li>
+                        <li>Security Groups</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>💾 Storage</h4>
+                    <ul>
+                        <li>EBS Volume Configuration</li>
+                        <li>Volume Type & Size</li>
+                        <li>Encryption Settings</li>
+                        <li>Delete on Termination</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🌐 Network Settings</h4>
+                    <ul>
+                        <li>VPC & Subnet</li>
+                        <li>Public IP Assignment</li>
+                        <li>Security Group IDs</li>
+                        <li>Network Interfaces</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>⚙️ Advanced Options</h4>
+                    <ul>
+                        <li>User Data Scripts</li>
+                        <li>IAM Instance Profile</li>
+                        <li>Monitoring (Detailed)</li>
+                        <li>Placement Groups</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-block">
+# AWS CLI Example - Create Launch Template
+aws ec2 create-launch-template \
+    --launch-template-name MyWebServerTemplate \
+    --launch-template-data '{
+        "ImageId": "ami-0abcdef1234567890",
+        "InstanceType": "t3.micro",
+        "KeyName": "my-key-pair",
+        "SecurityGroupIds": ["sg-12345678"],
+        "UserData": "IyEvYmluL2Jhc2gK...",
+        "IamInstanceProfile": {
+            "Name": "EC2-SSM-Role"
+        },
+        "Monitoring": {
+            "Enabled": true
+        }
+    }'
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+    <!-- Auto Scaling Groups Introduction -->
+    <div class="slide">
+        <div class="content">
+            <h2>Auto Scaling Groups (ASG)</h2>
+            
+            <p>Auto Scaling Groups automatically adjust the number of EC2 instances in response to demand, ensuring optimal performance and cost efficiency.</p>
+            
+            <div class="highlight-box">
+                <h3>Core ASG Concepts</h3>
+                <ul>
+                    <li><strong>Desired Capacity:</strong> Target number of instances to maintain</li>
+                    <li><strong>Minimum Size:</strong> Minimum number of instances (never go below)</li>
+                    <li><strong>Maximum Size:</strong> Maximum number of instances (never exceed)</li>
+                    <li><strong>Health Checks:</strong> EC2 and/or ELB health check types</li>
+                    <li><strong>Availability Zones:</strong> Distribute instances across multiple AZs</li>
+                </ul>
+            </div>
+
+            <h3>ASG Lifecycle</h3>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>1️⃣ Launch</h4>
+                    <p>ASG launches instances using Launch Template configuration</p>
+                </div>
+                <div class="grid-item">
+                    <h4>2️⃣ Health Check</h4>
+                    <p>Monitors instance health using EC2 or ELB health checks</p>
+                </div>
+                <div class="grid-item">
+                    <h4>3️⃣ Scale Out/In</h4>
+                    <p>Adds or removes instances based on scaling policies</p>
+                </div>
+                <div class="grid-item">
+                    <h4>4️⃣ Terminate</h4>
+                    <p>Terminates unhealthy or excess instances gracefully</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Important Notes</h4>
+                <ul>
+                    <li>ASG is free - you only pay for the EC2 instances launched</li>
+                    <li>Always distribute instances across multiple Availability Zones</li>
+                    <li>Use health check grace period to allow instances to initialize</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+    <!-- ASG Scaling Policies -->
+    <div class="slide">
+        <div class="content">
+            <h2>Auto Scaling Policies</h2>
+            
+            <h3>Types of Scaling Policies</h3>
+            
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>📊 Target Tracking</h4>
+                    <p><strong>Recommended approach</strong></p>
+                    <ul>
+                        <li>Maintain specific metric target</li>
+                        <li>CPU Utilization (e.g., 70%)</li>
+                        <li>Request Count per Target</li>
+                        <li>Network In/Out</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>📈 Step Scaling</h4>
+                    <p><strong>More granular control</strong></p>
+                    <ul>
+                        <li>Scale based on CloudWatch alarms</li>
+                        <li>Different scaling amounts for different thresholds</li>
+                        <li>Faster response than simple scaling</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>📅 Scheduled Scaling</h4>
+                    <p><strong>Predictable patterns</strong></p>
+                    <ul>
+                        <li>Scale based on time/date</li>
+                        <li>Recurring schedules</li>
+                        <li>One-time events</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🎯 Predictive Scaling</h4>
+                    <p><strong>ML-powered scaling</strong></p>
+                    <ul>
+                        <li>Uses machine learning</li>
+                        <li>Analyzes historical data</li>
+                        <li>Proactive scaling</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-block">
+# Target Tracking Scaling Policy Example
+aws autoscaling put-scaling-policy \
+    --auto-scaling-group-name my-asg \
+    --policy-name cpu-target-tracking \
+    --policy-type TargetTrackingScaling \
+    --target-tracking-configuration '{
+        "TargetValue": 70.0,
+        "PredefinedMetricSpecification": {
+            "PredefinedMetricType": "ASGAverageCPUUtilization"
+        }
+    }'
+            </div>
+
+            <div class="success-box">
+                <h4>✅ Best Practices for Scaling Policies</h4>
+                <ul>
+                    <li>Start with Target Tracking for CPU utilization</li>
+                    <li>Set appropriate cooldown periods to prevent flapping</li>
+                    <li>Use multiple metrics for comprehensive scaling decisions</li>
+                    <li>Test scaling policies in non-production environments first</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+    <!-- Elastic Load Balancers Introduction -->
+    <div class="slide">
+        <div class="content">
+            <h2>Elastic Load Balancers (ELB)</h2>
+            
+            <p>Elastic Load Balancers automatically distribute incoming application traffic across multiple targets, such as EC2 instances, containers, and IP addresses, in multiple Availability Zones.</p>
+            
+            <div class="highlight-box">
+                <h3>Key Benefits of ELB</h3>
+                <ul>
+                    <li><strong>High Availability:</strong> Distributes traffic across multiple AZs</li>
+                    <li><strong>Health Checks:</strong> Routes traffic only to healthy targets</li>
+                    <li><strong>Security:</strong> Integrates with AWS security services</li>
+                    <li><strong>Elasticity:</strong> Automatically scales to handle traffic</li>
+                    <li><strong>Monitoring:</strong> Detailed metrics and logging</li>
+                </ul>
+            </div>
+
+            <h3>Types of Load Balancers</h3>
+            <div class="comparison-table">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Load Balancer Type</th>
+                            <th>Layer</th>
+                            <th>Protocol Support</th>
+                            <th>Use Cases</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Application Load Balancer (ALB)</strong></td>
+                            <td>Layer 7 (Application)</td>
+                            <td>HTTP, HTTPS, gRPC</td>
+                            <td>Web applications, microservices</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Network Load Balancer (NLB)</strong></td>
+                            <td>Layer 4 (Transport)</td>
+                            <td>TCP, UDP, TLS</td>
+                            <td>High performance, low latency</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Gateway Load Balancer (GWLB)</strong></td>
+                            <td>Layer 3 (Network)</td>
+                            <td>GENEVE</td>
+                            <td>Third-party appliances</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Classic Load Balancer (CLB)</strong></td>
+                            <td>Layer 4 & 7</td>
+                            <td>HTTP, HTTPS, TCP, SSL</td>
+                            <td>Legacy applications (deprecated)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+    <!-- Target Groups -->
+    <div class="slide">
+        <div class="content">
+            <h2>Target Groups</h2>
+            
+            <p>Target Groups are used to route requests to one or more registered targets (EC2 instances, IP addresses, Lambda functions) using the protocol and port number you specify.</p>
+            
+            <div class="highlight-box">
+                <h3>Key Concepts</h3>
+                <ul>
+                    <li><strong>Targets:</strong> The destinations that receive traffic from the load balancer</li>
+                    <li><strong>Health Checks:</strong> Determine if targets are healthy and available</li>
+                    <li><strong>Routing Rules:</strong> Define how requests are distributed to targets</li>
+                    <li><strong>Sticky Sessions:</strong> Route requests from the same client to the same target</li>
+                </ul>
+            </div>
+
+            <h3>Target Types</h3>
+            <div class="comparison-table">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Target Type</th>
+                            <th>Description</th>
+                            <th>Use Cases</th>
+                            <th>Load Balancer Support</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Instance</strong></td>
+                            <td>EC2 instances by instance ID</td>
+                            <td>Traditional EC2 deployments</td>
+                            <td>ALB, NLB</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IP</strong></td>
+                            <td>Targets by IP address</td>
+                            <td>On-premises, containers, multiple NICs</td>
+                            <td>ALB, NLB</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lambda</strong></td>
+                            <td>Lambda functions</td>
+                            <td>Serverless applications</td>
+                            <td>ALB only</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ALB</strong></td>
+                            <td>Application Load Balancer</td>
+                            <td>Multi-tier architectures</td>
+                            <td>NLB only</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>🏥 Health Check Settings</h4>
+                    <ul>
+                        <li>Protocol (HTTP, HTTPS, TCP)</li>
+                        <li>Path (/health, /status)</li>
+                        <li>Port (80, 443, custom)</li>
+                        <li>Interval (15-300 seconds)</li>
+                        <li>Timeout (2-120 seconds)</li>
+                        <li>Healthy/Unhealthy thresholds</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>⚙️ Advanced Features</h4>
+                    <ul>
+                        <li>Deregistration delay</li>
+                        <li>Load balancing algorithm</li>
+                        <li>Stickiness configuration</li>
+                        <li>Slow start mode</li>
+                        <li>Cross-zone load balancing</li>
+                        <li>Preserve client IP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-block">
+# Create Target Group
+aws elbv2 create-target-group \
+    --name my-web-servers \
+    --protocol HTTP \
+    --port 80 \
+    --vpc-id vpc-12345678 \
+    --health-check-path /health \
+    --health-check-interval-seconds 30 \
+    --healthy-threshold-count 2 \
+    --unhealthy-threshold-count 3
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+    <!-- Application Load Balancer -->
+    <div class="slide">
+        <div class="content">
+            <h2>Application Load Balancer (ALB)</h2>
+            
+            <p>Application Load Balancer operates at Layer 7 (Application layer) and is ideal for HTTP and HTTPS traffic with advanced routing capabilities.</p>
+            
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>🎯 Advanced Routing</h4>
+                    <ul>
+                        <li>Path-based routing (/api, /images)</li>
+                        <li>Host-based routing (api.example.com)</li>
+                        <li>Query string routing</li>
+                        <li>HTTP header routing</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🔒 Security Features</h4>
+                    <ul>
+                        <li>SSL/TLS termination</li>
+                        <li>AWS WAF integration</li>
+                        <li>Security groups</li>
+                        <li>Authentication (OIDC, SAML)</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>📊 Target Types</h4>
+                    <ul>
+                        <li>EC2 instances</li>
+                        <li>IP addresses</li>
+                        <li>Lambda functions</li>
+                        <li>ECS containers</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>⚡ Performance</h4>
+                    <ul>
+                        <li>HTTP/2 support</li>
+                        <li>WebSocket support</li>
+                        <li>Sticky sessions</li>
+                        <li>Connection draining</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>ALB Routing Rules Example</h3>
+                <ul>
+                    <li><strong>Path Pattern:</strong> /api/* → API Target Group</li>
+                    <li><strong>Host Header:</strong> admin.example.com → Admin Target Group</li>
+                    <li><strong>Query String:</strong> ?version=v2 → V2 Target Group</li>
+                    <li><strong>HTTP Method:</strong> POST requests → Processing Target Group</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+# Create ALB with AWS CLI
+aws elbv2 create-load-balancer \
+    --name my-application-load-balancer \
+    --subnets subnet-12345678 subnet-87654321 \
+    --security-groups sg-12345678 \
+    --scheme internet-facing \
+    --type application \
+    --ip-address-type ipv4
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+    <!-- Network Load Balancer -->
+    <div class="slide">
+        <div class="content">
+            <h2>Network Load Balancer (NLB)</h2>
+            
+            <p>Network Load Balancer operates at Layer 4 (Transport layer) and is designed for high performance, low latency, and handling millions of requests per second.</p>
+            
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>⚡ Ultra Performance</h4>
+                    <ul>
+                        <li>Millions of requests/second</li>
+                        <li>Ultra-low latency</li>
+                        <li>Static IP addresses</li>
+                        <li>Elastic IP support</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🌐 Protocol Support</h4>
+                    <ul>
+                        <li>TCP traffic</li>
+                        <li>UDP traffic</li>
+                        <li>TLS traffic</li>
+                        <li>TCP_UDP (mixed)</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🎯 Target Types</h4>
+                    <ul>
+                        <li>EC2 instances</li>
+                        <li>IP addresses</li>
+                        <li>Application Load Balancers</li>
+                        <li>On-premises servers</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🔧 Features</h4>
+                    <ul>
+                        <li>Source IP preservation</li>
+                        <li>Cross-zone load balancing</li>
+                        <li>Health checks</li>
+                        <li>Connection draining</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="comparison-table">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Application LB</th>
+                            <th>Network LB</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Latency</td>
+                            <td>~100ms</td>
+                            <td>~100μs</td>
+                        </tr>
+                        <tr>
+                            <td>Static IP</td>
+                            <td>❌ No</td>
+                            <td>✅ Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Source IP Preservation</td>
+                            <td>❌ No (X-Forwarded-For)</td>
+                            <td>✅ Yes</td>
+                        </tr>
+                        <tr>
+                            <td>SSL Termination</td>
+                            <td>✅ Yes</td>
+                            <td>✅ Yes (TLS)</td>
+                        </tr>
+                        <tr>
+                            <td>Content-based Routing</td>
+                            <td>✅ Yes</td>
+                            <td>❌ No</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ NLB Considerations</h4>
+                <ul>
+                    <li>Security groups don't apply to NLB - configure target security groups</li>
+                    <li>Cross-zone load balancing is disabled by default (charges apply when enabled)</li>
+                    <li>Health checks are less sophisticated than ALB</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+    <!-- Gateway Load Balancer -->
+    <div class="slide">
+        <div class="content">
+            <h2>Gateway Load Balancer (GWLB)</h2>
+            
+            <p>Gateway Load Balancer operates at Layer 3 (Network layer) and is designed for deploying, scaling, and managing third-party network virtual appliances.</p>
+            
+            <div class="highlight-box">
+                <h3>Key Use Cases</h3>
+                <ul>
+                    <li><strong>Firewalls:</strong> Deploy third-party firewall appliances</li>
+                    <li><strong>Intrusion Detection:</strong> IDS/IPS systems</li>
+                    <li><strong>Deep Packet Inspection:</strong> Advanced security analysis</li>
+                    <li><strong>Payload Manipulation:</strong> Content filtering and modification</li>
+                </ul>
+            </div>
+
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>🔧 Architecture</h4>
+                    <ul>
+                        <li>GENEVE protocol (port 6081)</li>
+                        <li>Transparent network gateway</li>
+                        <li>Single entry/exit point</li>
+                        <li>Flow hash algorithm</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🎯 Target Types</h4>
+                    <ul>
+                        <li>EC2 instances</li>
+                        <li>IP addresses</li>
+                        <li>Third-party appliances</li>
+                        <li>Auto Scaling Groups</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>⚖️ Load Balancing</h4>
+                    <ul>
+                        <li>5-tuple hash (src IP, dst IP, src port, dst port, protocol)</li>
+                        <li>Flow stickiness</li>
+                        <li>Symmetric routing</li>
+                        <li>Health checks</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🔗 Integration</h4>
+                    <ul>
+                        <li>VPC Endpoint Services</li>
+                        <li>Route Tables</li>
+                        <li>Transit Gateway</li>
+                        <li>AWS Marketplace</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-block">
+# GWLB Traffic Flow
+1. Client sends traffic to application
+2. Route table directs traffic to GWLB Endpoint
+3. GWLB forwards traffic to security appliance
+4. Appliance processes and returns traffic
+5. GWLB forwards processed traffic to destination
+6. Response follows same path in reverse
+            </div>
+
+            <div class="success-box">
+                <h4>✅ GWLB Benefits</h4>
+                <ul>
+                    <li>Transparent insertion of security appliances</li>
+                    <li>Horizontal scaling of appliances</li>
+                    <li>High availability across multiple AZs</li>
+                    <li>Simplified network architecture</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+    <!-- ASG + ELB Integration -->
+    <div class="slide">
+        <div class="content">
+            <h2>ASG + ELB Integration</h2>
+            
+            <p>Auto Scaling Groups and Elastic Load Balancers work together to provide a highly available, scalable, and resilient architecture.</p>
+            
+            <div class="highlight-box">
+                <h3>Integration Benefits</h3>
+                <ul>
+                    <li><strong>Automatic Registration:</strong> New instances automatically register with load balancer</li>
+                    <li><strong>Health Checks:</strong> ELB health checks can trigger ASG instance replacement</li>
+                    <li><strong>Traffic Distribution:</strong> Load balancer distributes traffic across all healthy instances</li>
+                    <li><strong>Graceful Scaling:</strong> Connection draining during scale-in events</li>
+                </ul>
+            </div>
+
+            <h3>Health Check Types</h3>
+            <div class="comparison-table">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Health Check Type</th>
+                            <th>What it Checks</th>
+                            <th>When to Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>EC2 Health Check</strong></td>
+                            <td>Instance status, system status</td>
+                            <td>Basic infrastructure health</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ELB Health Check</strong></td>
+                            <td>Application response to health check requests</td>
+                            <td>Application-level health verification</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="code-block">
+# Create ASG with ELB integration
+aws autoscaling create-auto-scaling-group \
+    --auto-scaling-group-name my-asg \
+    --launch-template LaunchTemplateName=MyTemplate,Version=1 \
+    --min-size 2 \
+    --max-size 10 \
+    --desired-capacity 4 \
+    --target-group-arns arn:aws:elasticloadbalancing:region:account:targetgroup/my-targets/1234567890123456 \
+    --health-check-type ELB \
+    --health-check-grace-period 300 \
+    --vpc-zone-identifier "subnet-12345678,subnet-87654321"
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+    <!-- Best Practices -->
+    <div class="slide">
+        <div class="content">
+            <h2>Best Practices & Recommendations</h2>
+            
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>🚀 Launch Templates</h4>
+                    <ul>
+                        <li>Use Launch Templates over Launch Configurations</li>
+                        <li>Version your templates for change tracking</li>
+                        <li>Include detailed monitoring</li>
+                        <li>Use IAM instance profiles</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>📈 Auto Scaling</h4>
+                    <ul>
+                        <li>Start with Target Tracking policies</li>
+                        <li>Distribute across multiple AZs</li>
+                        <li>Set appropriate health check grace periods</li>
+                        <li>Use multiple scaling metrics</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>⚖️ Load Balancers</h4>
+                    <ul>
+                        <li>Choose the right LB type for your use case</li>
+                        <li>Enable access logs for troubleshooting</li>
+                        <li>Configure proper health checks</li>
+                        <li>Use SSL/TLS certificates</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>💰 Cost Optimization</h4>
+                    <ul>
+                        <li>Use Spot Instances in ASG</li>
+                        <li>Right-size your instances</li>
+                        <li>Monitor and adjust scaling policies</li>
+                        <li>Use Reserved Instances for baseline capacity</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4>✅ Architecture Checklist</h4>
+                <ul>
+                    <li>Multi-AZ deployment for high availability</li>
+                    <li>Proper security group configuration</li>
+                    <li>CloudWatch monitoring and alarms</li>
+                    <li>Regular testing of scaling policies</li>
+                    <li>Backup and disaster recovery planning</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+    <!-- Monitoring and Troubleshooting -->
+    <div class="slide">
+        <div class="content">
+            <h2>Monitoring & Troubleshooting</h2>
+            
+            <h3>Key Metrics to Monitor</h3>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>📊 ASG Metrics</h4>
+                    <ul>
+                        <li>GroupDesiredCapacity</li>
+                        <li>GroupInServiceInstances</li>
+                        <li>GroupTotalInstances</li>
+                        <li>GroupMinSize/GroupMaxSize</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>⚖️ ELB Metrics</h4>
+                    <ul>
+                        <li>RequestCount</li>
+                        <li>TargetResponseTime</li>
+                        <li>HTTPCode_Target_2XX_Count</li>
+                        <li>UnHealthyHostCount</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🖥️ EC2 Metrics</h4>
+                    <ul>
+                        <li>CPUUtilization</li>
+                        <li>NetworkIn/NetworkOut</li>
+                        <li>StatusCheckFailed</li>
+                        <li>DiskReadOps/DiskWriteOps</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>🚨 Alarms</h4>
+                    <ul>
+                        <li>High CPU utilization</li>
+                        <li>Unhealthy targets</li>
+                        <li>Scaling activity failures</li>
+                        <li>Load balancer errors</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Common Issues & Solutions</h4>
+                <ul>
+                    <li><strong>Instances not launching:</strong> Check IAM permissions, subnet capacity, security groups</li>
+                    <li><strong>Health check failures:</strong> Verify application startup time, health check path</li>
+                    <li><strong>Scaling not working:</strong> Review scaling policies, CloudWatch metrics, cooldown periods</li>
+                    <li><strong>Load balancer timeouts:</strong> Check target health, security groups, NACLs</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+    <!-- Summary -->
+    <div class="slide">
+        <div class="content">
+            <h2>Summary</h2>
+            
+            <div class="highlight-box">
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li><strong>Launch Templates</strong> provide versioning and advanced features over Launch Configurations</li>
+                    <li><strong>Auto Scaling Groups</strong> ensure optimal capacity and high availability</li>
+                    <li><strong>Elastic Load Balancers</strong> distribute traffic and improve application resilience</li>
+                    <li><strong>Integration</strong> of ASG + ELB creates robust, scalable architectures</li>
+                </ul>
+            </div>
+
+            <h3>Next Steps</h3>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <h4>🧪 Hands-on Practice</h4>
+                    <ul>
+                        <li>Create Launch Templates</li>
+                        <li>Set up Auto Scaling Groups</li>
+                        <li>Configure Load Balancers</li>
+                        <li>Test scaling scenarios</li>
+                    </ul>
+                </div>
+                <div class="grid-item">
+                    <h4>📚 Further Learning</h4>
+                    <ul>
+                        <li>Advanced scaling strategies</li>
+                        <li>Blue/Green deployments</li>
+                        <li>Container orchestration</li>
+                        <li>Serverless architectures</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px; font-size: 1.5rem; color: #FF9900;">
+                <strong>Thank You!</strong><br>
+                <span style="font-size: 1.2rem;">Questions & Discussion</span>
+            </div>
+        </div>
+        <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+    </div>
+
+</body>
+</html>

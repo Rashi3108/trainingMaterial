@@ -1,0 +1,3379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes: Container Orchestration Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .slide:last-child {
+            page-break-after: auto;
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .slide-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #326ce5 0%, #1a4480 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide .slide-title {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .slide-subtitle {
+            font-size: 1.5rem;
+            color: #a5c9ff;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #326ce5;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f3f4f6;
+            border-left: 5px solid #326ce5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #326ce5;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f3f4f6;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid #326ce5;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .lab-section {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .lab-section h3 {
+            color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 20px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0ea5e9;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.95rem;
+        }
+
+        .yaml-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .workflow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .workflow-phase {
+            background: #326ce5;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            text-align: center;
+            min-width: 120px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #326ce5;
+            margin: 0 10px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .architecture-diagram {
+            background: #f8fafc;
+            border: 2px solid #326ce5;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .component-box {
+            background: #326ce5;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .slide {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title Slide -->
+<div class="slide title-slide">
+    <div class="content">
+        <h1 class="slide-title">Kubernetes: Container Orchestration Platform</h1>
+        <p class="slide-subtitle">Complete Guide to Container Orchestration and Kubernetes Architecture</p>
+    </div>
+    <div class="slide-footer" style="color: #a5c9ff;">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 2: Why We Need an Orchestration Tool -->
+<div class="slide">
+    <div class="content">
+        <h2>Why We Need an Orchestration Tool</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Container Orchestration</strong> is the automated deployment, management, scaling, and networking of containers. As applications grow in complexity and scale, manual container management becomes impractical and error-prone.</p>
+        </div>
+
+        <h3>Challenges with Manual Container Management</h3>
+        <ul>
+            <li><strong>Scaling Issues:</strong> Manually starting/stopping containers based on demand</li>
+            <li><strong>Service Discovery:</strong> Containers need to find and communicate with each other</li>
+            <li><strong>Load Balancing:</strong> Distributing traffic across multiple container instances</li>
+            <li><strong>Health Monitoring:</strong> Detecting and replacing failed containers</li>
+            <li><strong>Rolling Updates:</strong> Updating applications without downtime</li>
+            <li><strong>Resource Management:</strong> Efficiently utilizing CPU, memory, and storage</li>
+            <li><strong>Configuration Management:</strong> Managing secrets, configs across environments</li>
+            <li><strong>Network Management:</strong> Container-to-container communication</li>
+        </ul>
+
+        <h3>Benefits of Container Orchestration</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Automated Scaling</h4>
+                <p>Automatically scale applications up or down based on demand, CPU usage, or custom metrics.</p>
+            </div>
+            <div class="feature-card">
+                <h4>High Availability</h4>
+                <p>Ensure applications remain available by automatically replacing failed containers and distributing workloads.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Resource Optimization</h4>
+                <p>Efficiently pack containers onto nodes to maximize resource utilization and minimize costs.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Simplified Deployment</h4>
+                <p>Declarative configuration allows you to describe desired state rather than imperative steps.</p>
+            </div>
+        </div>
+
+        <h3>Real-World Scenarios</h3>
+        <ul>
+            <li><strong>E-commerce Platform:</strong> Handle traffic spikes during sales events</li>
+            <li><strong>Microservices Architecture:</strong> Manage hundreds of interconnected services</li>
+            <li><strong>CI/CD Pipelines:</strong> Deploy applications across multiple environments</li>
+            <li><strong>Multi-Cloud Deployments:</strong> Run applications across different cloud providers</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 3: Introduction to Kubernetes -->
+<div class="slide">
+    <div class="content">
+        <h2>Introduction to Kubernetes</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Kubernetes (K8s)</strong> is an open-source container orchestration platform that automates the deployment, scaling, and management of containerized applications. Originally developed by Google, it's now maintained by the Cloud Native Computing Foundation (CNCF).</p>
+        </div>
+
+        <h3>What is Kubernetes?</h3>
+        <ul>
+            <li><strong>Container Orchestrator:</strong> Manages containerized applications across a cluster of machines</li>
+            <li><strong>Declarative Platform:</strong> You describe the desired state, Kubernetes makes it happen</li>
+            <li><strong>Portable:</strong> Runs on-premises, in the cloud, or in hybrid environments</li>
+            <li><strong>Extensible:</strong> Rich ecosystem of tools and extensions</li>
+            <li><strong>Production-Ready:</strong> Battle-tested by Google and thousands of organizations</li>
+        </ul>
+
+        <h3>Key Capabilities</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Service Discovery & Load Balancing</h4>
+                <p>Automatically expose containers and distribute network traffic for stable deployment.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Storage Orchestration</h4>
+                <p>Mount storage systems of your choice - local, cloud providers, or network storage.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Automated Rollouts & Rollbacks</h4>
+                <p>Deploy changes progressively and rollback if something goes wrong.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Self-Healing</h4>
+                <p>Restart failed containers, replace containers, and kill unresponsive containers.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Secret & Configuration Management</h4>
+                <p>Store and manage sensitive information and configuration separately from container images.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Horizontal Scaling</h4>
+                <p>Scale applications up or down with simple commands or automatically based on CPU usage.</p>
+            </div>
+        </div>
+
+        <ul>
+            <li><strong>CNCF Projects:</strong> Helm, Prometheus, Istio, Envoy, Fluentd</li>
+            <li><strong>Cloud Providers:</strong> EKS (AWS), GKE (Google), AKS (Azure)</li>
+            <li><strong>Distributions:</strong> OpenShift, Rancher, VMware Tanzu</li>
+            <li><strong>Tools:</strong> kubectl, kubeadm, kustomize, Skaffold</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 4: Why K8s? -->
+<div class="slide">
+    <div class="content">
+        <h2>Why Kubernetes (K8s)?</h2>
+        
+        <h3>Business Drivers</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Cost Efficiency</h4>
+                <p>Better resource utilization, reduced infrastructure costs, and optimized cloud spending.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Faster Time to Market</h4>
+                <p>Accelerated development cycles, automated deployments, and consistent environments.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Improved Reliability</h4>
+                <p>Self-healing systems, automated failover, and built-in redundancy.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Vendor Independence</h4>
+                <p>Avoid vendor lock-in with portable applications that run anywhere.</p>
+            </div>
+        </div>
+
+        <h3>Technical Advantages</h3>
+        <ul>
+            <li><strong>Immutable Infrastructure:</strong> Consistent, reproducible deployments</li>
+            <li><strong>Microservices Support:</strong> Perfect platform for microservices architecture</li>
+            <li><strong>DevOps Integration:</strong> Seamless CI/CD pipeline integration</li>
+            <li><strong>Multi-Cloud Strategy:</strong> Deploy across multiple cloud providers</li>
+            <li><strong>Container-Native:</strong> Built specifically for containerized workloads</li>
+            <li><strong>API-Driven:</strong> Everything is programmable and automatable</li>
+        </ul>
+
+        <h3>Industry Adoption</h3>
+        <div class="highlight-box">
+            <p><strong>Market Leadership:</strong> Kubernetes has become the de facto standard for container orchestration, with 96% of organizations either using or evaluating Kubernetes (CNCF Survey 2023).</p>
+        </div>
+
+        <h3>Success Stories</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Use Case</th>
+                    <th>Benefits Achieved</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Netflix</strong></td>
+                    <td>Global streaming platform</td>
+                    <td>Handles 200M+ users, auto-scaling</td>
+                </tr>
+                <tr>
+                    <td><strong>Spotify</strong></td>
+                    <td>Music streaming service</td>
+                    <td>1000+ microservices, faster deployments</td>
+                </tr>
+                <tr>
+                    <td><strong>Airbnb</strong></td>
+                    <td>Travel platform</td>
+                    <td>Reduced deployment time from hours to minutes</td>
+                </tr>
+                <tr>
+                    <td><strong>Pinterest</strong></td>
+                    <td>Social media platform</td>
+                    <td>Improved resource utilization by 80%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>When to Choose Kubernetes</h3>
+        <ul>
+            <li><strong>Microservices Architecture:</strong> Managing multiple interconnected services</li>
+            <li><strong>High Availability Requirements:</strong> Mission-critical applications</li>
+            <li><strong>Dynamic Scaling Needs:</strong> Variable workloads and traffic patterns</li>
+            <li><strong>Multi-Environment Deployments:</strong> Dev, staging, production consistency</li>
+            <li><strong>Team Collaboration:</strong> Multiple teams working on different services</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 5: History and Role in DevOps -->
+<div class="slide">
+    <div class="content">
+        <h2>History and Role in DevOps</h2>
+        
+        <h3>Kubernetes History</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">2003-2004<br>Google Borg</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">2013<br>Docker Launch</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">2014<br>K8s Open Source</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">2015<br>CNCF Founded</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">2017<br>K8s Graduated</div>
+        </div>
+
+        <h3>Evolution Timeline</h3>
+        <ul>
+            <li><strong>2003-2004:</strong> Google develops Borg for internal container orchestration</li>
+            <li><strong>2013:</strong> Docker popularizes containerization technology</li>
+            <li><strong>June 2014:</strong> Google open-sources Kubernetes project</li>
+            <li><strong>July 2015:</strong> Cloud Native Computing Foundation (CNCF) established</li>
+            <li><strong>2016:</strong> Kubernetes 1.0 released, production-ready</li>
+            <li><strong>2017:</strong> Kubernetes becomes first CNCF graduated project</li>
+            <li><strong>2018-Present:</strong> Rapid adoption and ecosystem growth</li>
+        </ul>
+
+        <h3>Role in DevOps Culture</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Infrastructure as Code</h4>
+                <p>YAML manifests define infrastructure declaratively, version-controlled and reproducible.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Continuous Integration</h4>
+                <p>Seamless integration with CI tools for automated testing and building.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Continuous Deployment</h4>
+                <p>GitOps workflows enable automated deployments from Git repositories.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Monitoring & Observability</h4>
+                <p>Built-in metrics, logging, and tracing capabilities for comprehensive monitoring.</p>
+            </div>
+        </div>
+
+        <h3>DevOps Principles Enabled by Kubernetes</h3>
+        <ul>
+            <li><strong>Collaboration:</strong> Shared platform for Dev and Ops teams</li>
+            <li><strong>Automation:</strong> Self-healing, auto-scaling, and automated deployments</li>
+            <li><strong>Measurement:</strong> Rich metrics and monitoring capabilities</li>
+            <li><strong>Sharing:</strong> Reusable components and standardized practices</li>
+        </ul>
+
+        <div class="highlight-box">
+            <p><strong>DevOps Impact:</strong> Kubernetes has transformed how organizations approach application deployment, enabling true DevOps practices with infrastructure automation, continuous delivery, and collaborative workflows.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 6: Kubernetes vs. Docker Swarm -->
+<div class="slide">
+    <div class="content">
+        <h2>Kubernetes vs. Docker Swarm</h2>
+        
+        <div class="highlight-box">
+            <p>Both Kubernetes and Docker Swarm are container orchestration platforms, but they differ significantly in complexity, features, and use cases.</p>
+        </div>
+
+        <h3>Detailed Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Kubernetes</th>
+                    <th>Docker Swarm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Complexity</strong></td>
+                    <td>High learning curve, complex setup</td>
+                    <td>Simple to learn and deploy</td>
+                </tr>
+                <tr>
+                    <td><strong>Installation</strong></td>
+                    <td>Complex, multiple components</td>
+                    <td>Built into Docker Engine</td>
+                </tr>
+                <tr>
+                    <td><strong>Scalability</strong></td>
+                    <td>Highly scalable (5000+ nodes)</td>
+                    <td>Limited scalability (1000 nodes)</td>
+                </tr>
+                <tr>
+                    <td><strong>Load Balancing</strong></td>
+                    <td>Manual configuration required</td>
+                    <td>Automatic load balancing</td>
+                </tr>
+                <tr>
+                    <td><strong>Auto-scaling</strong></td>
+                    <td>Horizontal Pod Autoscaler</td>
+                    <td>No built-in auto-scaling</td>
+                </tr>
+                <tr>
+                    <td><strong>Rolling Updates</strong></td>
+                    <td>Advanced deployment strategies</td>
+                    <td>Basic rolling updates</td>
+                </tr>
+                <tr>
+                    <td><strong>Networking</strong></td>
+                    <td>Complex but flexible</td>
+                    <td>Simple overlay network</td>
+                </tr>
+                <tr>
+                    <td><strong>Storage</strong></td>
+                    <td>Persistent Volumes, Storage Classes</td>
+                    <td>Basic volume support</td>
+                </tr>
+                <tr>
+                    <td><strong>Monitoring</strong></td>
+                    <td>Rich ecosystem (Prometheus, etc.)</td>
+                    <td>Basic monitoring capabilities</td>
+                </tr>
+                <tr>
+                    <td><strong>Community</strong></td>
+                    <td>Large, active community</td>
+                    <td>Smaller community</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>When to Choose Kubernetes</h3>
+        <ul>
+            <li><strong>Complex Applications:</strong> Microservices with multiple dependencies</li>
+            <li><strong>Enterprise Requirements:</strong> Advanced features, security, compliance</li>
+            <li><strong>Multi-Cloud Strategy:</strong> Vendor-neutral platform</li>
+            <li><strong>Large Scale:</strong> Hundreds or thousands of containers</li>
+            <li><strong>Advanced Networking:</strong> Complex networking requirements</li>
+        </ul>
+
+        <h3>When to Choose Docker Swarm</h3>
+        <ul>
+            <li><strong>Simple Applications:</strong> Monolithic or simple microservices</li>
+            <li><strong>Quick Setup:</strong> Need to get started quickly</li>
+            <li><strong>Docker-Centric:</strong> Already heavily invested in Docker</li>
+            <li><strong>Small Teams:</strong> Limited DevOps expertise</li>
+            <li><strong>Basic Requirements:</strong> Simple orchestration needs</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Market Reality:</strong> While Docker Swarm is simpler, Kubernetes has become the industry standard due to its flexibility, features, and ecosystem support.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 7: Kubernetes Architecture Overview -->
+<div class="slide">
+    <div class="content">
+        <h2>Kubernetes Architecture Overview</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Kubernetes Architecture</strong> follows a master-worker pattern where the control plane manages the cluster state and worker nodes run the actual workloads.</p>
+        </div>
+
+        <h3>High-Level Architecture</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #e53e3e;">Control Plane (Master)</div>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <div class="component-box">API Server</div>
+                <div class="component-box">etcd</div>
+                <div class="component-box">Scheduler</div>
+                <div class="component-box">Controller Manager</div>
+            </div>
+            <div style="margin: 20px 0; font-size: 1.5rem; color: #326ce5;">↓</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #38a169;">Worker Nodes</div>
+            </div>
+            <div>
+                <div class="component-box">Kubelet</div>
+                <div class="component-box">Kube-proxy</div>
+                <div class="component-box">Container Runtime</div>
+                <div class="component-box">Pods</div>
+            </div>
+        </div>
+
+        <h3>Key Architectural Principles</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Declarative Configuration</h4>
+                <p>Describe desired state, Kubernetes ensures current state matches desired state.</p>
+            </div>
+            <div class="feature-card">
+                <h4>API-Driven</h4>
+                <p>All interactions happen through REST APIs, enabling automation and extensibility.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Controller Pattern</h4>
+                <p>Controllers continuously monitor and reconcile actual state with desired state.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Distributed System</h4>
+                <p>Designed for high availability and fault tolerance across multiple nodes.</p>
+            </div>
+        </div>
+
+        <h3>Communication Flow</h3>
+        <ol class="step-list">
+            <li><strong>User/CI System:</strong> Submits YAML manifests to API Server</li>
+            <li><strong>API Server:</strong> Validates and stores configuration in etcd</li>
+            <li><strong>Scheduler:</strong> Assigns pods to appropriate worker nodes</li>
+            <li><strong>Kubelet:</strong> Pulls container images and starts containers</li>
+            <li><strong>Controllers:</strong> Monitor and maintain desired state</li>
+        </ol>
+
+        <h3>Cluster Components</h3>
+        <ul>
+            <li><strong>Control Plane:</strong> Manages cluster state and makes global decisions</li>
+            <li><strong>Worker Nodes:</strong> Run application workloads in containers</li>
+            <li><strong>Add-ons:</strong> DNS, Dashboard, Monitoring, Logging</li>
+            <li><strong>Network:</strong> Pod-to-pod and service-to-service communication</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 8: Master and Worker Nodes -->
+<div class="slide">
+    <div class="content">
+        <h2>Master and Worker Nodes</h2>
+        
+        <h3>Control Plane (Master Node)</h3>
+        <div class="highlight-box">
+            <p>The <strong>Control Plane</strong> is the brain of the Kubernetes cluster, responsible for making global decisions about the cluster and detecting and responding to cluster events.</p>
+        </div>
+
+        <h3>Control Plane Responsibilities</h3>
+        <ul>
+            <li><strong>Cluster State Management:</strong> Maintain desired state of the cluster</li>
+            <li><strong>API Gateway:</strong> Single point of entry for all cluster operations</li>
+            <li><strong>Scheduling:</strong> Decide which node should run each pod</li>
+            <li><strong>Resource Management:</strong> Monitor and manage cluster resources</li>
+            <li><strong>Policy Enforcement:</strong> Apply security policies and resource quotas</li>
+        </ul>
+
+        <h3>Worker Node Overview</h3>
+        <div class="highlight-box">
+            <p><strong>Worker Nodes</strong> are the machines where your application containers actually run. Each worker node is managed by the control plane and contains the services necessary to run pods.</p>
+        </div>
+
+        <h3>Worker Node Responsibilities</h3>
+        <ul>
+            <li><strong>Pod Execution:</strong> Run and manage application containers</li>
+            <li><strong>Network Proxy:</strong> Handle network routing for services</li>
+            <li><strong>Container Runtime:</strong> Pull images and run containers</li>
+            <li><strong>Resource Monitoring:</strong> Report node and pod status to control plane</li>
+            <li><strong>Volume Management:</strong> Mount and manage storage volumes</li>
+        </ul>
+
+        <h3>Node Types Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Control Plane (Master)</th>
+                    <th>Worker Node</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Primary Role</strong></td>
+                    <td>Cluster management and control</td>
+                    <td>Run application workloads</td>
+                </tr>
+                <tr>
+                    <td><strong>Key Components</strong></td>
+                    <td>API Server, etcd, Scheduler, Controllers</td>
+                    <td>Kubelet, Kube-proxy, Container Runtime</td>
+                </tr>
+                <tr>
+                    <td><strong>Workload Scheduling</strong></td>
+                    <td>Usually no application pods (can be configured)</td>
+                    <td>Runs application pods</td>
+                </tr>
+                <tr>
+                    <td><strong>High Availability</strong></td>
+                    <td>Multiple masters for HA</td>
+                    <td>Multiple workers for load distribution</td>
+                </tr>
+                <tr>
+                    <td><strong>Resource Requirements</strong></td>
+                    <td>Lower CPU/Memory for control tasks</td>
+                    <td>Higher CPU/Memory for applications</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Cluster Topology Examples</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Single Master</h4>
+                <p>1 Master + N Workers<br>Simple setup, single point of failure</p>
+            </div>
+            <div class="feature-card">
+                <h4>High Availability</h4>
+                <p>3+ Masters + N Workers<br>Production-ready, fault-tolerant</p>
+            </div>
+            <div class="feature-card">
+                <h4>Development</h4>
+                <p>All-in-one node<br>Master and worker on same machine</p>
+            </div>
+            <div class="feature-card">
+                <h4>Edge Computing</h4>
+                <p>Lightweight masters<br>Optimized for resource-constrained environments</p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <p><strong>Production Recommendation:</strong> Always use multiple master nodes (odd number: 3, 5, 7) for high availability in production environments.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 9: API Server -->
+<div class="slide">
+    <div class="content">
+        <h2>API Server</h2>
+        
+        <div class="highlight-box">
+            <p>The <strong>API Server</strong> is the central management entity and the only component that directly interacts with etcd. It serves as the front-end for the Kubernetes control plane.</p>
+        </div>
+
+        <h3>Key Responsibilities</h3>
+        <ul>
+            <li><strong>API Gateway:</strong> Single entry point for all REST operations</li>
+            <li><strong>Authentication & Authorization:</strong> Verify user identity and permissions</li>
+            <li><strong>Admission Control:</strong> Validate and mutate requests before processing</li>
+            <li><strong>Data Validation:</strong> Ensure resource definitions are correct</li>
+            <li><strong>etcd Interface:</strong> Only component that directly reads/writes to etcd</li>
+            <li><strong>Watch Interface:</strong> Notify clients about resource changes</li>
+        </ul>
+
+        <h3>API Server Features</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>RESTful API</h4>
+                <p>Standard HTTP methods (GET, POST, PUT, DELETE) for resource operations</p>
+            </div>
+            <div class="feature-card">
+                <h4>Resource Versioning</h4>
+                <p>Multiple API versions (v1, v1beta1, v1alpha1) for backward compatibility</p>
+            </div>
+            <div class="feature-card">
+                <h4>Custom Resources</h4>
+                <p>Extend Kubernetes API with custom resource definitions (CRDs)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Aggregation Layer</h4>
+                <p>Extend API server with additional APIs and services</p>
+            </div>
+        </div>
+
+        <h3>API Server Workflow</h3>
+        <ol class="step-list">
+            <li><strong>Request Reception:</strong> Receive HTTP request from client (kubectl, kubelet, etc.)</li>
+            <li><strong>Authentication:</strong> Verify client identity using certificates, tokens, or other methods</li>
+            <li><strong>Authorization:</strong> Check if client has permission to perform the requested operation</li>
+            <li><strong>Admission Control:</strong> Run admission controllers to validate/mutate the request</li>
+            <li><strong>Validation:</strong> Validate resource schema and business logic</li>
+            <li><strong>Storage:</strong> Store the resource in etcd or retrieve from etcd</li>
+            <li><strong>Response:</strong> Return response to client with resource data or status</li>
+        </ol>
+
+        <h3>Common API Operations</h3>
+        <div class="code-block">
+# Get all pods in default namespace<br>
+GET /api/v1/namespaces/default/pods<br><br>
+
+# Create a new deployment<br>
+POST /apis/apps/v1/namespaces/default/deployments<br><br>
+
+# Update a service<br>
+PUT /api/v1/namespaces/default/services/my-service<br><br>
+
+# Delete a pod<br>
+DELETE /api/v1/namespaces/default/pods/my-pod<br><br>
+
+# Watch for changes to deployments<br>
+GET /apis/apps/v1/namespaces/default/deployments?watch=true
+        </div>
+
+        <h3>Security Features</h3>
+        <ul>
+            <li><strong>TLS Encryption:</strong> All communication encrypted in transit</li>
+            <li><strong>RBAC:</strong> Role-based access control for fine-grained permissions</li>
+            <li><strong>Service Accounts:</strong> Identity for pods and services</li>
+            <li><strong>Network Policies:</strong> Control network traffic between pods</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 10: Scheduler -->
+<div class="slide">
+    <div class="content">
+        <h2>Scheduler</h2>
+        
+        <div class="highlight-box">
+            <p>The <strong>Scheduler</strong> is responsible for assigning pods to nodes based on resource requirements, constraints, and policies. It makes scheduling decisions but doesn't actually run the pods.</p>
+        </div>
+
+        <h3>Scheduling Process</h3>
+        <ol class="step-list">
+            <li><strong>Watch for Unscheduled Pods:</strong> Monitor API server for pods without node assignment</li>
+            <li><strong>Filtering:</strong> Find nodes that meet pod requirements (predicates)</li>
+            <li><strong>Scoring:</strong> Rank suitable nodes based on priorities</li>
+            <li><strong>Selection:</strong> Choose the best node for the pod</li>
+            <li><strong>Binding:</strong> Update pod specification with selected node</li>
+        </ol>
+
+        <h3>Scheduling Factors</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Resource Requirements</h4>
+                <p>CPU, memory, storage requests and limits</p>
+            </div>
+            <div class="feature-card">
+                <h4>Node Constraints</h4>
+                <p>Node selectors, affinity, and anti-affinity rules</p>
+            </div>
+            <div class="feature-card">
+                <h4>Quality of Service</h4>
+                <p>Guaranteed, Burstable, and BestEffort classes</p>
+            </div>
+            <div class="feature-card">
+                <h4>Data Locality</h4>
+                <p>Schedule pods close to their data sources</p>
+            </div>
+        </div>
+
+        <h3>Scheduling Constraints</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Constraint Type</th>
+                    <th>Description</th>
+                    <th>Example Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Node Selector</strong></td>
+                    <td>Simple key-value label matching</td>
+                    <td>Schedule on GPU nodes</td>
+                </tr>
+                <tr>
+                    <td><strong>Node Affinity</strong></td>
+                    <td>Advanced node selection rules</td>
+                    <td>Prefer SSD storage nodes</td>
+                </tr>
+                <tr>
+                    <td><strong>Pod Affinity</strong></td>
+                    <td>Schedule pods together</td>
+                    <td>Co-locate web and cache pods</td>
+                </tr>
+                <tr>
+                    <td><strong>Pod Anti-Affinity</strong></td>
+                    <td>Schedule pods apart</td>
+                    <td>Spread replicas across zones</td>
+                </tr>
+                <tr>
+                    <td><strong>Taints & Tolerations</strong></td>
+                    <td>Repel pods from nodes</td>
+                    <td>Dedicated nodes for specific workloads</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Custom Scheduling</h3>
+        <ul>
+            <li><strong>Custom Schedulers:</strong> Write your own scheduling logic</li>
+            <li><strong>Scheduler Extenders:</strong> Extend default scheduler with webhooks</li>
+            <li><strong>Multiple Schedulers:</strong> Run different schedulers for different workloads</li>
+            <li><strong>Scheduler Profiles:</strong> Configure different scheduling behaviors</li>
+        </ul>
+
+        <h3>Scheduling Example</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: Pod<br>
+metadata:<br>
+&nbsp;&nbsp;name: gpu-pod<br>
+spec:<br>
+&nbsp;&nbsp;nodeSelector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;accelerator: nvidia-tesla-k80<br>
+&nbsp;&nbsp;affinity:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nodeAffinity:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;requiredDuringSchedulingIgnoredDuringExecution:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nodeSelectorTerms:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- matchExpressions:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- key: zone<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;operator: In<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;values: ["us-west1-a", "us-west1-b"]<br>
+&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;- name: gpu-container<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: tensorflow/tensorflow:latest-gpu<br>
+&nbsp;&nbsp;&nbsp;&nbsp;resources:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;limits:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nvidia.com/gpu: 1
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 11: Controller Manager -->
+<div class="slide">
+    <div class="content">
+        <h2>Controller Manager</h2>
+        
+        <div class="highlight-box">
+            <p>The <strong>Controller Manager</strong> runs various controllers that regulate the state of the cluster. Controllers are control loops that watch the state of your cluster and make changes to move the current state toward the desired state.</p>
+        </div>
+
+        <h3>Controller Pattern</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Watch</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Compare</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Act</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Repeat</div>
+        </div>
+
+        <h3>Built-in Controllers</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Deployment Controller</h4>
+                <p>Manages ReplicaSets and rolling updates for Deployments</p>
+            </div>
+            <div class="feature-card">
+                <h4>ReplicaSet Controller</h4>
+                <p>Ensures specified number of pod replicas are running</p>
+            </div>
+            <div class="feature-card">
+                <h4>Node Controller</h4>
+                <p>Monitors node health and manages node lifecycle</p>
+            </div>
+            <div class="feature-card">
+                <h4>Service Controller</h4>
+                <p>Creates and manages load balancers for services</p>
+            </div>
+            <div class="feature-card">
+                <h4>Endpoint Controller</h4>
+                <p>Populates endpoint objects (joins Services & Pods)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Namespace Controller</h4>
+                <p>Manages namespace lifecycle and cleanup</p>
+            </div>
+        </div>
+
+        <h3>Controller Responsibilities</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Controller</th>
+                    <th>Watches</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Deployment</strong></td>
+                    <td>Deployment objects</td>
+                    <td>Create/update ReplicaSets, rolling updates</td>
+                </tr>
+                <tr>
+                    <td><strong>ReplicaSet</strong></td>
+                    <td>ReplicaSet objects</td>
+                    <td>Create/delete pods to match desired count</td>
+                </tr>
+                <tr>
+                    <td><strong>DaemonSet</strong></td>
+                    <td>DaemonSet objects</td>
+                    <td>Ensure pods run on all/selected nodes</td>
+                </tr>
+                <tr>
+                    <td><strong>Job</strong></td>
+                    <td>Job objects</td>
+                    <td>Run pods to completion</td>
+                </tr>
+                <tr>
+                    <td><strong>CronJob</strong></td>
+                    <td>CronJob objects</td>
+                    <td>Create jobs on schedule</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Custom Controllers</h3>
+        <ul>
+            <li><strong>Operators:</strong> Application-specific controllers that extend Kubernetes</li>
+            <li><strong>Custom Resource Definitions (CRDs):</strong> Define new resource types</li>
+            <li><strong>Controller Runtime:</strong> Framework for building controllers</li>
+            <li><strong>Kubebuilder:</strong> SDK for building Kubernetes APIs and controllers</li>
+        </ul>
+
+        <h3>Controller Example: ReplicaSet</h3>
+        <div class="yaml-block">
+apiVersion: apps/v1<br>
+kind: ReplicaSet<br>
+metadata:<br>
+&nbsp;&nbsp;name: nginx-replicaset<br>
+spec:<br>
+&nbsp;&nbsp;replicas: 3<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;matchLabels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;template:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;metadata:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spec:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: nginx<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: nginx:1.21<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- containerPort: 80
+        </div>
+
+        <div class="success-box">
+            <p><strong>Key Concept:</strong> Controllers implement the declarative nature of Kubernetes by continuously working to achieve the desired state defined in your manifests.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 12: etcd -->
+<div class="slide">
+    <div class="content">
+        <h2>etcd</h2>
+        
+        <div class="highlight-box">
+            <p><strong>etcd</strong> is a distributed, reliable key-value store used by Kubernetes to store all cluster data. It's the single source of truth for the entire cluster state.</p>
+        </div>
+
+        <h3>Key Characteristics</h3>
+        <ul>
+            <li><strong>Distributed:</strong> Runs across multiple nodes for high availability</li>
+            <li><strong>Consistent:</strong> Uses Raft consensus algorithm for data consistency</li>
+            <li><strong>Reliable:</strong> Fault-tolerant with automatic leader election</li>
+            <li><strong>Fast:</strong> Optimized for read-heavy workloads</li>
+            <li><strong>Secure:</strong> Supports TLS encryption and authentication</li>
+            <li><strong>Watchable:</strong> Clients can watch for changes to keys</li>
+        </ul>
+
+        <h3>What etcd Stores</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Cluster State</h4>
+                <p>All Kubernetes objects: pods, services, deployments, etc.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Configuration Data</h4>
+                <p>ConfigMaps, Secrets, and cluster configuration</p>
+            </div>
+            <div class="feature-card">
+                <h4>Metadata</h4>
+                <p>Resource versions, timestamps, and ownership information</p>
+            </div>
+            <div class="feature-card">
+                <h4>Network Information</h4>
+                <p>Service endpoints, network policies, and ingress rules</p>
+            </div>
+        </div>
+
+        <h3>etcd Architecture</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Role</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Leader</strong></td>
+                    <td>Primary node</td>
+                    <td>Handles all write operations and coordinates cluster</td>
+                </tr>
+                <tr>
+                    <td><strong>Followers</strong></td>
+                    <td>Secondary nodes</td>
+                    <td>Replicate data from leader, can handle read operations</td>
+                </tr>
+                <tr>
+                    <td><strong>Raft Log</strong></td>
+                    <td>Transaction log</td>
+                    <td>Ordered sequence of all state changes</td>
+                </tr>
+                <tr>
+                    <td><strong>State Machine</strong></td>
+                    <td>Data store</td>
+                    <td>Current state derived from applying log entries</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>High Availability Setup</h3>
+        <ul>
+            <li><strong>Odd Number of Nodes:</strong> 3, 5, or 7 nodes for fault tolerance</li>
+            <li><strong>Quorum:</strong> Majority of nodes must be available (e.g., 2 out of 3)</li>
+            <li><strong>Geographic Distribution:</strong> Spread across availability zones</li>
+            <li><strong>Backup Strategy:</strong> Regular snapshots and disaster recovery</li>
+        </ul>
+
+        <h3>etcd Operations</h3>
+        <div class="code-block">
+# Check etcd cluster health<br>
+etcdctl cluster-health<br><br>
+
+# List all keys<br>
+etcdctl ls / --recursive<br><br>
+
+# Get a specific key<br>
+etcdctl get /registry/pods/default/my-pod<br><br>
+
+# Create a backup<br>
+etcdctl snapshot save backup.db<br><br>
+
+# Restore from backup<br>
+etcdctl snapshot restore backup.db
+        </div>
+
+        <h3>Performance Considerations</h3>
+        <ul>
+            <li><strong>SSD Storage:</strong> Use fast storage for better performance</li>
+            <li><strong>Network Latency:</strong> Low latency between etcd nodes</li>
+            <li><strong>Resource Allocation:</strong> Adequate CPU and memory</li>
+            <li><strong>Monitoring:</strong> Watch for slow operations and disk usage</li>
+        </ul>
+
+        <div class="warning-box">
+            <p><strong>Critical:</strong> etcd is the most critical component. Always backup etcd data regularly and test restore procedures.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 13: Kubelet -->
+<div class="slide">
+    <div class="content">
+        <h2>Kubelet</h2>
+        
+        <div class="highlight-box">
+            <p>The <strong>Kubelet</strong> is the primary node agent that runs on each worker node. It's responsible for managing pods and containers on the node, ensuring they match the desired state.</p>
+        </div>
+
+        <h3>Key Responsibilities</h3>
+        <ul>
+            <li><strong>Pod Lifecycle Management:</strong> Create, start, stop, and delete pods</li>
+            <li><strong>Container Health Monitoring:</strong> Perform health checks and restart failed containers</li>
+            <li><strong>Resource Management:</strong> Enforce resource limits and requests</li>
+            <li><strong>Volume Management:</strong> Mount and unmount volumes for pods</li>
+            <li><strong>Node Status Reporting:</strong> Report node and pod status to API server</li>
+            <li><strong>Image Management:</strong> Pull container images as needed</li>
+        </ul>
+
+        <h3>Kubelet Workflow</h3>
+        <ol class="step-list">
+            <li><strong>Watch API Server:</strong> Monitor for pod assignments to this node</li>
+            <li><strong>Pull Images:</strong> Download required container images</li>
+            <li><strong>Create Containers:</strong> Start containers using container runtime</li>
+            <li><strong>Monitor Health:</strong> Perform liveness and readiness probes</li>
+            <li><strong>Report Status:</strong> Send pod and node status to API server</li>
+            <li><strong>Handle Updates:</strong> Apply configuration changes and restarts</li>
+        </ol>
+
+        <h3>Health Checks</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Liveness Probe</h4>
+                <p>Determines if container is running. Restarts container if probe fails.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Readiness Probe</h4>
+                <p>Determines if container is ready to serve traffic. Removes from service if fails.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Startup Probe</h4>
+                <p>Checks if container has started. Disables other probes until successful.</p>
+            </div>
+        </div>
+
+        <h3>Probe Types</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Probe Type</th>
+                    <th>Method</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>HTTP GET</strong></td>
+                    <td>HTTP request to container</td>
+                    <td>Web applications, REST APIs</td>
+                </tr>
+                <tr>
+                    <td><strong>TCP Socket</strong></td>
+                    <td>TCP connection attempt</td>
+                    <td>Database connections, TCP services</td>
+                </tr>
+                <tr>
+                    <td><strong>Exec</strong></td>
+                    <td>Execute command in container</td>
+                    <td>Custom health check scripts</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Kubelet Configuration</h3>
+        <div class="yaml-block">
+# Liveness probe example<br>
+apiVersion: v1<br>
+kind: Pod<br>
+metadata:<br>
+&nbsp;&nbsp;name: liveness-http<br>
+spec:<br>
+&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;- name: liveness<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: nginx<br>
+&nbsp;&nbsp;&nbsp;&nbsp;livenessProbe:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;httpGet:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path: /healthz<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialDelaySeconds: 3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;periodSeconds: 3<br>
+&nbsp;&nbsp;&nbsp;&nbsp;readinessProbe:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;httpGet:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path: /ready<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialDelaySeconds: 5<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;periodSeconds: 5
+        </div>
+
+        <h3>Resource Management</h3>
+        <ul>
+            <li><strong>CPU Limits:</strong> Throttle CPU usage when limit is reached</li>
+            <li><strong>Memory Limits:</strong> Kill container if memory limit exceeded</li>
+            <li><strong>Storage Limits:</strong> Monitor and enforce storage quotas</li>
+            <li><strong>QoS Classes:</strong> Guaranteed, Burstable, BestEffort</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Key Point:</strong> Kubelet is the bridge between Kubernetes control plane and the actual container runtime, ensuring desired state is maintained on each node.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 14: Kube-Proxy -->
+<div class="slide">
+    <div class="content">
+        <h2>Kube-Proxy</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Kube-proxy</strong> is a network proxy that runs on each node, implementing part of the Kubernetes Service concept by maintaining network rules and performing connection forwarding.</p>
+        </div>
+
+        <h3>Primary Functions</h3>
+        <ul>
+            <li><strong>Service Discovery:</strong> Route traffic to appropriate pods</li>
+            <li><strong>Load Balancing:</strong> Distribute requests across pod replicas</li>
+            <li><strong>Network Rules:</strong> Maintain iptables/IPVS rules for services</li>
+            <li><strong>Session Affinity:</strong> Route requests from same client to same pod</li>
+            <li><strong>Health Checking:</strong> Remove unhealthy pods from rotation</li>
+        </ul>
+
+        <h3>Proxy Modes</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>iptables Mode</h4>
+                <p>Default mode using iptables rules for traffic routing. Good performance for most use cases.</p>
+            </div>
+            <div class="feature-card">
+                <h4>IPVS Mode</h4>
+                <p>Uses Linux IPVS for better performance with large numbers of services.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Userspace Mode</h4>
+                <p>Legacy mode where kube-proxy acts as actual proxy. Slower but more compatible.</p>
+            </div>
+        </div>
+
+        <h3>Service Types</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Service Type</th>
+                    <th>Description</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ClusterIP</strong></td>
+                    <td>Internal cluster communication</td>
+                    <td>Microservice communication</td>
+                </tr>
+                <tr>
+                    <td><strong>NodePort</strong></td>
+                    <td>Expose service on node's IP</td>
+                    <td>External access for testing</td>
+                </tr>
+                <tr>
+                    <td><strong>LoadBalancer</strong></td>
+                    <td>Cloud provider load balancer</td>
+                    <td>Production external access</td>
+                </tr>
+                <tr>
+                    <td><strong>ExternalName</strong></td>
+                    <td>DNS CNAME record</td>
+                    <td>External service integration</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Traffic Flow Example</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #e53e3e;">Client Request</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #326ce5;">↓</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box">Service (ClusterIP)</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #326ce5;">↓</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #38a169;">Kube-proxy (iptables rules)</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #326ce5;">↓</div>
+            <div>
+                <div class="component-box">Pod 1</div>
+                <div class="component-box">Pod 2</div>
+                <div class="component-box">Pod 3</div>
+            </div>
+        </div>
+
+        <h3>Service Configuration Example</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: Service<br>
+metadata:<br>
+&nbsp;&nbsp;name: web-service<br>
+spec:<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: web<br>
+&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;- protocol: TCP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;port: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;targetPort: 8080<br>
+&nbsp;&nbsp;type: ClusterIP<br>
+&nbsp;&nbsp;sessionAffinity: ClientIP  # Optional: sticky sessions
+        </div>
+
+        <h3>Load Balancing Algorithms</h3>
+        <ul>
+            <li><strong>Round Robin:</strong> Default algorithm, distributes requests evenly</li>
+            <li><strong>Session Affinity:</strong> Route requests from same client to same pod</li>
+            <li><strong>Least Connections:</strong> Route to pod with fewest active connections (IPVS)</li>
+            <li><strong>Weighted Round Robin:</strong> Distribute based on pod weights (IPVS)</li>
+        </ul>
+
+        <div class="warning-box">
+            <p><strong>Important:</strong> Kube-proxy only handles traffic routing. Actual load balancing logic is implemented by the service mesh or ingress controller.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 15: Container Runtime -->
+<div class="slide">
+    <div class="content">
+        <h2>Container Runtime</h2>
+        
+        <div class="highlight-box">
+            <p>The <strong>Container Runtime</strong> is the software responsible for running containers. Kubernetes supports multiple container runtimes through the Container Runtime Interface (CRI).</p>
+        </div>
+
+        <h3>Container Runtime Interface (CRI)</h3>
+        <ul>
+            <li><strong>Standardized API:</strong> Common interface for different runtimes</li>
+            <li><strong>Runtime Agnostic:</strong> Kubernetes doesn't depend on specific runtime</li>
+            <li><strong>Pluggable Architecture:</strong> Easy to switch between runtimes</li>
+            <li><strong>gRPC Protocol:</strong> Communication between kubelet and runtime</li>
+        </ul>
+
+        <h3>Popular Container Runtimes</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>containerd</h4>
+                <p>Industry standard, high-performance container runtime. Default in many Kubernetes distributions.</p>
+            </div>
+            <div class="feature-card">
+                <h4>CRI-O</h4>
+                <p>Lightweight runtime specifically designed for Kubernetes. OCI-compliant.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Docker Engine</h4>
+                <p>Popular but deprecated in Kubernetes 1.24+. Uses dockershim compatibility layer.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Kata Containers</h4>
+                <p>Secure runtime using lightweight VMs for better isolation.</p>
+            </div>
+        </div>
+
+        <h3>Runtime Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Runtime</th>
+                    <th>Performance</th>
+                    <th>Security</th>
+                    <th>Ecosystem</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>containerd</strong></td>
+                    <td>High</td>
+                    <td>Good</td>
+                    <td>Excellent</td>
+                </tr>
+                <tr>
+                    <td><strong>CRI-O</strong></td>
+                    <td>High</td>
+                    <td>Good</td>
+                    <td>Good</td>
+                </tr>
+                <tr>
+                    <td><strong>Docker</strong></td>
+                    <td>Medium</td>
+                    <td>Good</td>
+                    <td>Excellent</td>
+                </tr>
+                <tr>
+                    <td><strong>Kata</strong></td>
+                    <td>Medium</td>
+                    <td>Excellent</td>
+                    <td>Limited</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Runtime Responsibilities</h3>
+        <ul>
+            <li><strong>Image Management:</strong> Pull, store, and manage container images</li>
+            <li><strong>Container Lifecycle:</strong> Create, start, stop, and delete containers</li>
+            <li><strong>Resource Isolation:</strong> CPU, memory, and network isolation</li>
+            <li><strong>Storage Management:</strong> Handle container filesystems and volumes</li>
+            <li><strong>Network Setup:</strong> Configure container networking</li>
+            <li><strong>Security:</strong> Apply security policies and constraints</li>
+        </ul>
+
+        <h3>OCI Standards</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Runtime Specification</h4>
+                <p>Defines how to run containers from filesystem bundles</p>
+            </div>
+            <div class="feature-card">
+                <h4>Image Specification</h4>
+                <p>Defines container image format and metadata</p>
+            </div>
+            <div class="feature-card">
+                <h4>Distribution Specification</h4>
+                <p>Defines how to distribute container images</p>
+            </div>
+        </div>
+
+        <h3>Runtime Configuration</h3>
+        <div class="code-block">
+# Check current runtime<br>
+kubectl get nodes -o wide<br><br>
+
+# Runtime configuration in kubelet<br>
+--container-runtime=remote<br>
+--container-runtime-endpoint=unix:///var/run/containerd/containerd.sock<br><br>
+
+# containerd configuration<br>
+/etc/containerd/config.toml
+        </div>
+
+        <h3>Security Features</h3>
+        <ul>
+            <li><strong>Namespace Isolation:</strong> Process, network, and filesystem isolation</li>
+            <li><strong>Cgroups:</strong> Resource limiting and accounting</li>
+            <li><strong>Seccomp:</strong> System call filtering</li>
+            <li><strong>AppArmor/SELinux:</strong> Mandatory access control</li>
+            <li><strong>User Namespaces:</strong> Root privilege isolation</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Trend:</strong> containerd has become the most popular runtime due to its performance, stability, and direct integration with Kubernetes.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 16: Understanding Pods -->
+<div class="slide">
+    <div class="content">
+        <h2>Understanding Pods</h2>
+        
+        <div class="highlight-box">
+            <p>A <strong>Pod</strong> is the smallest deployable unit in Kubernetes. It represents a group of one or more containers that share storage, network, and a specification for how to run the containers.</p>
+        </div>
+
+        <h3>Pod Characteristics</h3>
+        <ul>
+            <li><strong>Shared Network:</strong> All containers share the same IP address and port space</li>
+            <li><strong>Shared Storage:</strong> Containers can share volumes for data exchange</li>
+            <li><strong>Atomic Unit:</strong> Containers in a pod are scheduled together</li>
+            <li><strong>Ephemeral:</strong> Pods are mortal and can be created/destroyed</li>
+            <li><strong>Single Node:</strong> All containers in a pod run on the same node</li>
+        </ul>
+
+        <h3>Pod Lifecycle</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Pending</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Running</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Succeeded/Failed</div>
+        </div>
+
+        <h3>Pod Phases</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Phase</th>
+                    <th>Description</th>
+                    <th>Next Steps</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Pending</strong></td>
+                    <td>Pod accepted but not yet running</td>
+                    <td>Scheduling, image pulling</td>
+                </tr>
+                <tr>
+                    <td><strong>Running</strong></td>
+                    <td>At least one container is running</td>
+                    <td>Normal operation</td>
+                </tr>
+                <tr>
+                    <td><strong>Succeeded</strong></td>
+                    <td>All containers terminated successfully</td>
+                    <td>Job completion</td>
+                </tr>
+                <tr>
+                    <td><strong>Failed</strong></td>
+                    <td>At least one container failed</td>
+                    <td>Restart or cleanup</td>
+                </tr>
+                <tr>
+                    <td><strong>Unknown</strong></td>
+                    <td>Pod state cannot be determined</td>
+                    <td>Node communication issues</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Pod Patterns</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Single Container</h4>
+                <p>Most common pattern - one application container per pod</p>
+            </div>
+            <div class="feature-card">
+                <h4>Sidecar</h4>
+                <p>Helper container alongside main application (logging, monitoring)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Ambassador</h4>
+                <p>Proxy container for external service communication</p>
+            </div>
+            <div class="feature-card">
+                <h4>Adapter</h4>
+                <p>Transform container output to standard format</p>
+            </div>
+        </div>
+
+        <h3>Pod Specification Example</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: Pod<br>
+metadata:<br>
+&nbsp;&nbsp;name: multi-container-pod<br>
+&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: web<br>
+spec:<br>
+&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;- name: web-server<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: nginx:1.21<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- containerPort: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;volumeMounts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: shared-data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /usr/share/nginx/html<br>
+&nbsp;&nbsp;- name: log-collector<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: fluentd:latest<br>
+&nbsp;&nbsp;&nbsp;&nbsp;volumeMounts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: shared-data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /var/log<br>
+&nbsp;&nbsp;volumes:<br>
+&nbsp;&nbsp;- name: shared-data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;emptyDir: {}
+        </div>
+
+        <h3>Pod Networking</h3>
+        <ul>
+            <li><strong>Cluster IP:</strong> Each pod gets unique IP address</li>
+            <li><strong>Port Sharing:</strong> Containers share network namespace</li>
+            <li><strong>Localhost Communication:</strong> Containers can communicate via localhost</li>
+            <li><strong>DNS Resolution:</strong> Automatic service discovery</li>
+        </ul>
+
+        <ul>
+            <li><strong>Single Responsibility:</strong> One main application per pod</li>
+            <li><strong>Stateless Design:</strong> Store state externally</li>
+            <li><strong>Resource Limits:</strong> Define CPU and memory limits</li>
+            <li><strong>Health Checks:</strong> Implement liveness and readiness probes</li>
+            <li><strong>Graceful Shutdown:</strong> Handle SIGTERM signals properly</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 17: Types of Deployments -->
+<div class="slide">
+    <div class="content">
+        <h2>Types of Deployments</h2>
+        
+        <div class="highlight-box">
+            <p>Kubernetes provides several deployment strategies to manage application updates, each with different characteristics for availability, resource usage, and rollback capabilities.</p>
+        </div>
+
+        <h3>Deployment Strategies</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Rolling Update</h4>
+                <p>Default strategy. Gradually replace old pods with new ones. Zero downtime deployment.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Recreate</h4>
+                <p>Terminate all old pods before creating new ones. Causes downtime but uses fewer resources.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Blue-Green</h4>
+                <p>Run two identical environments. Switch traffic instantly between versions.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Canary</h4>
+                <p>Gradually shift traffic from old to new version. Test with subset of users first.</p>
+            </div>
+        </div>
+
+        <h3>Rolling Update Configuration</h3>
+        <div class="yaml-block">
+apiVersion: apps/v1<br>
+kind: Deployment<br>
+metadata:<br>
+&nbsp;&nbsp;name: nginx-deployment<br>
+spec:<br>
+&nbsp;&nbsp;replicas: 3<br>
+&nbsp;&nbsp;strategy:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type: RollingUpdate<br>
+&nbsp;&nbsp;&nbsp;&nbsp;rollingUpdate:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxUnavailable: 1      # Max pods that can be unavailable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maxSurge: 1           # Max pods above desired replica count<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;matchLabels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;template:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;metadata:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spec:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: nginx<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: nginx:1.21<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- containerPort: 80
+        </div>
+
+        <h3>Deployment Strategy Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Strategy</th>
+                    <th>Downtime</th>
+                    <th>Resource Usage</th>
+                    <th>Rollback Speed</th>
+                    <th>Risk</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Rolling Update</strong></td>
+                    <td>None</td>
+                    <td>Medium</td>
+                    <td>Medium</td>
+                    <td>Low</td>
+                </tr>
+                <tr>
+                    <td><strong>Recreate</strong></td>
+                    <td>Yes</td>
+                    <td>Low</td>
+                    <td>Fast</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td><strong>Blue-Green</strong></td>
+                    <td>None</td>
+                    <td>High (2x)</td>
+                    <td>Instant</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td><strong>Canary</strong></td>
+                    <td>None</td>
+                    <td>Medium</td>
+                    <td>Fast</td>
+                    <td>Low</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Kubernetes Workload Types</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Deployment</h4>
+                <p>Stateless applications with rolling updates and scaling capabilities</p>
+            </div>
+            <div class="feature-card">
+                <h4>StatefulSet</h4>
+                <p>Stateful applications with stable network identities and persistent storage</p>
+            </div>
+            <div class="feature-card">
+                <h4>DaemonSet</h4>
+                <p>Run one pod per node (logging agents, monitoring, network plugins)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Job</h4>
+                <p>Run pods to completion for batch processing or one-time tasks</p>
+            </div>
+            <div class="feature-card">
+                <h4>CronJob</h4>
+                <p>Run jobs on schedule (backups, reports, cleanup tasks)</p>
+            </div>
+        </div>
+
+        <h3>Deployment Commands</h3>
+        <div class="code-block">
+# Create deployment<br>
+kubectl create deployment nginx --image=nginx:1.21<br><br>
+
+# Update deployment image<br>
+kubectl set image deployment/nginx nginx=nginx:1.22<br><br>
+
+# Check rollout status<br>
+kubectl rollout status deployment/nginx<br><br>
+
+# View rollout history<br>
+kubectl rollout history deployment/nginx<br><br>
+
+# Rollback to previous version<br>
+kubectl rollout undo deployment/nginx<br><br>
+
+# Scale deployment<br>
+kubectl scale deployment nginx --replicas=5
+        </div>
+
+        <h3>Advanced Deployment Patterns</h3>
+        <ul>
+            <li><strong>A/B Testing:</strong> Split traffic between versions for testing</li>
+            <li><strong>Feature Flags:</strong> Control feature rollout without deployment</li>
+            <li><strong>Progressive Delivery:</strong> Automated canary with metrics-based decisions</li>
+            <li><strong>Shadow Deployment:</strong> Mirror production traffic to new version</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 18: Stateful vs Stateless Applications -->
+<div class="slide">
+    <div class="content">
+        <h2>Stateful vs Stateless Applications</h2>
+        
+        <div class="highlight-box">
+            <p>Understanding the difference between <strong>stateful</strong> and <strong>stateless</strong> applications is crucial for choosing the right Kubernetes workload type and deployment strategy.</p>
+        </div>
+
+        <h3>Stateless Applications</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Characteristics</h4>
+                <p>• No persistent data storage<br>• Each request is independent<br>• Easily replaceable<br>• Horizontally scalable</p>
+            </div>
+            <div class="feature-card">
+                <h4>Examples</h4>
+                <p>• Web servers (Nginx, Apache)<br>• API gateways<br>• Microservices<br>• Load balancers</p>
+            </div>
+            <div class="feature-card">
+                <h4>Kubernetes Resource</h4>
+                <p>• Deployment<br>• ReplicaSet<br>• Service<br>• Horizontal Pod Autoscaler</p>
+            </div>
+            <div class="feature-card">
+                <h4>Benefits</h4>
+                <p>• Easy to scale<br>• Fast recovery<br>• Simple deployment<br>• Cloud-native friendly</p>
+            </div>
+        </div>
+
+        <h3>Stateful Applications</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Characteristics</h4>
+                <p>• Persistent data storage<br>• Stable network identity<br>• Ordered deployment<br>• Data consistency requirements</p>
+            </div>
+            <div class="feature-card">
+                <h4>Examples</h4>
+                <p>• Databases (MySQL, PostgreSQL)<br>• Message queues (Kafka)<br>• Distributed systems (Elasticsearch)<br>• File systems</p>
+            </div>
+            <div class="feature-card">
+                <h4>Kubernetes Resource</h4>
+                <p>• StatefulSet<br>• Persistent Volumes<br>• Headless Services<br>• Storage Classes</p>
+            </div>
+            <div class="feature-card">
+                <h4>Challenges</h4>
+                <p>• Complex scaling<br>• Data migration<br>• Backup/restore<br>• Network dependencies</p>
+            </div>
+        </div>
+
+        <h3>Detailed Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Stateless</th>
+                    <th>Stateful</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Data Storage</strong></td>
+                    <td>No persistent data</td>
+                    <td>Requires persistent storage</td>
+                </tr>
+                <tr>
+                    <td><strong>Pod Identity</strong></td>
+                    <td>Interchangeable pods</td>
+                    <td>Unique, stable identities</td>
+                </tr>
+                <tr>
+                    <td><strong>Scaling</strong></td>
+                    <td>Easy horizontal scaling</td>
+                    <td>Complex, often manual scaling</td>
+                </tr>
+                <tr>
+                    <td><strong>Deployment Order</strong></td>
+                    <td>Parallel deployment</td>
+                    <td>Sequential, ordered deployment</td>
+                </tr>
+                <tr>
+                    <td><strong>Network</strong></td>
+                    <td>Any IP address</td>
+                    <td>Stable network identifiers</td>
+                </tr>
+                <tr>
+                    <td><strong>Recovery</strong></td>
+                    <td>Fast, simple restart</td>
+                    <td>Complex data recovery</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>StatefulSet Example</h3>
+        <div class="yaml-block">
+apiVersion: apps/v1<br>
+kind: StatefulSet<br>
+metadata:<br>
+&nbsp;&nbsp;name: mysql<br>
+spec:<br>
+&nbsp;&nbsp;serviceName: mysql<br>
+&nbsp;&nbsp;replicas: 3<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;matchLabels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: mysql<br>
+&nbsp;&nbsp;template:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;metadata:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: mysql<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spec:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: mysql<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: mysql:8.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: MYSQL_ROOT_PASSWORD<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value: "password"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;volumeMounts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: mysql-storage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /var/lib/mysql<br>
+&nbsp;&nbsp;volumeClaimTemplates:<br>
+&nbsp;&nbsp;- metadata:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: mysql-storage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spec:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;accessModes: ["ReadWriteOnce"]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resources:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;requests:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;storage: 10Gi
+        </div>
+
+        <h3>Best Practices</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Stateless Design</h4>
+                <p>• Store state externally<br>• Use caching layers<br>• Implement health checks<br>• Design for failure</p>
+            </div>
+            <div class="feature-card">
+                <h4>Stateful Management</h4>
+                <p>• Plan data migration<br>• Implement backups<br>• Monitor data consistency<br>• Use persistent volumes</p>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Architecture Recommendation:</strong> Design applications to be stateless when possible. Use external data stores and caching layers to maintain state outside the application containers.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 19: Deployments and ReplicaSets -->
+<div class="slide">
+    <div class="content">
+        <h2>Deployments and ReplicaSets</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Deployments</strong> provide declarative updates for Pods and ReplicaSets. A <strong>ReplicaSet</strong> ensures that a specified number of pod replicas are running at any given time.</p>
+        </div>
+
+        <h3>Relationship Hierarchy</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #e53e3e;">Deployment</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #326ce5;">manages</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #38a169;">ReplicaSet</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #326ce5;">manages</div>
+            <div>
+                <div class="component-box">Pod 1</div>
+                <div class="component-box">Pod 2</div>
+                <div class="component-box">Pod 3</div>
+            </div>
+        </div>
+
+        <h3>ReplicaSet Features</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Desired State</h4>
+                <p>Maintains specified number of pod replicas</p>
+            </div>
+            <div class="feature-card">
+                <h4>Self-Healing</h4>
+                <p>Automatically replaces failed pods</p>
+            </div>
+            <div class="feature-card">
+                <h4>Label Selector</h4>
+                <p>Uses labels to identify pods to manage</p>
+            </div>
+            <div class="feature-card">
+                <h4>Scaling</h4>
+                <p>Easy horizontal scaling up or down</p>
+            </div>
+        </div>
+
+        <h3>Deployment Advantages</h3>
+        <ul>
+            <li><strong>Rolling Updates:</strong> Update applications without downtime</li>
+            <li><strong>Rollback:</strong> Easy rollback to previous versions</li>
+            <li><strong>Scaling:</strong> Scale applications up or down</li>
+            <li><strong>Pause/Resume:</strong> Control deployment process</li>
+            <li><strong>History:</strong> Track deployment changes</li>
+        </ul>
+
+        <h3>Basic Deployment YAML</h3>
+        <div class="yaml-block">
+apiVersion: apps/v1<br>
+kind: Deployment<br>
+metadata:<br>
+&nbsp;&nbsp;name: nginx-deployment<br>
+&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+spec:<br>
+&nbsp;&nbsp;replicas: 3<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;matchLabels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;template:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;metadata:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spec:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: nginx<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: nginx:1.21<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- containerPort: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resources:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;requests:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;memory: "64Mi"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cpu: "250m"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;limits:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;memory: "128Mi"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cpu: "500m"
+        </div>
+
+        <h3>Key Deployment Commands</h3>
+        <div class="code-block">
+# Create deployment from YAML<br>
+kubectl apply -f deployment.yaml<br><br>
+
+# Create deployment imperatively<br>
+kubectl create deployment nginx --image=nginx:1.21 --replicas=3<br><br>
+
+# Scale deployment<br>
+kubectl scale deployment nginx-deployment --replicas=5<br><br>
+
+# Update image<br>
+kubectl set image deployment/nginx-deployment nginx=nginx:1.22<br><br>
+
+# Check rollout status<br>
+kubectl rollout status deployment/nginx-deployment<br><br>
+
+# View deployment details<br>
+kubectl describe deployment nginx-deployment
+        </div>
+
+        <h3>ReplicaSet vs Deployment</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>ReplicaSet</th>
+                    <th>Deployment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Purpose</strong></td>
+                    <td>Maintain pod replicas</td>
+                    <td>Manage ReplicaSets + updates</td>
+                </tr>
+                <tr>
+                    <td><strong>Updates</strong></td>
+                    <td>Manual process</td>
+                    <td>Automated rolling updates</td>
+                </tr>
+                <tr>
+                    <td><strong>Rollback</strong></td>
+                    <td>Not supported</td>
+                    <td>Easy rollback capability</td>
+                </tr>
+                <tr>
+                    <td><strong>Use Case</strong></td>
+                    <td>Low-level control</td>
+                    <td>Production applications</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="success-box">
+            <p><strong>Best Practice:</strong> Always use Deployments instead of directly creating ReplicaSets. Deployments provide better management and update capabilities.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 20: Exposing Services: ClusterIP, NodePort, LoadBalancer -->
+<div class="slide">
+    <div class="content">
+        <h2>Exposing Services: ClusterIP, NodePort, LoadBalancer</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Services</strong> provide stable network endpoints for accessing pods. They abstract away the dynamic nature of pods and provide load balancing across multiple replicas.</p>
+        </div>
+
+        <h3>Service Types Overview</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>ClusterIP</h4>
+                <p>Default type. Internal cluster communication only. Not accessible from outside.</p>
+            </div>
+            <div class="feature-card">
+                <h4>NodePort</h4>
+                <p>Exposes service on each node's IP at a static port. Accessible from outside cluster.</p>
+            </div>
+            <div class="feature-card">
+                <h4>LoadBalancer</h4>
+                <p>Creates external load balancer (cloud provider). Best for production external access.</p>
+            </div>
+            <div class="feature-card">
+                <h4>ExternalName</h4>
+                <p>Maps service to external DNS name. No proxying involved.</p>
+            </div>
+        </div>
+
+        <h3>ClusterIP Service</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: Service<br>
+metadata:<br>
+&nbsp;&nbsp;name: nginx-clusterip<br>
+spec:<br>
+&nbsp;&nbsp;type: ClusterIP  # Default type<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;- protocol: TCP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;port: 80        # Service port<br>
+&nbsp;&nbsp;&nbsp;&nbsp;targetPort: 80  # Container port
+        </div>
+
+        <h3>NodePort Service</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: Service<br>
+metadata:<br>
+&nbsp;&nbsp;name: nginx-nodeport<br>
+spec:<br>
+&nbsp;&nbsp;type: NodePort<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;- protocol: TCP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;port: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;targetPort: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nodePort: 30080  # Optional: 30000-32767 range
+        </div>
+
+        <h3>LoadBalancer Service</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: Service<br>
+metadata:<br>
+&nbsp;&nbsp;name: nginx-loadbalancer<br>
+spec:<br>
+&nbsp;&nbsp;type: LoadBalancer<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: nginx<br>
+&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;- protocol: TCP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;port: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;targetPort: 80<br>
+&nbsp;&nbsp;loadBalancerIP: 203.0.113.12  # Optional: specific IP
+        </div>
+
+        <h3>Service Type Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Service Type</th>
+                    <th>Accessibility</th>
+                    <th>Port Range</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ClusterIP</strong></td>
+                    <td>Internal only</td>
+                    <td>Any port</td>
+                    <td>Microservice communication</td>
+                </tr>
+                <tr>
+                    <td><strong>NodePort</strong></td>
+                    <td>External via node IP</td>
+                    <td>30000-32767</td>
+                    <td>Development, testing</td>
+                </tr>
+                <tr>
+                    <td><strong>LoadBalancer</strong></td>
+                    <td>External via LB</td>
+                    <td>Any port</td>
+                    <td>Production external access</td>
+                </tr>
+                <tr>
+                    <td><strong>ExternalName</strong></td>
+                    <td>DNS mapping</td>
+                    <td>N/A</td>
+                    <td>External service integration</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Service Discovery</h3>
+        <ul>
+            <li><strong>DNS Names:</strong> Services get DNS names like <code>service-name.namespace.svc.cluster.local</code></li>
+            <li><strong>Environment Variables:</strong> Service info injected as env vars</li>
+            <li><strong>Service Endpoints:</strong> Automatic endpoint management</li>
+            <li><strong>Load Balancing:</strong> Automatic traffic distribution</li>
+        </ul>
+
+        <h3>Service Commands</h3>
+        <div class="code-block">
+# Create service from YAML<br>
+kubectl apply -f service.yaml<br><br>
+
+# Expose deployment as service<br>
+kubectl expose deployment nginx-deployment --type=NodePort --port=80<br><br>
+
+# List services<br>
+kubectl get services<br><br>
+
+# Describe service<br>
+kubectl describe service nginx-service<br><br>
+
+# Get service endpoints<br>
+kubectl get endpoints nginx-service<br><br>
+
+# Port forward for testing<br>
+kubectl port-forward service/nginx-service 8080:80
+        </div>
+
+        <h3>Traffic Flow</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 15px;">
+                <div class="component-box" style="background: #e53e3e;">External Client</div>
+            </div>
+            <div style="margin: 5px 0; font-size: 1rem; color: #326ce5;">↓ (LoadBalancer)</div>
+            <div style="margin-bottom: 15px;">
+                <div class="component-box" style="background: #38a169;">Service</div>
+            </div>
+            <div style="margin: 5px 0; font-size: 1rem; color: #326ce5;">↓ (Load Balance)</div>
+            <div>
+                <div class="component-box">Pod 1:80</div>
+                <div class="component-box">Pod 2:80</div>
+                <div class="component-box">Pod 3:80</div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 21: Essential kubectl Commands -->
+<div class="slide">
+    <div class="content">
+        <h2>Essential kubectl Commands</h2>
+        
+        <div class="highlight-box">
+            <p><strong>kubectl</strong> is the command-line tool for interacting with Kubernetes clusters. Master these essential commands for effective cluster management.</p>
+        </div>
+
+        <h3>kubectl apply</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Declarative Management</h4>
+                <p>Apply configuration from YAML files. Creates or updates resources.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Idempotent</h4>
+                <p>Safe to run multiple times. Only applies necessary changes.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Best Practice</h4>
+                <p>Preferred method for production deployments and GitOps workflows.</p>
+            </div>
+        </div>
+
+        <div class="code-block">
+# Apply single file<br>
+kubectl apply -f deployment.yaml<br><br>
+
+# Apply multiple files<br>
+kubectl apply -f deployment.yaml -f service.yaml<br><br>
+
+# Apply entire directory<br>
+kubectl apply -f ./manifests/<br><br>
+
+# Apply with recursive directory search<br>
+kubectl apply -f ./manifests/ -R<br><br>
+
+# Apply from URL<br>
+kubectl apply -f https://example.com/manifest.yaml<br><br>
+
+# Dry run (validate without applying)<br>
+kubectl apply -f deployment.yaml --dry-run=client<br><br>
+
+# Server-side dry run<br>
+kubectl apply -f deployment.yaml --dry-run=server
+        </div>
+
+        <h3>kubectl describe</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Detailed Information</h4>
+                <p>Shows comprehensive details about resources including events.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Troubleshooting</h4>
+                <p>Essential for debugging issues and understanding resource state.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Events</h4>
+                <p>Displays recent events related to the resource.</p>
+            </div>
+        </div>
+
+        <div class="code-block">
+# Describe specific pod<br>
+kubectl describe pod nginx-deployment-abc123<br><br>
+
+# Describe deployment<br>
+kubectl describe deployment nginx-deployment<br><br>
+
+# Describe service<br>
+kubectl describe service nginx-service<br><br>
+
+# Describe node<br>
+kubectl describe node worker-node-1<br><br>
+
+# Describe all pods in namespace<br>
+kubectl describe pods<br><br>
+
+# Describe with specific namespace<br>
+kubectl describe pod nginx-pod -n production<br><br>
+
+# Describe multiple resource types<br>
+kubectl describe deployment,service nginx
+        </div>
+
+        <h3>kubectl delete</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Resource Cleanup</h4>
+                <p>Remove resources from cluster. Use with caution in production.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Multiple Methods</h4>
+                <p>Delete by name, file, or label selector.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Graceful Termination</h4>
+                <p>Allows pods to shut down gracefully before force termination.</p>
+            </div>
+        </div>
+
+        <div class="code-block">
+# Delete by resource name<br>
+kubectl delete pod nginx-pod<br><br>
+
+# Delete using YAML file<br>
+kubectl delete -f deployment.yaml<br><br>
+
+# Delete multiple resources<br>
+kubectl delete deployment,service nginx<br><br>
+
+# Delete by label selector<br>
+kubectl delete pods -l app=nginx<br><br>
+
+# Delete all pods in namespace<br>
+kubectl delete pods --all<br><br>
+
+# Force delete (immediate)<br>
+kubectl delete pod nginx-pod --force --grace-period=0<br><br>
+
+# Delete with confirmation<br>
+kubectl delete deployment nginx-deployment --wait=true
+        </div>
+
+        <h3>Command Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Command</th>
+                    <th>Purpose</th>
+                    <th>Use Case</th>
+                    <th>Safety</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>kubectl apply</strong></td>
+                    <td>Create/Update resources</td>
+                    <td>Deployments, configuration changes</td>
+                    <td>Safe, idempotent</td>
+                </tr>
+                <tr>
+                    <td><strong>kubectl describe</strong></td>
+                    <td>View detailed information</td>
+                    <td>Troubleshooting, inspection</td>
+                    <td>Read-only, safe</td>
+                </tr>
+                <tr>
+                    <td><strong>kubectl delete</strong></td>
+                    <td>Remove resources</td>
+                    <td>Cleanup, decommissioning</td>
+                    <td>Destructive, use carefully</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Additional Useful Commands</h3>
+        <div class="code-block">
+# Get resources<br>
+kubectl get pods,services,deployments<br><br>
+
+# Watch resources in real-time<br>
+kubectl get pods -w<br><br>
+
+# Get resource YAML<br>
+kubectl get deployment nginx -o yaml<br><br>
+
+# Edit resource directly<br>
+kubectl edit deployment nginx<br><br>
+
+# Scale deployment<br>
+kubectl scale deployment nginx --replicas=5<br><br>
+
+# Check logs<br>
+kubectl logs deployment/nginx<br><br>
+
+# Execute commands in pod<br>
+kubectl exec -it nginx-pod -- /bin/bash
+        </div>
+
+        <div class="warning-box">
+            <p><strong>Production Tip:</strong> Always use <code>--dry-run</code> flag to validate changes before applying them in production environments.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 22: Lab - Deploy Spring Boot Hello World App -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Deploy Spring Boot Hello World App</h2>
+        
+        <div class="lab-section">
+            <h3>Hands-on Lab: Complete Application Deployment</h3>
+            <p>Deploy a sample Spring Boot application using Deployment and Service YAMLs with step-by-step commands.</p>
+        </div>
+
+        <h3>Lab Objectives</h3>
+        <ul>
+            <li>Create a Deployment for Spring Boot application</li>
+            <li>Expose the application using different Service types</li>
+            <li>Practice essential kubectl commands</li>
+            <li>Understand the complete deployment workflow</li>
+        </ul>
+
+        <h3>Step 1: Spring Boot Deployment YAML</h3>
+        <div class="yaml-block">
+# springboot-deployment.yaml<br>
+apiVersion: apps/v1<br>
+kind: Deployment<br>
+metadata:<br>
+&nbsp;&nbsp;name: springboot-hello<br>
+&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: springboot-hello<br>
+spec:<br>
+&nbsp;&nbsp;replicas: 3<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;matchLabels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: springboot-hello<br>
+&nbsp;&nbsp;template:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;metadata:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: springboot-hello<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spec:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: springboot-hello<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: springio/gs-spring-boot-docker:latest<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- containerPort: 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: SERVER_PORT<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value: "8080"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resources:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;requests:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;memory: "256Mi"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cpu: "200m"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;limits:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;memory: "512Mi"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cpu: "500m"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;livenessProbe:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;httpGet:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path: /actuator/health<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialDelaySeconds: 30<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;periodSeconds: 10<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;readinessProbe:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;httpGet:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path: /actuator/health<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialDelaySeconds: 5<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;periodSeconds: 5
+        </div>
+
+        <h3>Step 2: ClusterIP Service YAML</h3>
+        <div class="yaml-block">
+# springboot-service-clusterip.yaml<br>
+apiVersion: v1<br>
+kind: Service<br>
+metadata:<br>
+&nbsp;&nbsp;name: springboot-hello-clusterip<br>
+&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: springboot-hello<br>
+spec:<br>
+&nbsp;&nbsp;type: ClusterIP<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: springboot-hello<br>
+&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;- protocol: TCP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;port: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;targetPort: 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name: http
+        </div>
+
+        <h3>Step 3: NodePort Service YAML</h3>
+        <div class="yaml-block">
+# springboot-service-nodeport.yaml<br>
+apiVersion: v1<br>
+kind: Service<br>
+metadata:<br>
+&nbsp;&nbsp;name: springboot-hello-nodeport<br>
+&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: springboot-hello<br>
+spec:<br>
+&nbsp;&nbsp;type: NodePort<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;app: springboot-hello<br>
+&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;- protocol: TCP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;port: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;targetPort: 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;nodePort: 30080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name: http
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 23: Lab Commands and Execution -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Commands and Execution</h2>
+        
+        <div class="lab-section">
+            <h3>Step-by-Step Execution Commands</h3>
+        </div>
+
+        <h3>Phase 1: Deploy the Application</h3>
+        <ol class="step-list">
+            <li><strong>Create the Deployment:</strong>
+                <div class="code-block">
+# Apply the deployment<br>
+kubectl apply -f springboot-deployment.yaml<br><br>
+
+# Verify deployment creation<br>
+kubectl get deployments<br><br>
+
+# Check deployment status<br>
+kubectl rollout status deployment/springboot-hello<br><br>
+
+# View deployment details<br>
+kubectl describe deployment springboot-hello
+                </div>
+            </li>
+            
+            <li><strong>Verify Pods are Running:</strong>
+                <div class="code-block">
+# List all pods<br>
+kubectl get pods<br><br>
+
+# List pods with labels<br>
+kubectl get pods -l app=springboot-hello<br><br>
+
+# Check pod details<br>
+kubectl describe pod &lt;pod-name&gt;<br><br>
+
+# View pod logs<br>
+kubectl logs -l app=springboot-hello
+                </div>
+            </li>
+            
+            <li><strong>Create ClusterIP Service:</strong>
+                <div class="code-block">
+# Apply ClusterIP service<br>
+kubectl apply -f springboot-service-clusterip.yaml<br><br>
+
+# Verify service creation<br>
+kubectl get services<br><br>
+
+# Check service endpoints<br>
+kubectl get endpoints springboot-hello-clusterip<br><br>
+
+# Describe service<br>
+kubectl describe service springboot-hello-clusterip
+                </div>
+            </li>
+        </ol>
+
+        <h3>Phase 2: Test Internal Connectivity</h3>
+        <div class="code-block">
+# Test ClusterIP service (internal access)<br>
+kubectl run test-pod --image=curlimages/curl -it --rm -- /bin/sh<br><br>
+
+# Inside the test pod, run:<br>
+curl http://springboot-hello-clusterip/hello<br><br>
+
+# Alternative: Port forward for local testing<br>
+kubectl port-forward service/springboot-hello-clusterip 8080:80<br><br>
+
+# Test from local machine<br>
+curl http://localhost:8080/hello
+        </div>
+
+        <h3>Phase 3: Expose Externally</h3>
+        <ol class="step-list">
+            <li><strong>Create NodePort Service:</strong>
+                <div class="code-block">
+# Apply NodePort service<br>
+kubectl apply -f springboot-service-nodeport.yaml<br><br>
+
+# Get node IP and port<br>
+kubectl get nodes -o wide<br>
+kubectl get service springboot-hello-nodeport<br><br>
+
+# Test external access<br>
+curl http://&lt;node-ip&gt;:30080/hello
+                </div>
+            </li>
+            
+            <li><strong>Create LoadBalancer Service (if supported):</strong>
+                <div class="code-block">
+# Create LoadBalancer service<br>
+kubectl expose deployment springboot-hello \<br>
+&nbsp;&nbsp;--type=LoadBalancer \<br>
+&nbsp;&nbsp;--port=80 \<br>
+&nbsp;&nbsp;--target-port=8080 \<br>
+&nbsp;&nbsp;--name=springboot-hello-lb<br><br>
+
+# Check external IP (may take a few minutes)<br>
+kubectl get service springboot-hello-lb<br><br>
+
+# Test when external IP is available<br>
+curl http://&lt;external-ip&gt;/hello
+                </div>
+            </li>
+        </ol>
+
+        <h3>Phase 4: Scaling and Updates</h3>
+        <div class="code-block">
+# Scale the deployment<br>
+kubectl scale deployment springboot-hello --replicas=5<br><br>
+
+# Verify scaling<br>
+kubectl get pods -l app=springboot-hello<br><br>
+
+# Update the image (simulate new version)<br>
+kubectl set image deployment/springboot-hello \<br>
+&nbsp;&nbsp;springboot-hello=springio/gs-spring-boot-docker:v2<br><br>
+
+# Watch the rolling update<br>
+kubectl rollout status deployment/springboot-hello<br><br>
+
+# Check rollout history<br>
+kubectl rollout history deployment/springboot-hello
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 24: Lab Verification and Cleanup -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Verification and Cleanup</h2>
+        
+        <h3>Phase 5: Verification Commands</h3>
+        <div class="code-block">
+# Check all resources created<br>
+kubectl get all -l app=springboot-hello<br><br>
+
+# View resource details in YAML format<br>
+kubectl get deployment springboot-hello -o yaml<br><br>
+
+# Check resource usage<br>
+kubectl top pods -l app=springboot-hello<br><br>
+
+# View events<br>
+kubectl get events --sort-by=.metadata.creationTimestamp<br><br>
+
+# Test application endpoints<br>
+curl http://&lt;service-endpoint&gt;/hello<br>
+curl http://&lt;service-endpoint&gt;/actuator/health
+        </div>
+
+        <h3>Phase 6: Troubleshooting Commands</h3>
+        <div class="code-block">
+# Check pod status and events<br>
+kubectl describe pods -l app=springboot-hello<br><br>
+
+# View application logs<br>
+kubectl logs -f deployment/springboot-hello<br><br>
+
+# Execute commands inside pod<br>
+kubectl exec -it &lt;pod-name&gt; -- /bin/bash<br><br>
+
+# Check service connectivity<br>
+kubectl exec -it &lt;pod-name&gt; -- curl localhost:8080/hello<br><br>
+
+# Debug network issues<br>
+kubectl exec -it &lt;pod-name&gt; -- netstat -tlnp
+        </div>
+
+        <h3>Phase 7: Cleanup</h3>
+        <div class="code-block">
+# Delete services<br>
+kubectl delete service springboot-hello-clusterip<br>
+kubectl delete service springboot-hello-nodeport<br>
+kubectl delete service springboot-hello-lb<br><br>
+
+# Delete deployment<br>
+kubectl delete deployment springboot-hello<br><br>
+
+# Alternative: Delete using YAML files<br>
+kubectl delete -f springboot-deployment.yaml<br>
+kubectl delete -f springboot-service-clusterip.yaml<br>
+kubectl delete -f springboot-service-nodeport.yaml<br><br>
+
+# Verify cleanup<br>
+kubectl get all -l app=springboot-hello
+        </div>
+
+        <h3>Lab Summary</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Deployment</h4>
+                <p>✓ Created 3-replica Spring Boot deployment<br>✓ Configured health checks<br>✓ Set resource limits</p>
+            </div>
+            <div class="feature-card">
+                <h4>Services</h4>
+                <p>✓ ClusterIP for internal access<br>✓ NodePort for external access<br>✓ LoadBalancer for production</p>
+            </div>
+            <div class="feature-card">
+                <h4>Operations</h4>
+                <p>✓ Applied YAML manifests<br>✓ Scaled deployment<br>✓ Performed rolling updates</p>
+            </div>
+            <div class="feature-card">
+                <h4>Verification</h4>
+                <p>✓ Tested connectivity<br>✓ Monitored health<br>✓ Cleaned up resources</p>
+            </div>
+        </div>
+
+        <h3>Key Takeaways</h3>
+        <ul>
+            <li><strong>Declarative Management:</strong> YAML files provide version-controlled infrastructure</li>
+            <li><strong>Service Types:</strong> Choose appropriate service type based on access requirements</li>
+            <li><strong>Health Checks:</strong> Liveness and readiness probes ensure application reliability</li>
+            <li><strong>Resource Management:</strong> Set appropriate CPU and memory limits</li>
+            <li><strong>Scaling:</strong> Easy horizontal scaling with kubectl commands</li>
+            <li><strong>Monitoring:</strong> Use describe and logs commands for troubleshooting</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Congratulations!</strong> You've successfully deployed, exposed, and managed a Spring Boot application in Kubernetes using Deployments and Services.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 25: Kubernetes Storage and Configurations -->
+<div class="slide">
+    <div class="content">
+        <h2>Kubernetes Storage and Configurations</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Storage and Configuration Management</strong> are critical aspects of Kubernetes that handle persistent data and application configuration separately from container images.</p>
+        </div>
+
+        <h3>Storage Concepts</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Volumes</h4>
+                <p>Provide storage that persists beyond pod lifecycle</p>
+            </div>
+            <div class="feature-card">
+                <h4>Persistent Volumes</h4>
+                <p>Cluster-wide storage resources independent of pods</p>
+            </div>
+            <div class="feature-card">
+                <h4>Storage Classes</h4>
+                <p>Define different types of storage with specific properties</p>
+            </div>
+            <div class="feature-card">
+                <h4>Dynamic Provisioning</h4>
+                <p>Automatically create storage when requested</p>
+            </div>
+        </div>
+
+        <h3>Configuration Management</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>ConfigMaps</h4>
+                <p>Store non-sensitive configuration data as key-value pairs</p>
+            </div>
+            <div class="feature-card">
+                <h4>Secrets</h4>
+                <p>Store sensitive information like passwords and API keys</p>
+            </div>
+            <div class="feature-card">
+                <h4>Environment Variables</h4>
+                <p>Inject configuration directly into container environment</p>
+            </div>
+            <div class="feature-card">
+                <h4>Volume Mounts</h4>
+                <p>Mount configuration as files in container filesystem</p>
+            </div>
+        </div>
+
+        <h3>Storage vs Configuration</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Storage</th>
+                    <th>Configuration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Purpose</strong></td>
+                    <td>Persistent data storage</td>
+                    <td>Application configuration</td>
+                </tr>
+                <tr>
+                    <td><strong>Lifecycle</strong></td>
+                    <td>Independent of pods</td>
+                    <td>Managed separately from images</td>
+                </tr>
+                <tr>
+                    <td><strong>Examples</strong></td>
+                    <td>Database files, logs, uploads</td>
+                    <td>Config files, environment variables</td>
+                </tr>
+                <tr>
+                    <td><strong>Kubernetes Objects</strong></td>
+                    <td>PV, PVC, StorageClass</td>
+                    <td>ConfigMap, Secret</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Benefits</h3>
+        <ul>
+            <li><strong>Separation of Concerns:</strong> Keep configuration separate from application code</li>
+            <li><strong>Environment Portability:</strong> Same image, different configurations</li>
+            <li><strong>Data Persistence:</strong> Survive pod restarts and rescheduling</li>
+            <li><strong>Security:</strong> Encrypted storage for sensitive data</li>
+            <li><strong>Scalability:</strong> Share storage and configuration across multiple pods</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 26: Persistent Volumes and Claims (PV, PVC) -->
+<div class="slide">
+    <div class="content">
+        <h2>Persistent Volumes and Claims (PV, PVC)</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Persistent Volumes (PV)</strong> are cluster-wide storage resources, while <strong>Persistent Volume Claims (PVC)</strong> are requests for storage by pods. This separation provides abstraction between storage provisioning and consumption.</p>
+        </div>
+
+        <h3>PV and PVC Relationship</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #e53e3e;">Pod</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #326ce5;">requests</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #38a169;">PVC</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #326ce5;">binds to</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box">PV</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #326ce5;">backed by</div>
+            <div>
+                <div class="component-box">Physical Storage</div>
+            </div>
+        </div>
+
+        <h3>Persistent Volume (PV) Example</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: PersistentVolume<br>
+metadata:<br>
+&nbsp;&nbsp;name: mysql-pv<br>
+spec:<br>
+&nbsp;&nbsp;capacity:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;storage: 10Gi<br>
+&nbsp;&nbsp;accessModes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- ReadWriteOnce<br>
+&nbsp;&nbsp;persistentVolumeReclaimPolicy: Retain<br>
+&nbsp;&nbsp;storageClassName: fast-ssd<br>
+&nbsp;&nbsp;hostPath:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;path: /data/mysql
+        </div>
+
+        <h3>Persistent Volume Claim (PVC) Example</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: PersistentVolumeClaim<br>
+metadata:<br>
+&nbsp;&nbsp;name: mysql-pvc<br>
+spec:<br>
+&nbsp;&nbsp;accessModes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- ReadWriteOnce<br>
+&nbsp;&nbsp;resources:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;requests:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;storage: 5Gi<br>
+&nbsp;&nbsp;storageClassName: fast-ssd
+        </div>
+
+        <h3>Access Modes</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Access Mode</th>
+                    <th>Description</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ReadWriteOnce (RWO)</strong></td>
+                    <td>Single node read-write access</td>
+                    <td>Database storage, single pod applications</td>
+                </tr>
+                <tr>
+                    <td><strong>ReadOnlyMany (ROX)</strong></td>
+                    <td>Multiple nodes read-only access</td>
+                    <td>Static content, shared configuration</td>
+                </tr>
+                <tr>
+                    <td><strong>ReadWriteMany (RWX)</strong></td>
+                    <td>Multiple nodes read-write access</td>
+                    <td>Shared file systems, collaborative storage</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Using PVC in Pod</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: Pod<br>
+metadata:<br>
+&nbsp;&nbsp;name: mysql-pod<br>
+spec:<br>
+&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;- name: mysql<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: mysql:8.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;env:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: MYSQL_ROOT_PASSWORD<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value: "password"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;volumeMounts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: mysql-storage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /var/lib/mysql<br>
+&nbsp;&nbsp;volumes:<br>
+&nbsp;&nbsp;- name: mysql-storage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;persistentVolumeClaim:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;claimName: mysql-pvc
+        </div>
+
+        <h3>PV Lifecycle</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Available</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Bound</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Released</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Reclaimed</div>
+        </div>
+
+        <h3>Reclaim Policies</h3>
+        <ul>
+            <li><strong>Retain:</strong> Manual reclamation, data preserved</li>
+            <li><strong>Delete:</strong> Automatic deletion of PV and underlying storage</li>
+            <li><strong>Recycle:</strong> Basic scrub and make available again (deprecated)</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 27: ConfigMaps and Secrets -->
+<div class="slide">
+    <div class="content">
+        <h2>ConfigMaps and Secrets</h2>
+        
+        <div class="highlight-box">
+            <p><strong>ConfigMaps</strong> store non-sensitive configuration data, while <strong>Secrets</strong> store sensitive information. Both decouple configuration from container images.</p>
+        </div>
+
+        <h3>ConfigMap Example</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: ConfigMap<br>
+metadata:<br>
+&nbsp;&nbsp;name: app-config<br>
+data:<br>
+&nbsp;&nbsp;database_url: "jdbc:mysql://mysql:3306/mydb"<br>
+&nbsp;&nbsp;log_level: "INFO"<br>
+&nbsp;&nbsp;max_connections: "100"<br>
+&nbsp;&nbsp;app.properties: |<br>
+&nbsp;&nbsp;&nbsp;&nbsp;server.port=8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spring.datasource.url=jdbc:mysql://mysql:3306/mydb<br>
+&nbsp;&nbsp;&nbsp;&nbsp;logging.level.root=INFO
+        </div>
+
+        <h3>Secret Example</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: Secret<br>
+metadata:<br>
+&nbsp;&nbsp;name: app-secrets<br>
+type: Opaque<br>
+data:<br>
+&nbsp;&nbsp;username: YWRtaW4=  # base64 encoded "admin"<br>
+&nbsp;&nbsp;password: cGFzc3dvcmQ=  # base64 encoded "password"<br>
+stringData:<br>
+&nbsp;&nbsp;api_key: "sk-1234567890abcdef"  # plain text, auto-encoded
+        </div>
+
+        <h3>Using ConfigMaps and Secrets</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Environment Variables</h4>
+                <p>Inject as env vars into containers</p>
+            </div>
+            <div class="feature-card">
+                <h4>Volume Mounts</h4>
+                <p>Mount as files in container filesystem</p>
+            </div>
+            <div class="feature-card">
+                <h4>Command Arguments</h4>
+                <p>Use in container command and args</p>
+            </div>
+            <div class="feature-card">
+                <h4>Init Containers</h4>
+                <p>Configure initialization processes</p>
+            </div>
+        </div>
+
+        <h3>Pod Using ConfigMap and Secret</h3>
+        <div class="yaml-block">
+apiVersion: v1<br>
+kind: Pod<br>
+metadata:<br>
+&nbsp;&nbsp;name: app-pod<br>
+spec:<br>
+&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;- name: app<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: myapp:latest<br>
+&nbsp;&nbsp;&nbsp;&nbsp;env:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: DATABASE_URL<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;valueFrom:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;configMapKeyRef:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: app-config<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: database_url<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: DB_PASSWORD<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;valueFrom:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;secretKeyRef:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: app-secrets<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key: password<br>
+&nbsp;&nbsp;&nbsp;&nbsp;volumeMounts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: config-volume<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /etc/config<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: secret-volume<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /etc/secrets<br>
+&nbsp;&nbsp;volumes:<br>
+&nbsp;&nbsp;- name: config-volume<br>
+&nbsp;&nbsp;&nbsp;&nbsp;configMap:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: app-config<br>
+&nbsp;&nbsp;- name: secret-volume<br>
+&nbsp;&nbsp;&nbsp;&nbsp;secret:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;secretName: app-secrets
+        </div>
+
+        <h3>ConfigMap vs Secret</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>ConfigMap</th>
+                    <th>Secret</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Data Type</strong></td>
+                    <td>Non-sensitive configuration</td>
+                    <td>Sensitive information</td>
+                </tr>
+                <tr>
+                    <td><strong>Storage</strong></td>
+                    <td>Plain text in etcd</td>
+                    <td>Base64 encoded in etcd</td>
+                </tr>
+                <tr>
+                    <td><strong>Size Limit</strong></td>
+                    <td>1MB per ConfigMap</td>
+                    <td>1MB per Secret</td>
+                </tr>
+                <tr>
+                    <td><strong>Examples</strong></td>
+                    <td>URLs, ports, feature flags</td>
+                    <td>Passwords, API keys, certificates</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Management Commands</h3>
+        <div class="code-block">
+# Create ConfigMap from literal values<br>
+kubectl create configmap app-config \<br>
+&nbsp;&nbsp;--from-literal=database_url=mysql://db:3306 \<br>
+&nbsp;&nbsp;--from-literal=log_level=INFO<br><br>
+
+# Create ConfigMap from file<br>
+kubectl create configmap app-config --from-file=app.properties<br><br>
+
+# Create Secret from literal values<br>
+kubectl create secret generic app-secrets \<br>
+&nbsp;&nbsp;--from-literal=username=admin \<br>
+&nbsp;&nbsp;--from-literal=password=secret<br><br>
+
+# View ConfigMap<br>
+kubectl get configmap app-config -o yaml<br><br>
+
+# View Secret (base64 encoded)<br>
+kubectl get secret app-secrets -o yaml
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 28: Summary and Next Steps -->
+<div class="slide">
+    <div class="content">
+        <h2>Summary and Next Steps</h2>
+        
+        <h3>Key Concepts Covered</h3>
+        <div class="highlight-box">
+            <ul>
+                <li>Why container orchestration is essential for modern applications</li>
+                <li>Kubernetes architecture and core components</li>
+                <li>Master node components: API Server, Scheduler, Controller Manager, etcd</li>
+                <li>Worker node components: Kubelet, Kube-proxy, Container Runtime</li>
+                <li>Understanding Pods as the fundamental unit</li>
+                <li>Deployments and ReplicaSets for application management</li>
+                <li>Service types: ClusterIP, NodePort, LoadBalancer for exposing applications</li>
+                <li>Essential kubectl commands: apply, describe, delete</li>
+                <li>Hands-on deployment of Spring Boot application</li>
+                <li>Different deployment strategies and workload types</li>
+                <li>Stateful vs Stateless application patterns</li>
+            </ul>
+        </div>
+
+        <h3>Practical Skills Gained</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>YAML Manifests</h4>
+                <p>Writing Deployment and Service configurations with best practices</p>
+            </div>
+            <div class="feature-card">
+                <h4>kubectl Mastery</h4>
+                <p>Essential commands for deployment, troubleshooting, and management</p>
+            </div>
+            <div class="feature-card">
+                <h4>Service Exposure</h4>
+                <p>Different methods to expose applications internally and externally</p>
+            </div>
+            <div class="feature-card">
+                <h4>Application Lifecycle</h4>
+                <p>Complete deployment workflow from creation to cleanup</p>
+            </div>
+        </div>
+
+        <h3>Lab Accomplishments</h3>
+        <ul>
+            <li><strong>Deployed Spring Boot App:</strong> 3-replica deployment with health checks</li>
+            <li><strong>Service Exposure:</strong> ClusterIP, NodePort, and LoadBalancer services</li>
+            <li><strong>Scaling Operations:</strong> Horizontal scaling and rolling updates</li>
+            <li><strong>Troubleshooting:</strong> Using describe, logs, and exec commands</li>
+            <li><strong>Resource Management:</strong> CPU/memory limits and monitoring</li>
+        </ul>
+
+        <h3>Learning Path Forward</h3>
+        <ol class="step-list">
+            <li><strong>Advanced Workloads:</strong> StatefulSets, DaemonSets, Jobs, and CronJobs</li>
+            <li><strong>Configuration Management:</strong> ConfigMaps, Secrets, and environment variables</li>
+            <li><strong>Storage:</strong> Persistent Volumes, Storage Classes, and data management</li>
+            <li><strong>Networking:</strong> Ingress controllers, Network Policies, and service mesh</li>
+            <li><strong>Security:</strong> RBAC, Pod Security Standards, and security best practices</li>
+            <li><strong>Monitoring & Logging:</strong> Prometheus, Grafana, and centralized logging</li>
+            <li><strong>CI/CD Integration:</strong> GitOps workflows and automated deployments</li>
+            <li><strong>Production Operations:</strong> High availability, backup, and disaster recovery</li>
+        </ol>
+
+        <h3>Recommended Tools and Resources</h3>
+        <ul>
+            <li><strong>Local Development:</strong> Docker Desktop, minikube, kind, k3s</li>
+            <li><strong>Cloud Platforms:</strong> EKS (AWS), GKE (Google), AKS (Azure)</li>
+            <li><strong>Package Management:</strong> Helm charts for application deployment</li>
+            <li><strong>GitOps:</strong> ArgoCD, Flux for continuous deployment</li>
+            <li><strong>Monitoring:</strong> Prometheus, Grafana, Jaeger for observability</li>
+            <li><strong>Security:</strong> Falco, OPA Gatekeeper for policy enforcement</li>
+        </ul>
+
+        <h3>Next Session Topics</h3>
+        <ul>
+            <li><strong>Advanced Kubernetes Objects:</strong> ConfigMaps, Secrets, Volumes</li>
+            <li><strong>Ingress Controllers:</strong> Advanced routing and SSL termination</li>
+            <li><strong>Helm Package Manager:</strong> Templating and application packaging</li>
+            <li><strong>Monitoring Stack:</strong> Setting up Prometheus and Grafana</li>
+            <li><strong>Security Hardening:</strong> RBAC, Network Policies, and Pod Security</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Congratulations!</strong> You've completed a comprehensive introduction to Kubernetes. You now understand the architecture, core components, and have hands-on experience deploying applications. Continue practicing with different workloads and gradually explore advanced features.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+</body>
+</html>

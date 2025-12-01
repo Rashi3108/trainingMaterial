@@ -1,0 +1,2104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS API Gateway: Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .slide:last-child {
+            page-break-after: auto;
+        }
+        .slide-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .title-slide {
+            background: linear-gradient(135deg, #232F3E 0%, #FF9900 100%);
+            color: white;
+            text-align: center;
+        }
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .slide-subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        h1 {
+            font-size: 2.8rem;
+            color: #232F3E;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #FF9900;
+            padding-bottom: 15px;
+        }
+        h2 {
+            font-size: 2.2rem;
+            color: #232F3E;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #FF9900;
+            padding-bottom: 10px;
+        }
+        h3 {
+            font-size: 1.6rem;
+            color: #232F3E;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+        h4 {
+            font-size: 1.3rem;
+            color: #FF9900;
+            margin-bottom: 15px;
+        }
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        .highlight-box {
+            background: #f3f4f6;
+            border-left: 5px solid #FF9900;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .comparison-table th {
+            background: #232F3E;
+            color: white;
+            font-weight: 600;
+        }
+        .comparison-table tr:hover {
+            background: #f3f4f6;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .grid-item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .grid-item h4 {
+            color: #232F3E;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 20px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .warning-box {
+            background: #fef2f2;
+            border-left: 5px solid #ef4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .success-box {
+            background: #f0fdf4;
+            border-left: 5px solid #22c55e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .info-box {
+            background: #eff6ff;
+            border-left: 5px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .architecture-diagram {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+        }
+        .lab-step {
+            background: #fefce8;
+            border-left: 5px solid #eab308;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        @media print {
+            .slide {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Title Slide -->
+    <div class="slide title-slide">
+        <div class="slide-header">
+            <h1 class="slide-title">AWS API Gateway</h1>
+            <p class="slide-subtitle">Complete Guide to Building & Managing APIs</p>
+            <div style="margin-top: 50px;">
+                <p style="font-size: 1.3rem; margin-bottom: 10px;">Create, Publish, Maintain & Secure APIs at Scale</p>
+                <p style="font-size: 1.1rem; opacity: 0.8;">REST • HTTP • WebSocket • Serverless</p>
+            </div>
+        </div>
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- What is API Gateway -->
+    <div class="slide">
+        <h1>What is AWS API Gateway?</h1>
+        
+        <div class="highlight-box">
+            <p><strong>Amazon API Gateway</strong> is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale. It acts as a "front door" for applications to access data, business logic, or functionality from your backend services.</p>
+        </div>
+
+        <h3>Key Characteristics</h3>
+        <div class="grid-container">
+            <div class="grid-item">
+                <h4>🚪 API Front Door</h4>
+                <p>Single entry point for all client requests</p>
+            </div>
+            <div class="grid-item">
+                <h4>🔒 Security</h4>
+                <p>Built-in authorization and authentication</p>
+            </div>
+            <div class="grid-item">
+                <h4>📊 Monitoring</h4>
+                <p>CloudWatch integration for metrics and logs</p>
+            </div>
+            <div class="grid-item">
+                <h4>⚡ Performance</h4>
+                <p>Caching, throttling, and request validation</p>
+            </div>
+        </div>
+
+        <h3>How API Gateway Works</h3>
+        <div class="architecture-diagram">
+            <p><strong>Client → API Gateway → Backend Services (Lambda, EC2, HTTP endpoints)</strong></p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">1. Client sends request | 2. API Gateway processes & routes | 3. Backend responds | 4. Gateway returns response</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Why API Gateway -->
+    <div class="slide">
+        <h1>Why Do We Need API Gateway?</h1>
+        
+        <h2>Problems Without API Gateway</h2>
+        <ul>
+            <li><strong>Direct Backend Exposure:</strong> Clients directly calling backend services creates security risks</li>
+            <li><strong>Multiple Endpoints:</strong> Managing different backend URLs for different services</li>
+            <li><strong>No Centralized Control:</strong> Difficult to implement consistent authentication, rate limiting, and monitoring</li>
+            <li><strong>Tight Coupling:</strong> Clients need to know about backend service locations and protocols</li>
+            <li><strong>Scalability Issues:</strong> Each service needs its own scaling and load balancing</li>
+        </ul>
+
+        <h2>Benefits of Using API Gateway</h2>
+        <div class="grid-container">
+            <div class="grid-item">
+                <h4>🛡️ Security Layer</h4>
+                <p>Centralized authentication, authorization, and API key management</p>
+            </div>
+            <div class="grid-item">
+                <h4>🔄 Request Transformation</h4>
+                <p>Modify requests and responses without changing backend code</p>
+            </div>
+            <div class="grid-item">
+                <h4>⚙️ Traffic Management</h4>
+                <p>Throttling, rate limiting, and request quotas</p>
+            </div>
+            <div class="grid-item">
+                <h4>💾 Caching</h4>
+                <p>Reduce backend load with response caching</p>
+            </div>
+            <div class="grid-item">
+                <h4>📈 Monitoring & Analytics</h4>
+                <p>Track API usage, performance, and errors</p>
+            </div>
+            <div class="grid-item">
+                <h4>🔌 Multiple Integrations</h4>
+                <p>Connect to Lambda, HTTP endpoints, AWS services</p>
+            </div>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- API Types -->
+    <div class="slide">
+        <h1>Types of APIs in API Gateway</h1>
+        
+        <h2>1. REST API</h2>
+        <div class="highlight-box">
+            <p><strong>RESTful APIs</strong> using HTTP methods (GET, POST, PUT, DELETE). Full-featured API with extensive customization options.</p>
+        </div>
+        
+        <h4>Key Features:</h4>
+        <ul>
+            <li>API keys, usage plans, and request throttling</li>
+            <li>Request and response transformations</li>
+            <li>Custom domain names and SSL certificates</li>
+            <li>API caching for improved performance</li>
+            <li>Multiple deployment stages (dev, test, prod)</li>
+            <li>Detailed CloudWatch metrics and logging</li>
+        </ul>
+
+        <h4>When to Use REST API:</h4>
+        <ul>
+            <li>Need full control over API design and behavior</li>
+            <li>Require API keys and usage plans</li>
+            <li>Need request/response transformation</li>
+            <li>Want caching capabilities</li>
+            <li>Building complex enterprise APIs</li>
+        </ul>
+
+        <div class="info-box">
+            <p><strong>Pricing:</strong> Pay per million API calls + data transfer costs. Caching adds additional charges.</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- HTTP API -->
+    <div class="slide">
+        <h1>Types of APIs in API Gateway (Continued)</h1>
+        
+        <h2>2. HTTP API</h2>
+        <div class="highlight-box">
+            <p><strong>HTTP APIs</strong> are optimized for building APIs that proxy to Lambda functions or HTTP backends. Simpler, faster, and cheaper than REST APIs.</p>
+        </div>
+        
+        <h4>Key Features:</h4>
+        <ul>
+            <li>Lower latency and cost (up to 71% cheaper than REST APIs)</li>
+            <li>Built-in support for CORS</li>
+            <li>Native OIDC and OAuth 2.0 authorization</li>
+            <li>Automatic deployments</li>
+            <li>JWT authorizers</li>
+        </ul>
+
+        <h4>When to Use HTTP API:</h4>
+        <ul>
+            <li>Building serverless applications with Lambda</li>
+            <li>Need lower latency and cost</li>
+            <li>Simple proxy to HTTP backends</li>
+            <li>Don't need API keys or usage plans</li>
+            <li>Modern OAuth 2.0 or OIDC authentication</li>
+        </ul>
+
+        <h3>REST API vs HTTP API Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>REST API</th>
+                    <th>HTTP API</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>Higher</td>
+                    <td>Up to 71% cheaper</td>
+                </tr>
+                <tr>
+                    <td><strong>Latency</strong></td>
+                    <td>Standard</td>
+                    <td>Lower latency</td>
+                </tr>
+                <tr>
+                    <td><strong>API Keys</strong></td>
+                    <td>✅ Yes</td>
+                    <td>❌ No</td>
+                </tr>
+                <tr>
+                    <td><strong>Usage Plans</strong></td>
+                    <td>✅ Yes</td>
+                    <td>❌ No</td>
+                </tr>
+                <tr>
+                    <td><strong>Caching</strong></td>
+                    <td>✅ Yes</td>
+                    <td>❌ No</td>
+                </tr>
+                <tr>
+                    <td><strong>Request Transformation</strong></td>
+                    <td>✅ Yes</td>
+                    <td>Limited</td>
+                </tr>
+                <tr>
+                    <td><strong>OAuth 2.0/OIDC</strong></td>
+                    <td>Via Custom Authorizer</td>
+                    <td>✅ Native Support</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- WebSocket API -->
+    <div class="slide">
+        <h1>Types of APIs in API Gateway (Continued)</h1>
+        
+        <h2>3. WebSocket API</h2>
+        <div class="highlight-box">
+            <p><strong>WebSocket APIs</strong> enable two-way communication between clients and servers. Perfect for real-time applications like chat, gaming, and live dashboards.</p>
+        </div>
+        
+        <h4>Key Features:</h4>
+        <ul>
+            <li>Persistent connections between client and server</li>
+            <li>Server can push data to clients without polling</li>
+            <li>Route selection based on message content</li>
+            <li>Connection management (connect, disconnect, message)</li>
+            <li>Integration with Lambda, HTTP, and AWS services</li>
+        </ul>
+
+        <h4>When to Use WebSocket API:</h4>
+        <ul>
+            <li>Real-time chat applications</li>
+            <li>Live dashboards and monitoring</li>
+            <li>Multiplayer gaming</li>
+            <li>Collaborative editing tools</li>
+            <li>Financial trading platforms</li>
+            <li>IoT device communication</li>
+        </ul>
+
+        <h3>WebSocket Connection Lifecycle</h3>
+        <div class="architecture-diagram">
+            <p><strong>$connect → $default (messages) → $disconnect</strong></p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">1. Client connects | 2. Exchange messages | 3. Client disconnects</p>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Pricing:</strong> Pay for connection minutes and messages sent/received. First 1 billion messages per month are $1.00 per million.</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Core Concepts -->
+    <div class="slide">
+        <h1>API Gateway Core Concepts</h1>
+        
+        <h2>1. Resources & Methods</h2>
+        <div class="highlight-box">
+            <p><strong>Resources:</strong> URL paths in your API (e.g., /users, /products)</p>
+            <p><strong>Methods:</strong> HTTP verbs (GET, POST, PUT, DELETE, PATCH) associated with resources</p>
+        </div>
+
+        <h3>Example API Structure:</h3>
+        <div class="code-block">
+/api
+  /users
+    GET    - List all users
+    POST   - Create new user
+    /{id}
+      GET    - Get user by ID
+      PUT    - Update user
+      DELETE - Delete user
+  /products
+    GET    - List all products
+    POST   - Create new product
+        </div>
+
+        <h2>2. Stages</h2>
+        <div class="highlight-box">
+            <p><strong>Stages</strong> are named references to a deployment of your API. They allow you to have multiple versions of your API running simultaneously.</p>
+        </div>
+
+        <h4>Common Stage Setup:</h4>
+        <ul>
+            <li><strong>dev:</strong> Development environment for testing</li>
+            <li><strong>test/staging:</strong> Pre-production testing</li>
+            <li><strong>prod:</strong> Production environment for end users</li>
+        </ul>
+
+        <div class="info-box">
+            <p>Each stage has its own URL: https://api-id.execute-api.region.amazonaws.com/stage-name</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Integration Types -->
+    <div class="slide">
+        <h1>API Gateway Integration Types</h1>
+        
+        <h2>1. Lambda Function Integration</h2>
+        <div class="highlight-box">
+            <p>Invoke AWS Lambda functions to process requests. Most common integration for serverless applications.</p>
+        </div>
+        <ul>
+            <li><strong>Lambda Proxy:</strong> Passes entire request to Lambda, expects specific response format</li>
+            <li><strong>Lambda Custom:</strong> Transform request/response using mapping templates</li>
+        </ul>
+
+        <h2>2. HTTP Integration</h2>
+        <div class="highlight-box">
+            <p>Forward requests to HTTP endpoints (public or private). Can integrate with existing web services.</p>
+        </div>
+        <ul>
+            <li><strong>HTTP Proxy:</strong> Pass request directly to backend HTTP endpoint</li>
+            <li><strong>HTTP Custom:</strong> Transform request/response before forwarding</li>
+        </ul>
+
+        <h2>3. AWS Service Integration</h2>
+        <div class="highlight-box">
+            <p>Directly integrate with AWS services like DynamoDB, S3, SNS, SQS without Lambda.</p>
+        </div>
+        <ul>
+            <li>Expose AWS service actions as API methods</li>
+            <li>Reduce latency by eliminating Lambda invocation</li>
+            <li>Lower cost for simple operations</li>
+        </ul>
+
+        <h2>4. Mock Integration</h2>
+        <div class="highlight-box">
+            <p>Return static responses without calling a backend. Useful for testing and development.</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Authorization -->
+    <div class="slide">
+        <h1>API Gateway Authorization & Security</h1>
+        
+        <h2>1. IAM Authorization</h2>
+        <div class="highlight-box">
+            <p>Use AWS IAM policies to control access. Best for internal APIs accessed by AWS services or users with AWS credentials.</p>
+        </div>
+        <ul>
+            <li>Leverages AWS Signature Version 4 signing</li>
+            <li>No additional cost</li>
+            <li>Integrates with AWS identity management</li>
+        </ul>
+
+        <h2>2. Lambda Authorizers (Custom Authorizers)</h2>
+        <div class="highlight-box">
+            <p>Use Lambda function to implement custom authorization logic. Supports bearer tokens, OAuth, SAML, etc.</p>
+        </div>
+        <ul>
+            <li><strong>Token-based:</strong> Validate token in Authorization header</li>
+            <li><strong>Request-based:</strong> Validate based on headers, query strings, etc.</li>
+            <li>Results can be cached to improve performance</li>
+        </ul>
+
+        <h2>3. Cognito User Pools</h2>
+        <div class="highlight-box">
+            <p>Integrate with Amazon Cognito for user authentication and management.</p>
+        </div>
+        <ul>
+            <li>Built-in user sign-up and sign-in</li>
+            <li>Social identity providers (Google, Facebook, etc.)</li>
+            <li>JWT token validation</li>
+        </ul>
+
+        <h2>4. API Keys</h2>
+        <div class="highlight-box">
+            <p>Simple API key-based authentication. Best for identifying API consumers and implementing usage plans.</p>
+        </div>
+        <ul>
+            <li>Not recommended as sole security mechanism</li>
+            <li>Use with usage plans for rate limiting</li>
+            <li>Easy to implement and manage</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Advanced Features -->
+    <div class="slide">
+        <h1>Advanced API Gateway Features</h1>
+        
+        <h2>1. Request & Response Transformation</h2>
+        <div class="highlight-box">
+            <p>Modify requests before sending to backend and responses before returning to client using mapping templates (VTL - Velocity Template Language).</p>
+        </div>
+        <ul>
+            <li>Add/remove headers</li>
+            <li>Transform JSON structure</li>
+            <li>Set default values</li>
+            <li>Extract data from request</li>
+        </ul>
+
+        <h2>2. Request Validation</h2>
+        <div class="highlight-box">
+            <p>Validate request parameters and body before invoking backend, reducing unnecessary backend calls.</p>
+        </div>
+        <ul>
+            <li>Validate required parameters</li>
+            <li>Check data types and formats</li>
+            <li>Validate against JSON schema</li>
+            <li>Return 400 error for invalid requests</li>
+        </ul>
+
+        <h2>3. Caching</h2>
+        <div class="highlight-box">
+            <p>Cache API responses to reduce backend load and improve latency. Available in REST APIs only.</p>
+        </div>
+        <ul>
+            <li>Cache sizes from 0.5 GB to 237 GB</li>
+            <li>TTL from 0 to 3600 seconds</li>
+            <li>Cache key customization</li>
+            <li>Per-method cache settings</li>
+        </ul>
+
+        <h2>4. Throttling & Rate Limiting</h2>
+        <div class="highlight-box">
+            <p>Control API traffic to protect backend services from being overwhelmed.</p>
+        </div>
+        <ul>
+            <li><strong>Account-level throttling:</strong> 10,000 requests per second (RPS) default</li>
+            <li><strong>Burst limit:</strong> 5,000 requests</li>
+            <li><strong>Method-level throttling:</strong> Set limits per API method</li>
+            <li><strong>Usage plans:</strong> Different limits for different API consumers</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- More Features -->
+    <div class="slide">
+        <h1>More API Gateway Features</h1>
+        
+        <h2>5. CORS (Cross-Origin Resource Sharing)</h2>
+        <div class="highlight-box">
+            <p>Enable web browsers to make requests to your API from different domains.</p>
+        </div>
+        <ul>
+            <li>Configure allowed origins, headers, and methods</li>
+            <li>Automatic OPTIONS method handling</li>
+            <li>Essential for web applications</li>
+        </ul>
+
+        <h2>6. Custom Domain Names</h2>
+        <div class="highlight-box">
+            <p>Use your own domain name instead of default API Gateway URL.</p>
+        </div>
+        <ul>
+            <li>Example: api.yourcompany.com instead of xyz123.execute-api.region.amazonaws.com</li>
+            <li>Requires SSL/TLS certificate from ACM</li>
+            <li>Supports base path mapping for multiple APIs</li>
+        </ul>
+
+        <h2>7. Canary Deployments</h2>
+        <div class="highlight-box">
+            <p>Gradually roll out API changes by routing a percentage of traffic to new version.</p>
+        </div>
+        <ul>
+            <li>Test new versions with subset of users</li>
+            <li>Control traffic percentage (0-100%)</li>
+            <li>Promote or rollback easily</li>
+            <li>Reduce deployment risk</li>
+        </ul>
+
+        <h2>8. API Documentation</h2>
+        <div class="highlight-box">
+            <p>Generate and publish API documentation automatically.</p>
+        </div>
+        <ul>
+            <li>Export as OpenAPI (Swagger) specification</li>
+            <li>Publish to API Gateway Developer Portal</li>
+            <li>Keep documentation in sync with API</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Monitoring -->
+    <div class="slide">
+        <h1>Monitoring & Logging</h1>
+        
+        <h2>CloudWatch Metrics</h2>
+        <div class="highlight-box">
+            <p>API Gateway automatically publishes metrics to CloudWatch for monitoring API performance.</p>
+        </div>
+
+        <h4>Key Metrics:</h4>
+        <div class="grid-container">
+            <div class="grid-item">
+                <h4>📊 Count</h4>
+                <p>Total number of API requests</p>
+            </div>
+            <div class="grid-item">
+                <h4>⏱️ Latency</h4>
+                <p>Time between request and response</p>
+            </div>
+            <div class="grid-item">
+                <h4>🔴 4XXError</h4>
+                <p>Client-side errors</p>
+            </div>
+            <div class="grid-item">
+                <h4>🔴 5XXError</h4>
+                <p>Server-side errors</p>
+            </div>
+            <div class="grid-item">
+                <h4>💾 CacheHitCount</h4>
+                <p>Number of cache hits</p>
+            </div>
+            <div class="grid-item">
+                <h4>❌ CacheMissCount</h4>
+                <p>Number of cache misses</p>
+            </div>
+        </div>
+
+        <h2>CloudWatch Logs</h2>
+        <div class="highlight-box">
+            <p>Enable detailed logging to troubleshoot API issues.</p>
+        </div>
+
+        <h4>Log Types:</h4>
+        <ul>
+            <li><strong>Execution Logs:</strong> Detailed information about request/response</li>
+            <li><strong>Access Logs:</strong> Who accessed your API and how</li>
+        </ul>
+
+        <h2>AWS X-Ray</h2>
+        <div class="highlight-box">
+            <p>Trace requests through your entire application stack for performance analysis.</p>
+        </div>
+        <ul>
+            <li>End-to-end request tracing</li>
+            <li>Identify performance bottlenecks</li>
+            <li>Visualize service dependencies</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Use Cases -->
+    <div class="slide">
+        <h1>Common Use Cases</h1>
+        
+        <h2>1. Serverless Backend for Mobile/Web Apps</h2>
+        <div class="highlight-box">
+            <p>Create scalable backend APIs without managing servers.</p>
+        </div>
+        <ul>
+            <li>API Gateway + Lambda + DynamoDB</li>
+            <li>Automatic scaling</li>
+            <li>Pay only for what you use</li>
+        </ul>
+
+        <h2>2. Microservices Architecture</h2>
+        <div class="highlight-box">
+            <p>Single entry point for multiple microservices.</p>
+        </div>
+        <ul>
+            <li>Route requests to different services</li>
+            <li>Centralized authentication and monitoring</li>
+            <li>Service discovery and load balancing</li>
+        </ul>
+
+        <h2>3. Legacy System Modernization</h2>
+        <div class="highlight-box">
+            <p>Add modern API layer to existing systems.</p>
+        </div>
+        <ul>
+            <li>Expose legacy systems via REST APIs</li>
+            <li>Add security and rate limiting</li>
+            <li>Transform legacy data formats</li>
+        </ul>
+
+        <h2>4. IoT Backend</h2>
+        <div class="highlight-box">
+            <p>Handle requests from IoT devices at scale.</p>
+        </div>
+        <ul>
+            <li>WebSocket APIs for real-time communication</li>
+            <li>Throttling to protect backend</li>
+            <li>Integration with IoT Core</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="slide">
+        <h1>API Gateway Pricing</h1>
+        
+        <h2>REST API Pricing</h2>
+        <div class="highlight-box">
+            <p><strong>$3.50 per million API calls</strong> (first 333 million calls/month)</p>
+            <p>Price decreases with volume (up to $1.51 per million for over 1 billion calls)</p>
+        </div>
+        <ul>
+            <li>Data transfer: Standard AWS data transfer rates</li>
+            <li>Caching: $0.02 per hour for 0.5GB cache</li>
+        </ul>
+
+        <h2>HTTP API Pricing</h2>
+        <div class="highlight-box">
+            <p><strong>$1.00 per million API calls</strong> (first 300 million calls/month)</p>
+            <p>Up to 71% cheaper than REST APIs</p>
+        </div>
+
+        <h2>WebSocket API Pricing</h2>
+        <div class="highlight-box">
+            <p><strong>$1.00 per million messages</strong> (first 1 billion messages)</p>
+            <p><strong>$0.25 per million connection minutes</strong></p>
+        </div>
+
+        <h2>Free Tier</h2>
+        <div class="success-box">
+            <p><strong>12 months free tier includes:</strong></p>
+            <ul>
+                <li>1 million REST API calls per month</li>
+                <li>1 million HTTP API calls per month</li>
+                <li>1 million messages for WebSocket APIs</li>
+                <li>750,000 connection minutes for WebSocket APIs</li>
+            </ul>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Best Practices -->
+    <div class="slide">
+        <h1>API Gateway Best Practices</h1>
+        
+        <h2>Security Best Practices</h2>
+        <ul>
+            <li><strong>Use HTTPS:</strong> Always use SSL/TLS for API endpoints</li>
+            <li><strong>Implement proper authorization:</strong> Don't rely solely on API keys</li>
+            <li><strong>Enable CloudTrail:</strong> Log all API Gateway API calls</li>
+            <li><strong>Use resource policies:</strong> Control who can invoke your API</li>
+            <li><strong>Validate input:</strong> Enable request validation to prevent malicious input</li>
+            <li><strong>Use WAF:</strong> Integrate AWS WAF for additional protection</li>
+        </ul>
+
+        <h2>Performance Best Practices</h2>
+        <ul>
+            <li><strong>Enable caching:</strong> Reduce backend load and improve latency</li>
+            <li><strong>Use HTTP APIs:</strong> When you don't need REST API features</li>
+            <li><strong>Implement throttling:</strong> Protect backend from traffic spikes</li>
+            <li><strong>Optimize Lambda functions:</strong> Reduce cold starts and execution time</li>
+            <li><strong>Use regional endpoints:</strong> For lower latency (unless you need edge-optimized)</li>
+        </ul>
+
+        <h2>Cost Optimization</h2>
+        <ul>
+            <li><strong>Choose HTTP API over REST API:</strong> When features allow</li>
+            <li><strong>Enable caching:</strong> Reduce number of backend calls</li>
+            <li><strong>Implement request validation:</strong> Reject invalid requests early</li>
+            <li><strong>Use usage plans:</strong> Monitor and control API usage</li>
+            <li><strong>Clean up unused APIs:</strong> Delete old stages and APIs</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Architecture Patterns -->
+    <div class="slide">
+        <h1>Common Architecture Patterns</h1>
+        
+        <h2>Pattern 1: Serverless REST API</h2>
+        <div class="architecture-diagram">
+            <p><strong>Client → API Gateway → Lambda → DynamoDB</strong></p>
+        </div>
+        <ul>
+            <li>Fully serverless and scalable</li>
+            <li>No infrastructure management</li>
+            <li>Pay per request</li>
+        </ul>
+
+        <h2>Pattern 2: Microservices Gateway</h2>
+        <div class="architecture-diagram">
+            <p><strong>Client → API Gateway → [Lambda/ECS/EKS Services]</strong></p>
+        </div>
+        <ul>
+            <li>Single entry point for multiple services</li>
+            <li>Centralized authentication and monitoring</li>
+            <li>Service routing based on path</li>
+        </ul>
+
+        <h2>Pattern 3: Real-time Application</h2>
+        <div class="architecture-diagram">
+            <p><strong>Client ↔ WebSocket API ↔ Lambda ↔ DynamoDB</strong></p>
+        </div>
+        <ul>
+            <li>Bidirectional communication</li>
+            <li>Real-time updates</li>
+            <li>Connection state management</li>
+        </ul>
+
+        <h2>Pattern 4: API Aggregation</h2>
+        <div class="architecture-diagram">
+            <p><strong>Client → API Gateway → [Multiple Backend APIs]</strong></p>
+        </div>
+        <ul>
+            <li>Combine multiple backend APIs</li>
+            <li>Transform and aggregate responses</li>
+            <li>Simplify client integration</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Introduction -->
+    <div class="slide">
+        <h1>🧪 Hands-On Lab: Building Your First API</h1>
+        
+        <div class="highlight-box">
+            <h3>Lab Objective</h3>
+            <p>Create a serverless REST API using API Gateway and Lambda to manage a simple user database with DynamoDB.</p>
+        </div>
+
+        <h2>What You'll Build</h2>
+        <div class="architecture-diagram">
+            <p><strong>Client → API Gateway → Lambda Functions → DynamoDB</strong></p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">Complete CRUD API for user management</p>
+        </div>
+
+        <h2>Lab Components</h2>
+        <div class="grid-container">
+            <div class="grid-item">
+                <h4>📊 DynamoDB Table</h4>
+                <p>Store user data</p>
+            </div>
+            <div class="grid-item">
+                <h4>⚡ Lambda Functions</h4>
+                <p>Business logic for CRUD operations</p>
+            </div>
+            <div class="grid-item">
+                <h4>🚪 API Gateway</h4>
+                <p>REST API with multiple endpoints</p>
+            </div>
+            <div class="grid-item">
+                <h4>🔒 IAM Roles</h4>
+                <p>Permissions for Lambda to access DynamoDB</p>
+            </div>
+        </div>
+
+        <h2>API Endpoints You'll Create</h2>
+        <ul>
+            <li><strong>GET /users</strong> - List all users</li>
+            <li><strong>GET /users/{id}</strong> - Get specific user</li>
+            <li><strong>POST /users</strong> - Create new user</li>
+            <li><strong>PUT /users/{id}</strong> - Update user</li>
+            <li><strong>DELETE /users/{id}</strong> - Delete user</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Prerequisites -->
+    <div class="slide">
+        <h1>Lab Prerequisites & Setup</h1>
+        
+        <h2>Prerequisites</h2>
+        <ul>
+            <li>AWS Account with appropriate permissions</li>
+            <li>Basic understanding of REST APIs</li>
+            <li>Familiarity with JSON format</li>
+            <li>API testing tool (Postman, curl, or AWS Console)</li>
+        </ul>
+
+        <h2>Required AWS Permissions</h2>
+        <div class="code-block">
+{
+  "Services": [
+    "API Gateway - Full Access",
+    "Lambda - Full Access", 
+    "DynamoDB - Full Access",
+    "IAM - Create Roles",
+    "CloudWatch Logs - Read Access"
+  ]
+}
+        </div>
+
+        <h2>Estimated Time & Cost</h2>
+        <div class="info-box">
+            <p><strong>Time:</strong> 45-60 minutes</p>
+            <p><strong>Cost:</strong> Free tier eligible - Should cost $0 if within free tier limits</p>
+        </div>
+
+        <div class="warning-box">
+            <p><strong>⚠️ Important:</strong> Remember to clean up resources after the lab to avoid unnecessary charges!</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 1 -->
+    <div class="slide">
+        <h1>Lab Step 1: Create DynamoDB Table</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create a DynamoDB table to store user data</h3>
+        </div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Open AWS Console and navigate to <strong>DynamoDB</strong></li>
+            <li>Click <strong>"Create table"</strong></li>
+            <li>Configure table settings:
+                <ul>
+                    <li><strong>Table name:</strong> Users</li>
+                    <li><strong>Partition key:</strong> userId (String)</li>
+                    <li><strong>Table settings:</strong> Default settings</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Create table"</strong></li>
+            <li>Wait for table status to become <strong>"Active"</strong></li>
+        </ol>
+
+        <h2>Table Schema</h2>
+        <div class="code-block">
+{
+  "userId": "string (Primary Key)",
+  "name": "string",
+  "email": "string",
+  "age": "number",
+  "createdAt": "string"
+}
+        </div>
+
+        <div class="success-box">
+            <p><strong>✅ Verification:</strong> Table status shows "Active" in DynamoDB console</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 2 -->
+    <div class="slide">
+        <h1>Lab Step 2: Create IAM Role for Lambda</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create IAM role with permissions for Lambda to access DynamoDB</h3>
+        </div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Navigate to <strong>IAM</strong> in AWS Console</li>
+            <li>Click <strong>"Roles"</strong> → <strong>"Create role"</strong></li>
+            <li>Select <strong>"AWS service"</strong> → <strong>"Lambda"</strong></li>
+            <li>Click <strong>"Next"</strong></li>
+            <li>Attach policies:
+                <ul>
+                    <li><strong>AWSLambdaBasicExecutionRole</strong> (for CloudWatch Logs)</li>
+                    <li><strong>AmazonDynamoDBFullAccess</strong> (for DynamoDB operations)</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Next"</strong></li>
+            <li>Role name: <strong>LambdaDynamoDBRole</strong></li>
+            <li>Click <strong>"Create role"</strong></li>
+        </ol>
+
+        <div class="info-box">
+            <p><strong>💡 Best Practice:</strong> In production, use least privilege principle and create custom policies instead of using FullAccess policies.</p>
+        </div>
+
+        <div class="success-box">
+            <p><strong>✅ Verification:</strong> Role appears in IAM Roles list with both policies attached</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 3 -->
+    <div class="slide">
+        <h1>Lab Step 3: Create Lambda Function - Get All Users</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create Lambda function to retrieve all users</h3>
+        </div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Navigate to <strong>Lambda</strong> in AWS Console</li>
+            <li>Click <strong>"Create function"</strong></li>
+            <li>Select <strong>"Author from scratch"</strong></li>
+            <li>Configure:
+                <ul>
+                    <li><strong>Function name:</strong> GetAllUsers</li>
+                    <li><strong>Runtime:</strong> Python 3.12</li>
+                    <li><strong>Execution role:</strong> Use existing role → LambdaDynamoDBRole</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Create function"</strong></li>
+        </ol>
+
+        <h2>Lambda Code (Python)</h2>
+        <div class="code-block">
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('Users')
+
+def lambda_handler(event, context):
+    try:
+        response = table.scan()
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            'body': json.dumps(response['Items'])
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 4 -->
+    <div class="slide">
+        <h1>Lab Step 4: Create Lambda Function - Get User by ID</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create Lambda function to retrieve specific user</h3>
+        </div>
+
+        <h2>Function Configuration</h2>
+        <ul>
+            <li><strong>Function name:</strong> GetUserById</li>
+            <li><strong>Runtime:</strong> Python 3.12</li>
+            <li><strong>Execution role:</strong> LambdaDynamoDBRole</li>
+        </ul>
+
+        <h2>Lambda Code (Python)</h2>
+        <div class="code-block">
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('Users')
+
+def lambda_handler(event, context):
+    try:
+        user_id = event['pathParameters']['id']
+        
+        response = table.get_item(Key={'userId': user_id})
+        
+        if 'Item' in response:
+            return {
+                'statusCode': 200,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                'body': json.dumps(response['Item'])
+            }
+        else:
+            return {
+                'statusCode': 404,
+                'body': json.dumps({'error': 'User not found'})
+            }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 5 -->
+    <div class="slide">
+        <h1>Lab Step 5: Create Lambda Function - Create User</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create Lambda function to add new user</h3>
+        </div>
+
+        <h2>Function Configuration</h2>
+        <ul>
+            <li><strong>Function name:</strong> CreateUser</li>
+            <li><strong>Runtime:</strong> Python 3.12</li>
+            <li><strong>Execution role:</strong> LambdaDynamoDBRole</li>
+        </ul>
+
+        <h2>Lambda Code (Python)</h2>
+        <div class="code-block">
+import json
+import boto3
+import uuid
+from datetime import datetime
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('Users')
+
+def lambda_handler(event, context):
+    try:
+        body = json.loads(event['body'])
+        
+        user_id = str(uuid.uuid4())
+        item = {
+            'userId': user_id,
+            'name': body['name'],
+            'email': body['email'],
+            'age': body.get('age', 0),
+            'createdAt': datetime.now().isoformat()
+        }
+        
+        table.put_item(Item=item)
+        
+        return {
+            'statusCode': 201,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            'body': json.dumps(item)
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 6 -->
+    <div class="slide">
+        <h1>Lab Step 6: Create Lambda Function - Update User</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create Lambda function to update existing user</h3>
+        </div>
+
+        <h2>Function Configuration</h2>
+        <ul>
+            <li><strong>Function name:</strong> UpdateUser</li>
+            <li><strong>Runtime:</strong> Python 3.12</li>
+            <li><strong>Execution role:</strong> LambdaDynamoDBRole</li>
+        </ul>
+
+        <h2>Lambda Code (Python)</h2>
+        <div class="code-block">
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('Users')
+
+def lambda_handler(event, context):
+    try:
+        user_id = event['pathParameters']['id']
+        body = json.loads(event['body'])
+        
+        update_expr = "SET "
+        expr_values = {}
+        expr_names = {}
+        
+        if 'name' in body:
+            update_expr += "#n = :name, "
+            expr_values[':name'] = body['name']
+            expr_names['#n'] = 'name'
+        if 'email' in body:
+            update_expr += "email = :email, "
+            expr_values[':email'] = body['email']
+        if 'age' in body:
+            update_expr += "age = :age, "
+            expr_values[':age'] = body['age']
+        
+        update_expr = update_expr.rstrip(', ')
+        
+        response = table.update_item(
+            Key={'userId': user_id},
+            UpdateExpression=update_expr,
+            ExpressionAttributeValues=expr_values,
+            ExpressionAttributeNames=expr_names if expr_names else None,
+            ReturnValues='ALL_NEW'
+        )
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            'body': json.dumps(response['Attributes'])
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 7 -->
+    <div class="slide">
+        <h1>Lab Step 7: Create Lambda Function - Delete User</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create Lambda function to delete user</h3>
+        </div>
+
+        <h2>Function Configuration</h2>
+        <ul>
+            <li><strong>Function name:</strong> DeleteUser</li>
+            <li><strong>Runtime:</strong> Python 3.12</li>
+            <li><strong>Execution role:</strong> LambdaDynamoDBRole</li>
+        </ul>
+
+        <h2>Lambda Code (Python)</h2>
+        <div class="code-block">
+import json
+import boto3
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('Users')
+
+def lambda_handler(event, context):
+    try:
+        user_id = event['pathParameters']['id']
+        
+        table.delete_item(Key={'userId': user_id})
+        
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            'body': json.dumps({
+                'message': 'User deleted successfully',
+                'userId': user_id
+            })
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+        </div>
+
+        <div class="success-box">
+            <p><strong>✅ Checkpoint:</strong> You should now have 5 Lambda functions created</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 8 -->
+    <div class="slide">
+        <h1>Lab Step 8: Create API Gateway REST API</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create REST API in API Gateway</h3>
+        </div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Navigate to <strong>API Gateway</strong> in AWS Console</li>
+            <li>Click <strong>"Create API"</strong></li>
+            <li>Choose <strong>"REST API"</strong> (not Private or HTTP API)</li>
+            <li>Click <strong>"Build"</strong></li>
+            <li>Configure API:
+                <ul>
+                    <li><strong>Choose protocol:</strong> REST</li>
+                    <li><strong>Create new API:</strong> New API</li>
+                    <li><strong>API name:</strong> UserManagementAPI</li>
+                    <li><strong>Description:</strong> API for managing users</li>
+                    <li><strong>Endpoint Type:</strong> Regional</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Create API"</strong></li>
+        </ol>
+
+        <div class="info-box">
+            <p><strong>💡 Note:</strong> Regional endpoints are recommended for most use cases as they provide lower latency for clients in the same region.</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 9 -->
+    <div class="slide">
+        <h1>Lab Step 9: Create /users Resource</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create the /users resource path</h3>
+        </div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>In your API, click <strong>"Actions"</strong> → <strong>"Create Resource"</strong></li>
+            <li>Configure resource:
+                <ul>
+                    <li><strong>Resource Name:</strong> users</li>
+                    <li><strong>Resource Path:</strong> /users</li>
+                    <li><strong>Enable CORS:</strong> ✅ Check this box</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Create Resource"</strong></li>
+        </ol>
+
+        <h2>Create GET Method for /users</h2>
+        <ol>
+            <li>Select the <strong>/users</strong> resource</li>
+            <li>Click <strong>"Actions"</strong> → <strong>"Create Method"</strong></li>
+            <li>Select <strong>"GET"</strong> from dropdown</li>
+            <li>Click the checkmark ✓</li>
+            <li>Configure integration:
+                <ul>
+                    <li><strong>Integration type:</strong> Lambda Function</li>
+                    <li><strong>Use Lambda Proxy integration:</strong> ✅ Check</li>
+                    <li><strong>Lambda Function:</strong> GetAllUsers</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Save"</strong></li>
+            <li>Click <strong>"OK"</strong> to grant permissions</li>
+        </ol>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 10 -->
+    <div class="slide">
+        <h1>Lab Step 10: Create POST Method for /users</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Add POST method to create users</h3>
+        </div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Select the <strong>/users</strong> resource</li>
+            <li>Click <strong>"Actions"</strong> → <strong>"Create Method"</strong></li>
+            <li>Select <strong>"POST"</strong> from dropdown</li>
+            <li>Click the checkmark ✓</li>
+            <li>Configure integration:
+                <ul>
+                    <li><strong>Integration type:</strong> Lambda Function</li>
+                    <li><strong>Use Lambda Proxy integration:</strong> ✅ Check</li>
+                    <li><strong>Lambda Function:</strong> CreateUser</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Save"</strong></li>
+            <li>Click <strong>"OK"</strong> to grant permissions</li>
+        </ol>
+
+        <div class="info-box">
+            <p><strong>💡 Lambda Proxy Integration:</strong> Passes the entire request to Lambda and expects a specific response format. This is the easiest way to integrate Lambda with API Gateway.</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 11 -->
+    <div class="slide">
+        <h1>Lab Step 11: Create /users/{id} Resource</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create resource with path parameter for specific user operations</h3>
+        </div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Select the <strong>/users</strong> resource</li>
+            <li>Click <strong>"Actions"</strong> → <strong>"Create Resource"</strong></li>
+            <li>Configure resource:
+                <ul>
+                    <li><strong>Resource Name:</strong> user</li>
+                    <li><strong>Resource Path:</strong> {id}</li>
+                    <li><strong>Enable CORS:</strong> ✅ Check</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Create Resource"</strong></li>
+        </ol>
+
+        <div class="info-box">
+            <p><strong>💡 Path Parameters:</strong> The {id} syntax creates a path parameter that will be passed to your Lambda function in the event object.</p>
+        </div>
+
+        <h2>Your API Structure Should Look Like:</h2>
+        <div class="code-block">
+/
+└── /users
+    ├── GET (GetAllUsers)
+    ├── POST (CreateUser)
+    └── /{id}
+        ├── GET (to be added)
+        ├── PUT (to be added)
+        └── DELETE (to be added)
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 12 -->
+    <div class="slide">
+        <h1>Lab Step 12: Add Methods to /users/{id}</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Create GET, PUT, and DELETE methods for specific user</h3>
+        </div>
+
+        <h2>Create GET Method</h2>
+        <ol>
+            <li>Select <strong>/users/{id}</strong> resource</li>
+            <li>Create Method → <strong>GET</strong></li>
+            <li>Integration: Lambda Function (Proxy) → <strong>GetUserById</strong></li>
+            <li>Save and grant permissions</li>
+        </ol>
+
+        <h2>Create PUT Method</h2>
+        <ol>
+            <li>Select <strong>/users/{id}</strong> resource</li>
+            <li>Create Method → <strong>PUT</strong></li>
+            <li>Integration: Lambda Function (Proxy) → <strong>UpdateUser</strong></li>
+            <li>Save and grant permissions</li>
+        </ol>
+
+        <h2>Create DELETE Method</h2>
+        <ol>
+            <li>Select <strong>/users/{id}</strong> resource</li>
+            <li>Create Method → <strong>DELETE</strong></li>
+            <li>Integration: Lambda Function (Proxy) → <strong>DeleteUser</strong></li>
+            <li>Save and grant permissions</li>
+        </ol>
+
+        <div class="success-box">
+            <p><strong>✅ Checkpoint:</strong> You should now have 5 methods configured across 2 resources</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 13 -->
+    <div class="slide">
+        <h1>Lab Step 13: Deploy API</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Deploy your API to make it accessible</h3>
+        </div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Click <strong>"Actions"</strong> → <strong>"Deploy API"</strong></li>
+            <li>Configure deployment:
+                <ul>
+                    <li><strong>Deployment stage:</strong> [New Stage]</li>
+                    <li><strong>Stage name:</strong> dev</li>
+                    <li><strong>Stage description:</strong> Development environment</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Deploy"</strong></li>
+            <li>Note the <strong>Invoke URL</strong> displayed at the top</li>
+        </ol>
+
+        <div class="highlight-box">
+            <h4>Your Invoke URL will look like:</h4>
+            <p>https://abc123xyz.execute-api.us-east-1.amazonaws.com/dev</p>
+        </div>
+
+        <h2>Your Complete API Endpoints</h2>
+        <div class="code-block">
+GET    {Invoke-URL}/users          - List all users
+POST   {Invoke-URL}/users          - Create user
+GET    {Invoke-URL}/users/{id}     - Get user by ID
+PUT    {Invoke-URL}/users/{id}     - Update user
+DELETE {Invoke-URL}/users/{id}     - Delete user
+        </div>
+
+        <div class="warning-box">
+            <p><strong>⚠️ Important:</strong> Save your Invoke URL - you'll need it for testing!</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 14 -->
+    <div class="slide">
+        <h1>Lab Step 14: Test Your API</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Test all API endpoints</h3>
+        </div>
+
+        <h2>Option 1: Test in API Gateway Console</h2>
+        <ol>
+            <li>Select any method in your API</li>
+            <li>Click the <strong>"TEST"</strong> button (lightning bolt icon)</li>
+            <li>For methods with {id}, enter a test value</li>
+            <li>For POST/PUT, add request body in the Request Body field</li>
+            <li>Click <strong>"Test"</strong></li>
+        </ol>
+
+        <h2>Option 2: Test with curl</h2>
+        
+        <h4>Create a User:</h4>
+        <div class="code-block">
+curl -X POST https://YOUR-API-ID.execute-api.REGION.amazonaws.com/dev/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "age": 30
+  }'
+        </div>
+
+        <h4>Get All Users:</h4>
+        <div class="code-block">
+curl https://YOUR-API-ID.execute-api.REGION.amazonaws.com/dev/users
+        </div>
+
+        <h4>Get User by ID:</h4>
+        <div class="code-block">
+curl https://YOUR-API-ID.execute-api.REGION.amazonaws.com/dev/users/USER-ID
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 15 -->
+    <div class="slide">
+        <h1>Lab Step 15: More Testing Examples</h1>
+        
+        <h2>Update User:</h2>
+        <div class="code-block">
+curl -X PUT https://YOUR-API-ID.execute-api.REGION.amazonaws.com/dev/users/USER-ID \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Updated",
+    "email": "john.updated@example.com",
+    "age": 31
+  }'
+        </div>
+
+        <h2>Delete User:</h2>
+        <div class="code-block">
+curl -X DELETE https://YOUR-API-ID.execute-api.REGION.amazonaws.com/dev/users/USER-ID
+        </div>
+
+        <h2>Option 3: Test with Postman</h2>
+        <ol>
+            <li>Open Postman</li>
+            <li>Create a new request</li>
+            <li>Set method (GET, POST, PUT, DELETE)</li>
+            <li>Enter your API endpoint URL</li>
+            <li>For POST/PUT, add JSON body in Body → raw → JSON</li>
+            <li>Click Send</li>
+        </ol>
+
+        <div class="success-box">
+            <p><strong>✅ Expected Results:</strong></p>
+            <ul>
+                <li>POST returns 201 with created user data</li>
+                <li>GET returns 200 with user data</li>
+                <li>PUT returns 200 with updated data</li>
+                <li>DELETE returns 200 with success message</li>
+            </ul>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 16 -->
+    <div class="slide">
+        <h1>Lab Step 16: Monitor Your API</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: View API metrics and logs</h3>
+        </div>
+
+        <h2>View API Gateway Metrics</h2>
+        <ol>
+            <li>In API Gateway console, select your API</li>
+            <li>Click on the <strong>"dev"</strong> stage</li>
+            <li>Click the <strong>"Logs/Tracing"</strong> tab</li>
+            <li>View CloudWatch metrics:
+                <ul>
+                    <li>API calls count</li>
+                    <li>Latency</li>
+                    <li>4XX and 5XX errors</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>Enable CloudWatch Logs (Optional)</h2>
+        <ol>
+            <li>In the stage, go to <strong>"Logs/Tracing"</strong></li>
+            <li>Click <strong>"Edit"</strong></li>
+            <li>Enable <strong>"CloudWatch Logs"</strong></li>
+            <li>Set log level to <strong>"INFO"</strong> or <strong>"ERROR"</strong></li>
+            <li>Enable <strong>"Log full requests/responses data"</strong></li>
+            <li>Save changes</li>
+            <li>Redeploy API</li>
+        </ol>
+
+        <div class="info-box">
+            <p><strong>💡 Note:</strong> CloudWatch Logs incur additional charges. Use INFO level for debugging, ERROR for production.</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 17 -->
+    <div class="slide">
+        <h1>Lab Step 17: Add Throttling (Optional)</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Configure rate limiting to protect your API</h3>
+        </div>
+
+        <h2>Configure Stage-Level Throttling</h2>
+        <ol>
+            <li>In API Gateway, select your API</li>
+            <li>Click on <strong>"dev"</strong> stage</li>
+            <li>Click <strong>"Settings"</strong> tab</li>
+            <li>Scroll to <strong>"Default Method Throttling"</strong></li>
+            <li>Configure:
+                <ul>
+                    <li><strong>Rate:</strong> 100 requests per second</li>
+                    <li><strong>Burst:</strong> 200 requests</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Save Changes"</strong></li>
+        </ol>
+
+        <h2>Configure Method-Level Throttling</h2>
+        <ol>
+            <li>In the same Settings tab</li>
+            <li>Click <strong>"Add Method Throttling"</strong></li>
+            <li>Select resource and method (e.g., /users POST)</li>
+            <li>Set custom rate and burst limits</li>
+            <li>Save changes</li>
+        </ol>
+
+        <div class="info-box">
+            <p><strong>💡 Use Case:</strong> Protect expensive operations (like POST) with lower limits than read operations (GET).</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 18 -->
+    <div class="slide">
+        <h1>Lab Step 18: Enable CORS (If Needed)</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Configure CORS for web browser access</h3>
+        </div>
+
+        <h2>Enable CORS on Resources</h2>
+        <ol>
+            <li>Select a resource (e.g., /users)</li>
+            <li>Click <strong>"Actions"</strong> → <strong>"Enable CORS"</strong></li>
+            <li>Configure CORS settings:
+                <ul>
+                    <li><strong>Access-Control-Allow-Origin:</strong> * (or specific domain)</li>
+                    <li><strong>Access-Control-Allow-Headers:</strong> Content-Type,X-Amz-Date,Authorization,X-Api-Key</li>
+                    <li><strong>Access-Control-Allow-Methods:</strong> GET,POST,PUT,DELETE,OPTIONS</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Enable CORS and replace existing CORS headers"</strong></li>
+            <li>Repeat for /users/{id} resource</li>
+            <li>Redeploy API</li>
+        </ol>
+
+        <div class="warning-box">
+            <p><strong>⚠️ Security Note:</strong> In production, replace * with your specific domain instead of allowing all origins.</p>
+        </div>
+
+        <div class="info-box">
+            <p><strong>💡 Note:</strong> CORS is only needed if your API will be called from web browsers. Server-to-server calls don't require CORS.</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 19 -->
+    <div class="slide">
+        <h1>Lab Step 19: Create Production Stage</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Deploy API to production stage</h3>
+        </div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Click <strong>"Actions"</strong> → <strong>"Deploy API"</strong></li>
+            <li>Configure deployment:
+                <ul>
+                    <li><strong>Deployment stage:</strong> [New Stage]</li>
+                    <li><strong>Stage name:</strong> prod</li>
+                    <li><strong>Stage description:</strong> Production environment</li>
+                </ul>
+            </li>
+            <li>Click <strong>"Deploy"</strong></li>
+        </ol>
+
+        <h2>Configure Production Settings</h2>
+        <ol>
+            <li>Select <strong>"prod"</strong> stage</li>
+            <li>Go to <strong>"Settings"</strong></li>
+            <li>Configure:
+                <ul>
+                    <li>Enable CloudWatch Logs (ERROR level only)</li>
+                    <li>Set appropriate throttling limits</li>
+                    <li>Enable caching if needed</li>
+                </ul>
+            </li>
+            <li>Save changes</li>
+        </ol>
+
+        <div class="highlight-box">
+            <h4>Now you have two environments:</h4>
+            <p><strong>Dev:</strong> https://api-id.execute-api.region.amazonaws.com/dev</p>
+            <p><strong>Prod:</strong> https://api-id.execute-api.region.amazonaws.com/prod</p>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Step 20 -->
+    <div class="slide">
+        <h1>Lab Step 20: Cleanup Resources</h1>
+        
+        <div class="lab-step">
+            <h3>📋 Task: Delete resources to avoid charges</h3>
+        </div>
+
+        <div class="warning-box">
+            <p><strong>⚠️ Important:</strong> Complete this step to avoid ongoing charges!</p>
+        </div>
+
+        <h2>Cleanup Steps</h2>
+        
+        <h3>1. Delete API Gateway</h3>
+        <ol>
+            <li>Go to API Gateway console</li>
+            <li>Select <strong>UserManagementAPI</strong></li>
+            <li>Click <strong>"Actions"</strong> → <strong>"Delete API"</strong></li>
+            <li>Confirm deletion</li>
+        </ol>
+
+        <h3>2. Delete Lambda Functions</h3>
+        <ol>
+            <li>Go to Lambda console</li>
+            <li>Delete each function:
+                <ul>
+                    <li>GetAllUsers</li>
+                    <li>GetUserById</li>
+                    <li>CreateUser</li>
+                    <li>UpdateUser</li>
+                    <li>DeleteUser</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h3>3. Delete DynamoDB Table</h3>
+        <ol>
+            <li>Go to DynamoDB console</li>
+            <li>Select <strong>Users</strong> table</li>
+            <li>Click <strong>"Delete"</strong></li>
+            <li>Confirm deletion</li>
+        </ol>
+
+        <h3>4. Delete IAM Role</h3>
+        <ol>
+            <li>Go to IAM console</li>
+            <li>Select <strong>LambdaDynamoDBRole</strong></li>
+            <li>Click <strong>"Delete"</strong></li>
+            <li>Confirm deletion</li>
+        </ol>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Lab Summary -->
+    <div class="slide">
+        <h1>🎉 Lab Complete - What You've Learned</h1>
+        
+        <div class="success-box">
+            <h3>Congratulations! You've successfully built a complete serverless API!</h3>
+        </div>
+
+        <h2>Skills Acquired</h2>
+        <div class="grid-container">
+            <div class="grid-item">
+                <h4>✅ API Gateway</h4>
+                <p>Created REST API with multiple resources and methods</p>
+            </div>
+            <div class="grid-item">
+                <h4>✅ Lambda Integration</h4>
+                <p>Connected Lambda functions to API endpoints</p>
+            </div>
+            <div class="grid-item">
+                <h4>✅ DynamoDB</h4>
+                <p>Implemented CRUD operations on NoSQL database</p>
+            </div>
+            <div class="grid-item">
+                <h4>✅ IAM</h4>
+                <p>Configured proper permissions and roles</p>
+            </div>
+            <div class="grid-item">
+                <h4>✅ API Testing</h4>
+                <p>Tested APIs using multiple methods</p>
+            </div>
+            <div class="grid-item">
+                <h4>✅ Deployment</h4>
+                <p>Deployed to multiple stages</p>
+            </div>
+        </div>
+
+        <h2>Architecture You Built</h2>
+        <div class="architecture-diagram">
+            <p><strong>Client → API Gateway (REST) → Lambda Functions → DynamoDB</strong></p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">Complete serverless CRUD API with 5 endpoints</p>
+        </div>
+
+        <h2>Next Steps</h2>
+        <ul>
+            <li>Add authentication using Cognito or Lambda Authorizers</li>
+            <li>Implement request validation</li>
+            <li>Add caching for better performance</li>
+            <li>Set up custom domain name</li>
+            <li>Implement usage plans and API keys</li>
+            <li>Add comprehensive error handling</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div class="slide">
+        <h1>Troubleshooting Common Issues</h1>
+        
+        <h2>Issue 1: 502 Bad Gateway Error</h2>
+        <div class="warning-box">
+            <p><strong>Cause:</strong> Lambda function error or timeout</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Check Lambda function logs in CloudWatch</li>
+                <li>Verify Lambda function code syntax</li>
+                <li>Ensure Lambda has correct IAM permissions</li>
+                <li>Check Lambda timeout settings (increase if needed)</li>
+            </ul>
+        </div>
+
+        <h2>Issue 2: 403 Forbidden Error</h2>
+        <div class="warning-box">
+            <p><strong>Cause:</strong> Missing permissions or API key required</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Verify API Gateway has permission to invoke Lambda</li>
+                <li>Check if API key is required but not provided</li>
+                <li>Verify IAM role permissions</li>
+            </ul>
+        </div>
+
+        <h2>Issue 3: CORS Errors in Browser</h2>
+        <div class="warning-box">
+            <p><strong>Cause:</strong> CORS not properly configured</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Enable CORS on all resources</li>
+                <li>Ensure Lambda returns CORS headers in response</li>
+                <li>Redeploy API after CORS changes</li>
+            </ul>
+        </div>
+
+        <h2>Issue 4: Empty Response from Lambda</h2>
+        <div class="warning-box">
+            <p><strong>Cause:</strong> Lambda not returning proper response format</p>
+            <p><strong>Solution:</strong></p>
+            <ul>
+                <li>Ensure Lambda returns statusCode, headers, and body</li>
+                <li>Body must be a string (use json.dumps())</li>
+                <li>Check Lambda logs for errors</li>
+            </ul>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Additional Resources -->
+    <div class="slide">
+        <h1>Additional Resources & Learning</h1>
+        
+        <h2>AWS Documentation</h2>
+        <ul>
+            <li><strong>API Gateway Developer Guide:</strong> https://docs.aws.amazon.com/apigateway/</li>
+            <li><strong>Lambda Developer Guide:</strong> https://docs.aws.amazon.com/lambda/</li>
+            <li><strong>DynamoDB Developer Guide:</strong> https://docs.aws.amazon.com/dynamodb/</li>
+        </ul>
+
+        <h2>Advanced Topics to Explore</h2>
+        <div class="grid-container">
+            <div class="grid-item">
+                <h4>🔐 Security</h4>
+                <ul>
+                    <li>Lambda Authorizers</li>
+                    <li>Cognito User Pools</li>
+                    <li>API Keys & Usage Plans</li>
+                    <li>AWS WAF Integration</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>⚡ Performance</h4>
+                <ul>
+                    <li>Response Caching</li>
+                    <li>Lambda Provisioned Concurrency</li>
+                    <li>DynamoDB DAX</li>
+                    <li>CloudFront Integration</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>🛠️ DevOps</h4>
+                <ul>
+                    <li>Infrastructure as Code (CloudFormation/CDK)</li>
+                    <li>CI/CD Pipelines</li>
+                    <li>Canary Deployments</li>
+                    <li>Blue/Green Deployments</li>
+                </ul>
+            </div>
+            <div class="grid-item">
+                <h4>📊 Monitoring</h4>
+                <ul>
+                    <li>CloudWatch Dashboards</li>
+                    <li>X-Ray Tracing</li>
+                    <li>Custom Metrics</li>
+                    <li>Alarms & Notifications</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Practice Projects</h2>
+        <ul>
+            <li>Build a blog API with authentication</li>
+            <li>Create a file upload API with S3 integration</li>
+            <li>Implement a real-time chat using WebSocket API</li>
+            <li>Build a microservices architecture with multiple APIs</li>
+        </ul>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Summary -->
+    <div class="slide">
+        <h1>API Gateway - Key Takeaways</h1>
+        
+        <h2>What We Covered</h2>
+        <ul>
+            <li>✅ What API Gateway is and why it's needed</li>
+            <li>✅ Three types of APIs: REST, HTTP, and WebSocket</li>
+            <li>✅ When to use each API type</li>
+            <li>✅ Integration options: Lambda, HTTP, AWS Services, Mock</li>
+            <li>✅ Authorization methods: IAM, Lambda Authorizers, Cognito, API Keys</li>
+            <li>✅ Advanced features: Caching, Throttling, CORS, Custom Domains</li>
+            <li>✅ Monitoring with CloudWatch and X-Ray</li>
+            <li>✅ Best practices for security, performance, and cost</li>
+            <li>✅ Hands-on experience building a complete serverless API</li>
+        </ul>
+
+        <h2>Remember</h2>
+        <div class="highlight-box">
+            <ul>
+                <li><strong>REST API:</strong> Full-featured, use when you need all capabilities</li>
+                <li><strong>HTTP API:</strong> Simpler and cheaper, use for basic proxy scenarios</li>
+                <li><strong>WebSocket API:</strong> Real-time bidirectional communication</li>
+                <li><strong>Always secure your APIs</strong> with proper authorization</li>
+                <li><strong>Monitor and optimize</strong> using CloudWatch metrics</li>
+                <li><strong>Use stages</strong> for different environments (dev, test, prod)</li>
+            </ul>
+        </div>
+
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+    <!-- Final Slide -->
+    <div class="slide title-slide">
+        <div class="slide-header">
+            <h1 class="slide-title">Thank You!</h1>
+            <p class="slide-subtitle">AWS API Gateway Training Complete</p>
+            <div style="margin-top: 50px;">
+                <p style="font-size: 1.3rem; margin-bottom: 20px;">Questions?</p>
+                <p style="font-size: 1.1rem; opacity: 0.8;">Keep building and exploring AWS services!</p>
+            </div>
+        </div>
+        <div class="slide-footer">AWS Training Material</div>
+    </div>
+
+</body>
+</html>

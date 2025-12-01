@@ -1,0 +1,221 @@
+Batch 4 - Milestone 1
+MCQ Set 2
+
+1. Which of the following is NOT a core DevOps value?
+a) Collaboration over silos
+b) Automation over manual processes
+c) Documentation over working software
+d) Learning from failures
+
+2. What does the Linux command `cat` do?
+a) Categorize files
+b) Display file contents
+c) Create a file
+d) Copy and transfer files
+
+3. According to the content, DevOps can make deployments how much faster?
+a) 50% faster
+b) 100% faster
+c) 200% faster
+d) 300% faster
+
+4. Which Linux directory contains configuration files?
+a) /home
+b) /var
+c) /etc
+d) /usr
+
+5. What is the primary benefit of automated deployments?
+a) Increased manual intervention
+b) Consistent deployment process
+c) Slower deployment times
+d) More human errors
+
+6. What does the Linux command `chmod` do?
+a) Change file ownership
+b) Change file permissions
+c) Change file mode
+d) Change file location
+
+7. What does CD stand for in DevOps?
+a) Code Development
+b) Continuous Deployment
+c) Central Database
+d) Configuration Design
+
+8. Which Linux command removes duplicate lines from sorted data?
+a) unique
+b) uniq
+c) remove
+d) distinct
+
+9. In a CI/CD pipeline, what typically happens after the "Build" stage?
+a) Plan
+b) Code
+c) Test
+d) Monitor
+
+10. What does the Linux command `head` do?
+a) Show file headers
+b) Show first few lines of a file
+c) Show file metadata
+d) Show file permissions
+
+===============================================================================
+
+Questions 11-20: Text Processing & Automation
+
+11. What is the main advantage of automated testing in CI/CD?
+a) Slower feedback
+b) More human errors
+c) Quick feedback on code quality
+d) Increased manual effort
+
+12. Which Linux command is used to count lines, words, and characters?
+a) count
+b) wc
+c) calc
+d) num
+
+13. What does the Terraform command `terraform destroy` do?
+a) Deletes the Terraform configuration files
+b) Removes all resources defined in the Terraform configuration
+c) Destroys the state file only
+d) Uninstalls Terraform from the system
+
+14. What does the pipe operator `|` do in Linux?
+a) Creates a file
+b) Deletes a file
+c) Connects output of one command to input of another
+d) Compares two files
+
+15. What do Jenkins Agents (Workers) primarily do?
+a) Schedule jobs
+b) Manage the web interface
+c) Actually execute the build jobs
+d) Store build artifacts
+
+16. In shell scripting, what is used to make decisions based on conditions?
+a) for loop
+b) while loop
+c) if-else statement
+d) case statement
+
+17. Which of the following is NOT typically part of a CI/CD pipeline?
+a) Code commit
+b) Automated testing
+c) Manual approval for every change
+d) Automated deployment
+
+18. What does the `sed` command do in Linux?
+a) Sort data
+b) Stream editor for filtering and transforming text
+c) Search for files
+d) Set environment variables
+
+19. What is the primary reason for Jenkins' popularity in DevOps?
+a) It's the newest tool
+b) 15+ years of proven reliability and massive community support
+c) It only works with specific programming languages
+d) It requires no configuration
+
+20. Which command extracts specific columns from text?
+a) extract
+b) column
+c) cut
+d) select
+
+21. What percentage of the top 1 million web servers run on Linux?
+a) 85%
+b) 90%
+c) 96%
+d) 100%
+
+22. Which command is used to preview Terraform changes?
+a) terraform apply
+b) terraform plan
+c) terraform show
+d) terraform init
+
+23. In Python, which data type is used to store multiple items in a single variable?
+a) string
+b) integer
+c) list
+d) boolean
+
+24. Which tool is primarily discussed for Infrastructure as Code?
+a) Ansible
+b) Puppet
+c) Chef
+d) Terraform
+
+25. How many services does AWS offer?
+a) 100+
+b) 150+
+c) 200+
+d) 250+
+
+26. What does AWS Lambda allow you to do?
+a) Store files in the cloud
+b) Run code without managing servers
+c) Create virtual machines
+d) Manage databases
+
+27. Which Python library is commonly used for making HTTP requests?
+a) http
+b) web
+c) requests
+d) urllib
+
+28. What is the main problem with manual AWS resource creation?
+a) It's too fast
+b) It's error-prone and time-consuming
+c) It's too automated
+d) It requires no documentation
+
+29. What is the most critical rule when writing YAML?
+a) Use tabs for indentation
+b) Use spaces for indentation
+c) Always use quotes
+d) Avoid comments
+
+30. What is an SLO in SRE terminology?
+a) Service Level Objective
+b) System Load Optimization
+c) Software License Owner
+d) Service Location Object
+
+===============================================================================
+
+ANSWER KEY
+
+1. c) Documentation over working software
+2. b) Display file contents
+3. c) 200% faster
+4. c) /etc
+5. b) Consistent deployment process
+6. b) Change file permissions
+7. b) Continuous Deployment
+8. b) uniq
+9. c) Test
+10. b) Show first few lines of a file
+11. c) Quick feedback on code quality
+12. b) wc
+13. b) Removes all resources defined in the Terraform configuration
+14. c) Connects output of one command to input of another
+15. c) Actually execute the build jobs
+16. c) if-else statement
+17. c) Manual approval for every change
+18. b) Stream editor for filtering and transforming text
+19. b) 15+ years of proven reliability and massive community support
+20. c) cut
+21. c) 96%
+22. b) terraform plan
+23. c) list
+24. d) Terraform
+25. c) 200+
+26. b) Run code without managing servers
+27. c) requests
+28. b) It's error-prone and time-consuming
+29. b) Use spaces for indentation
+30. a) Service Level Objective

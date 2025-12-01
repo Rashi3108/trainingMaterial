@@ -1,0 +1,219 @@
+Batch 4 - Milestone 1
+MCQ Set 1: 
+
+1. What does DevOps primarily aim to bridge?
+a) Development and Testing
+b) Development and Operations
+c) Operations and Security
+d) Testing and Deployment
+
+2. In Linux, which directory contains user home directories?
+a) /usr
+b) /var
+c) /home
+d) /etc
+
+3. Which cultural shift is most important in DevOps adoption?
+a) From collaboration to competition
+b) From shared responsibility to individual ownership
+c) From "It's not my job" to "How can we solve this together?"
+d) From automation to manual processes
+
+4. What does the Linux command `pwd` do?
+a) Print working directory
+b) Power down system
+c) Process word document
+d) Permanent write data
+
+5. What is the main advantage of DevOps over traditional IT approaches?
+a) Slower deployment cycles
+b) More manual processes
+c) Faster time to market
+d) Increased silos between teams
+
+6. Which Linux command is used to list files and directories?
+a) list
+b) ls
+c) dir
+d) show
+
+7. What does the Linux file permission `755` mean?
+a) rwxr-xr-x (owner: read/write/execute, group/others: read/execute)
+b) rw-r--r-- (owner: read/write, group/others: read only)
+c) rwxrwxrwx (full permissions for everyone)
+d) r--r--r-- (read only for everyone)
+
+8. What does CI stand for in DevOps?
+a) Continuous Integration
+b) Code Implementation
+c) Continuous Improvement
+d) Central Intelligence
+
+9. Which Linux command shows the current logged-in user?
+a) user
+b) who
+c) whoami
+d) current
+
+10. In the traditional waterfall approach, what happens after the Development phase?
+a) Deployment
+b) Testing
+c) Requirements
+d) Design
+
+11. What is the main purpose of a CI/CD pipeline?
+a) To slow down development
+b) To automate the software delivery process
+c) To increase manual testing
+d) To reduce code quality
+
+12. What is the first line of a shell script called?
+a) Header line
+b) Shebang line
+c) Command line
+d) Script line
+
+13. Which Terraform command initializes a new or existing Terraform configuration?
+a) terraform start
+b) terraform init
+c) terraform begin
+d) terraform setup
+
+14. Which shell scripting construct is used to repeat actions?
+a) if-else
+b) case
+c) for loop
+d) function
+
+15. What triggers a typical CI/CD pipeline?
+a) Manual intervention only
+b) Code commit to repository
+c) Weekly scheduled runs
+d) Email notifications
+
+16. In shell scripting, how do you store the output of a command in a variable?
+a) variable = command
+b) variable := $(command)
+c) variable = $(command)
+d) variable == command
+
+17. Which tool is mentioned as the most popular CI/CD tool with 70%+ market share?
+a) GitLab CI
+b) GitHub Actions
+c) Jenkins
+d) TeamCity
+
+18. What does the `grep` command do in Linux?
+a) Group files
+b) Search for patterns in text
+c) Generate reports
+d) Get remote files
+
+19. In Jenkins architecture, what is the role of the Master (Controller)?
+a) Execute build jobs
+b) Job scheduling and coordination
+c) Store code repositories
+d) Run automated tests
+
+20. Which Linux command is used to sort lines of text?
+a) order
+b) arrange
+c) sort
+d) organize
+
+21. Which cloud provider is mentioned as the pioneer and market leader?
+a) Microsoft Azure
+b) Google Cloud
+c) Amazon AWS
+d) IBM Cloud
+
+22. What does Terraform use to track infrastructure state?
+a) Database
+b) State file
+c) Log files
+d) Configuration files
+
+23. Why is Python popular for DevOps automation?
+a) It's the fastest programming language
+b) Simple syntax and powerful capabilities
+c) It only works on Linux
+d) It requires no libraries
+
+24. What is the main principle behind Terraform's approach?
+a) Imperative - how to build
+b) Declarative - what you want
+c) Manual - step by step
+d) Reactive - respond to changes
+
+25. In Python, what is the correct way to define a function?
+a) function myFunc():
+b) def myFunc():
+c) create myFunc():
+d) func myFunc():
+
+26. What is the main benefit of Infrastructure as Code (IaC)?
+a) More manual processes
+b) Slower deployments
+c) Consistent, repeatable infrastructure
+d) Increased human errors
+
+27. What does YAML stand for?
+a) Yet Another Markup Language
+b) YAML Ain't Markup Language
+c) Young Adult Markup Language
+d) Youthful Application Markup Language
+
+28. In YAML, what is the correct way to define a list?
+a) [item1, item2, item3]
+b) - item1, item2, item3
+c) - item1
+   - item2
+   - item3
+d) Both a and c are correct
+
+29. What is an SLI in SRE terminology?
+a) Service Level Indicator
+b) System Load Index
+c) Software License Information
+d) Service Location Identifier
+
+30. In YAML, what character is used to start a comment?
+a) //
+b) /*
+c) #
+d) --
+
+===============================================================================
+
+ANSWER KEY
+
+1. b) Development and Operations
+2. c) /home
+3. c) From "It's not my job" to "How can we solve this together?"
+4. a) Print working directory
+5. c) Faster time to market
+6. b) ls
+7. a) rwxr-xr-x (owner: read/write/execute, group/others: read/execute)
+8. a) Continuous Integration
+9. c) whoami
+10. b) Testing
+11. b) To automate the software delivery process
+12. b) Shebang line
+13. b) terraform init
+14. c) for loop
+15. b) Code commit to repository
+16. c) variable = $(command)
+17. c) Jenkins
+18. b) Search for patterns in text
+19. b) Job scheduling and coordination
+20. c) sort
+21. c) Amazon AWS
+22. b) State file
+23. b) Simple syntax and powerful capabilities
+24. b) Declarative - what you want
+25. b) def myFunc():
+26. c) Consistent, repeatable infrastructure
+27. b) YAML Ain't Markup Language
+28. d) Both a and c are correct
+29. a) Service Level Indicator
+30. c) #

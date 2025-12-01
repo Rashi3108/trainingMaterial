@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: rashi
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        env:
+          - name: APP_COLOR
+            valueFrom:
+              configMapKeyRef: 
+                name: demo-config
+                key: APP_COLOR
+          - name: APP_MODE
+            valueFrom:
+              configMapKeyRef: 
+                name: demo-config
+                key: APP_MODE
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef: 
+                name: demo-secret
+                key: username
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef: 
+                name: demo-secret
+                key: password
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/demo-config
+          - name: secret-volume
+            mountPath: /etc/demo-secret
+    
+      volumes:
+        - name: config-volume
+          configMap:
+            name: demo-config
+        - name: secret-volume
+          secret:
+            secretName: demo-secret

@@ -1,0 +1,96 @@
+===============================================================================
+                  Batch - 4 -> 15 MCQ QUESTIONS: WEEK 3
+
+===============================================================================
+
+1. What is the primary purpose of Apache Maven?
+   a) Version control system for Java projects
+   b) Build automation and project management tool
+   c) Application server for Java applications
+   d) Database management system
+
+   Answer: b) Build automation and project management tool
+
+-------------------------------------------------------------------------------
+
+2. Which file is considered the cornerstone of every Maven project?
+   a) build.xml
+   b) settings.xml
+   c) pom.xml
+   d) maven.properties
+
+   Answer: c) pom.xml
+
+-------------------------------------------------------------------------------
+
+3. Which Maven lifecycle phase creates the distributable format (JAR/WAR)?
+   a) compile
+   b) test
+   c) package
+   d) install
+
+   Answer: c) package
+
+-------------------------------------------------------------------------------
+
+4. What is the correct order of Maven's default lifecycle phases?
+   a) compile → test → validate → package → install
+   b) validate → compile → test → package → install
+   c) test → compile → validate → package → install
+   d) validate → test → compile → package → install
+
+   Answer: b) validate → compile → test → package → install
+
+-------------------------------------------------------------------------------
+
+5. Which dependency scope is used for testing frameworks like JUnit?
+   a) compile
+   b) runtime
+   c) provided
+   d) test
+
+   Answer: d) test
+
+-------------------------------------------------------------------------------
+
+6. What command executes the complete Maven build lifecycle including installing 
+   the artifact to the local repository?
+   a) mvn clean compile
+   b) mvn clean package
+   c) mvn clean install
+   d) mvn clean deploy
+
+   Answer: c) mvn clean install
+
+-------------------------------------------------------------------------------
+
+7. Which Harness module enables runtime feature control without additional deployments?
+    a) Continuous Integration
+    b) Feature Flags
+    c) Chaos Engineering
+    d) Cloud Cost Management
+
+    Answer: b) Feature Flags
+
+-------------------------------------------------------------------------------
+
+8. What is the primary purpose of Harness Chaos Engineering module?
+    a) To create random errors in production
+    b) To intentionally inject failures to test system resilience
+    c) To monitor application performance
+    d) To manage cloud infrastructure costs
+
+    Answer: b) To intentionally inject failures to test system resilience
+
+
+-------------------------------------------------------------------------------
+
+9. What is a key advantage of Harness SaaS platform compared to self-hosted 
+    solutions like Jenkins?
+    a) Lower total cost of ownership
+    b) Minimal setup and managed infrastructure
+    c) Better integration with Git repositories
+    d) Support for containerized applications
+
+    Answer: b) Minimal setup and managed infrastructure
+

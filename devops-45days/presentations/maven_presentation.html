@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building and Managing Projects with Maven</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .slide:last-child {
+            page-break-after: auto;
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .slide-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide .slide-title {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .slide-subtitle {
+            font-size: 1.5rem;
+            color: #fecaca;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #dc2626;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #fef2f2;
+            border-left: 5px solid #dc2626;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #dc2626;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #fef2f2;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid #dc2626;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .lab-section {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .lab-section h3 {
+            color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 20px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0ea5e9;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.95rem;
+        }
+
+        .xml-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .lifecycle-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .lifecycle-phase {
+            background: #dc2626;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            text-align: center;
+            min-width: 120px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #dc2626;
+            margin: 0 10px;
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .slide {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title Slide -->
+<div class="slide title-slide">
+    <div class="content">
+        <h1 class="slide-title">Building and Managing Projects with Maven</h1>
+        <p class="slide-subtitle">Comprehensive Guide to Apache Maven for Modern Development</p>
+    </div>
+    <div class="slide-footer" style="color: #fecaca;">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 2: What is Maven? -->
+<div class="slide">
+    <div class="content">
+        <h2>What is Maven?</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Apache Maven</strong> is a powerful build automation and project management tool primarily used for Java projects. It provides a comprehensive framework for managing project dependencies, build processes, and project lifecycle.</p>
+        </div>
+
+        <h3>Core Concepts</h3>
+        <ul>
+            <li><strong>Project Object Model (POM):</strong> XML-based project configuration file that defines project structure, dependencies, and build configuration</li>
+            <li><strong>Standardized Directory Layout:</strong> Convention-over-configuration approach with predefined project structure</li>
+            <li><strong>Dependency Management:</strong> Automatic resolution and download of project dependencies from repositories</li>
+            <li><strong>Build Lifecycle:</strong> Predefined phases for building, testing, and deploying projects</li>
+        </ul>
+
+        <h3>Key Benefits</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Simplified Build Process</h4>
+                <p>Standardized build lifecycle eliminates complex build scripts and configurations.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Dependency Management</h4>
+                <p>Automatic resolution of transitive dependencies with version conflict resolution.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Project Standardization</h4>
+                <p>Consistent project structure across teams and organizations.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Integration Ecosystem</h4>
+                <p>Extensive plugin ecosystem and IDE integration support.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 3: Maven's Role in DevOps -->
+<div class="slide">
+    <div class="content">
+        <h2>Maven's Role in DevOps</h2>
+        
+        <h3>DevOps Integration Points</h3>
+        <p>Maven serves as a critical component in modern DevOps pipelines, providing standardized build processes and artifact management capabilities.</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Continuous Integration</h4>
+                <p>Standardized build commands enable consistent CI pipeline execution across different environments.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Artifact Management</h4>
+                <p>Integration with artifact repositories (Nexus, Artifactory) for versioned artifact storage and distribution.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Quality Gates</h4>
+                <p>Built-in support for code quality tools, testing frameworks, and security scanning integration.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Environment Consistency</h4>
+                <p>Profile-based configuration management ensures consistent builds across development, testing, and production environments.</p>
+            </div>
+        </div>
+
+        <h3>DevOps Pipeline Benefits</h3>
+        <ul>
+            <li><strong>Reproducible Builds:</strong> Consistent build results across different environments and team members</li>
+            <li><strong>Automated Testing:</strong> Integration with testing frameworks for automated unit, integration, and acceptance testing</li>
+            <li><strong>Dependency Security:</strong> Vulnerability scanning and license compliance checking for dependencies</li>
+            <li><strong>Release Management:</strong> Automated versioning, tagging, and release artifact generation</li>
+            <li><strong>Multi-Module Support:</strong> Complex project structures with inter-module dependencies</li>
+        </ul>
+
+        <h3>CI/CD Integration</h3>
+        <div class="highlight-box">
+            <p>Maven's standardized commands (<code>mvn clean compile test package install deploy</code>) provide a universal interface for CI/CD tools, enabling seamless integration with Jenkins, GitLab CI, GitHub Actions, and other automation platforms.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 4: Maven Lifecycle Phases -->
+<div class="slide">
+    <div class="content">
+        <h2>Maven Lifecycle Phases</h2>
+        
+        <h3>Build Lifecycle Overview</h3>
+        <p>Maven defines three built-in build lifecycles: <strong>default</strong>, <strong>clean</strong>, and <strong>site</strong>. Each lifecycle consists of a sequence of phases.</p>
+
+        <h3>Default Lifecycle Phases</h3>
+        <div class="lifecycle-diagram">
+            <div class="lifecycle-phase">validate</div>
+            <div class="arrow">→</div>
+            <div class="lifecycle-phase">compile</div>
+            <div class="arrow">→</div>
+            <div class="lifecycle-phase">test</div>
+            <div class="arrow">→</div>
+            <div class="lifecycle-phase">package</div>
+            <div class="arrow">→</div>
+            <div class="lifecycle-phase">verify</div>
+            <div class="arrow">→</div>
+            <div class="lifecycle-phase">install</div>
+            <div class="arrow">→</div>
+            <div class="lifecycle-phase">deploy</div>
+        </div>
+
+        <h3>Phase Descriptions</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Phase</th>
+                    <th>Description</th>
+                    <th>Key Activities</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>validate</strong></td>
+                    <td>Validate project structure and information</td>
+                    <td>Check POM validity, required properties</td>
+                </tr>
+                <tr>
+                    <td><strong>compile</strong></td>
+                    <td>Compile source code</td>
+                    <td>Compile main Java sources, process resources</td>
+                </tr>
+                <tr>
+                    <td><strong>test</strong></td>
+                    <td>Run unit tests</td>
+                    <td>Execute unit tests, generate test reports</td>
+                </tr>
+                <tr>
+                    <td><strong>package</strong></td>
+                    <td>Create distributable format</td>
+                    <td>Create JAR, WAR, or other package formats</td>
+                </tr>
+                <tr>
+                    <td><strong>verify</strong></td>
+                    <td>Run integration tests and checks</td>
+                    <td>Integration tests, quality checks</td>
+                </tr>
+                <tr>
+                    <td><strong>install</strong></td>
+                    <td>Install to local repository</td>
+                    <td>Copy artifact to local Maven repository</td>
+                </tr>
+                <tr>
+                    <td><strong>deploy</strong></td>
+                    <td>Deploy to remote repository</td>
+                    <td>Upload artifact to remote repository</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 5: POM.xml File Explained -->
+<div class="slide">
+    <div class="content">
+        <h2>POM.xml File Explained</h2>
+        
+        <h3>Project Object Model Structure</h3>
+        <p>The POM.xml file is the cornerstone of every Maven project, containing all project configuration, dependencies, and build instructions.</p>
+
+        <h3>Essential POM Elements</h3>
+        <div class="xml-block">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+&lt;project xmlns="http://maven.apache.org/POM/4.0.0"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xsi:schemaLocation="http://maven.apache.org/POM/4.0.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- Project Coordinates --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;com.example&lt;/groupId&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;simple-hello-app&lt;/artifactId&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;1.0.0&lt;/version&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;packaging&gt;jar&lt;/packaging&gt;<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- Project Information --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;name&gt;Simple Hello Application&lt;/name&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;description&gt;A simple Spring Boot hello world application&lt;/description&gt;<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;!-- Properties --&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;properties&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;java.version&gt;17&lt;/java.version&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;maven.compiler.source&gt;17&lt;/maven.compiler.source&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;maven.compiler.target&gt;17&lt;/maven.compiler.target&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/properties&gt;<br>
+&lt;/project&gt;
+        </div>
+
+        <h3>Key POM Components</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Project Coordinates</h4>
+                <p><strong>GroupId:</strong> Organization identifier<br>
+                <strong>ArtifactId:</strong> Project name<br>
+                <strong>Version:</strong> Project version</p>
+            </div>
+            <div class="feature-card">
+                <h4>Dependencies</h4>
+                <p>External libraries and frameworks required by the project with version management.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Build Configuration</h4>
+                <p>Plugins, goals, and build customization settings for compilation and packaging.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Properties</h4>
+                <p>Configuration variables used throughout the POM for version management and settings.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 6: Dependency Management -->
+<div class="slide">
+    <div class="content">
+        <h2>Dependency Management</h2>
+        
+        <h3>Maven Dependency System</h3>
+        <p>Maven's dependency management system automatically resolves, downloads, and manages project dependencies and their transitive dependencies.</p>
+
+        <h3>Dependency Declaration</h3>
+        <div class="xml-block">
+&lt;dependencies&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;dependency&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;3.2.0&lt;/version&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/dependency&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;dependency&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;junit&lt;/groupId&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;junit&lt;/artifactId&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;4.13.2&lt;/version&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;scope&gt;test&lt;/scope&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/dependency&gt;<br>
+&lt;/dependencies&gt;
+        </div>
+
+        <h3>Dependency Scopes</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Scope</th>
+                    <th>Description</th>
+                    <th>Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>compile</strong></td>
+                    <td>Default scope, available in all classpaths</td>
+                    <td>Main application dependencies</td>
+                </tr>
+                <tr>
+                    <td><strong>test</strong></td>
+                    <td>Only available during test compilation and execution</td>
+                    <td>Testing frameworks (JUnit, Mockito)</td>
+                </tr>
+                <tr>
+                    <td><strong>provided</strong></td>
+                    <td>Available at compile time, not packaged</td>
+                    <td>Servlet API, application server libraries</td>
+                </tr>
+                <tr>
+                    <td><strong>runtime</strong></td>
+                    <td>Not needed for compilation, required at runtime</td>
+                    <td>Database drivers, logging implementations</td>
+                </tr>
+                <tr>
+                    <td><strong>system</strong></td>
+                    <td>Similar to provided, but JAR location specified</td>
+                    <td>System-specific libraries (rarely used)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Dependency Management Benefits</h3>
+        <ul>
+            <li><strong>Transitive Dependencies:</strong> Automatic resolution of dependencies of dependencies</li>
+            <li><strong>Version Conflict Resolution:</strong> Nearest definition and dependency mediation</li>
+            <li><strong>Repository Management:</strong> Central, local, and remote repository support</li>
+            <li><strong>Exclusions:</strong> Ability to exclude specific transitive dependencies</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 7: Lab - Create Maven Project -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Create Maven Project</h2>
+        
+        <div class="lab-section">
+            <h3>Creating a New Maven Project</h3>
+            
+            <h4>Method 1: Using Maven Archetype</h4>
+            <div class="code-block">
+# Create a new Maven project using quickstart archetype<br>
+mvn archetype:generate \<br>
+&nbsp;&nbsp;-DgroupId=com.example \<br>
+&nbsp;&nbsp;-DartifactId=my-maven-app \<br>
+&nbsp;&nbsp;-DarchetypeArtifactId=maven-archetype-quickstart \<br>
+&nbsp;&nbsp;-DinteractiveMode=false<br><br>
+
+# Navigate to project directory<br>
+cd my-maven-app
+            </div>
+
+            <h4>Method 2: Using Spring Boot Initializer</h4>
+            <div class="code-block">
+# Create Spring Boot project using Maven<br>
+curl https://start.spring.io/starter.zip \<br>
+&nbsp;&nbsp;-d dependencies=web \<br>
+&nbsp;&nbsp;-d groupId=com.example \<br>
+&nbsp;&nbsp;-d artifactId=spring-boot-demo \<br>
+&nbsp;&nbsp;-d name=spring-boot-demo \<br>
+&nbsp;&nbsp;-d packageName=com.example.demo \<br>
+&nbsp;&nbsp;-o spring-boot-demo.zip<br><br>
+
+# Extract and navigate<br>
+unzip spring-boot-demo.zip<br>
+cd spring-boot-demo
+            </div>
+
+            <h3>Project Structure Verification</h3>
+            <ol class="step-list">
+                <li><strong>Examine Directory Structure:</strong> Verify standard Maven directory layout is created</li>
+                <li><strong>Review POM.xml:</strong> Check project coordinates, dependencies, and build configuration</li>
+                <li><strong>Source Code Location:</strong> Confirm Java sources are in <code>src/main/java</code></li>
+                <li><strong>Test Location:</strong> Verify test files are in <code>src/test/java</code></li>
+                <li><strong>Resources:</strong> Check <code>src/main/resources</code> for configuration files</li>
+            </ol>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 8: Maven Commands Demonstration -->
+<div class="slide">
+    <div class="content">
+        <h2>Maven Commands with Spring Boot Example</h2>
+        
+        <div class="lab-section">
+            <h3>Using the springboot-hello-world-app Project</h3>
+            
+            <h4>Project Overview</h4>
+            <div class="xml-block">
+Project: springboot-hello-world-app<br>
+├── pom.xml (Spring Boot 3.2.0, Java 17)<br>
+├── src/main/java/com/example/<br>
+│&nbsp;&nbsp;&nbsp;├── HelloApplication.java (Main class)<br>
+│&nbsp;&nbsp;&nbsp;└── HelloController.java (REST endpoint)<br>
+└── target/ (Build output directory)
+            </div>
+
+            <h3>Essential Maven Commands</h3>
+            
+            <h4>1. Clean and Compile</h4>
+            <div class="code-block">
+# Navigate to project directory<br>
+cd /Users/ashu.rana/repos/devops-45days/springboot-hello-world-app<br><br>
+
+# Clean previous builds and compile source code<br>
+mvn clean compile<br><br>
+
+# Expected output: Compiled classes in target/classes/
+            </div>
+
+            <h4>2. Run Tests</h4>
+            <div class="code-block">
+# Execute unit tests<br>
+mvn test<br><br>
+
+# Run tests with detailed output<br>
+mvn test -Dtest=* -DfailIfNoTests=false
+            </div>
+
+            <h4>3. Package Application</h4>
+            <div class="code-block">
+# Create JAR file<br>
+mvn package<br><br>
+
+# Skip tests during packaging (if needed)<br>
+mvn package -DskipTests<br><br>
+
+# Result: target/simple-hello-rashi-1.0.0.jar
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 9: mvn clean install and Advanced Commands -->
+<div class="slide">
+    <div class="content">
+        <h2>mvn clean install and Advanced Commands</h2>
+        
+        <div class="lab-section">
+            <h3>The Complete Build Process</h3>
+            
+            <h4>mvn clean install Command</h4>
+            <div class="code-block">
+# Complete build lifecycle execution<br>
+mvn clean install<br><br>
+
+# What this command does:<br>
+# 1. clean: Removes target directory<br>
+# 2. validate: Validates project structure<br>
+# 3. compile: Compiles source code<br>
+# 4. test: Runs unit tests<br>
+# 5. package: Creates JAR/WAR file<br>
+# 6. verify: Runs integration tests<br>
+# 7. install: Installs artifact to local repository
+            </div>
+
+            <h3>Running the Spring Boot Application</h3>
+            <div class="code-block">
+# Method 1: Using Maven Spring Boot plugin<br>
+mvn spring-boot:run<br><br>
+
+# Method 2: Running the JAR directly<br>
+java -jar target/simple-hello-rashi-1.0.0.jar<br><br>
+
+# Method 3: With specific profile<br>
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+            </div>
+
+            <h3>Additional Useful Commands</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Command</th>
+                        <th>Purpose</th>
+                        <th>Usage Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>mvn dependency:tree</code></td>
+                        <td>Display dependency hierarchy</td>
+                        <td>Analyze transitive dependencies</td>
+                    </tr>
+                    <tr>
+                        <td><code>mvn versions:display-updates</code></td>
+                        <td>Check for dependency updates</td>
+                        <td>Identify outdated dependencies</td>
+                    </tr>
+                    <tr>
+                        <td><code>mvn help:effective-pom</code></td>
+                        <td>Show effective POM configuration</td>
+                        <td>Debug inheritance and profiles</td>
+                    </tr>
+                    <tr>
+                        <td><code>mvn site</code></td>
+                        <td>Generate project documentation</td>
+                        <td>Create project reports and docs</td>
+                    </tr>
+                    <tr>
+                        <td><code>mvn deploy</code></td>
+                        <td>Deploy to remote repository</td>
+                        <td>Publish artifacts to Nexus/Artifactory</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 10: Practical Demonstration -->
+<div class="slide">
+    <div class="content">
+        <h2>Practical Demonstration: Spring Boot Hello World</h2>
+        
+        <div class="lab-section">
+            <h3>Step-by-Step Execution</h3>
+            
+            <ol class="step-list">
+                <li><strong>Project Analysis:</strong>
+                    <div class="code-block">
+# Examine the project structure<br>
+ls -la springboot-hello-world-app/<br>
+cat springboot-hello-world-app/pom.xml
+                    </div>
+                </li>
+                
+                <li><strong>Clean and Compile:</strong>
+                    <div class="code-block">
+cd springboot-hello-world-app<br>
+mvn clean compile<br>
+# Observe: target/classes directory creation
+                    </div>
+                </li>
+                
+                <li><strong>Run Tests:</strong>
+                    <div class="code-block">
+mvn test<br>
+# Check: Test results and reports in target/surefire-reports/
+                    </div>
+                </li>
+                
+                <li><strong>Package Application:</strong>
+                    <div class="code-block">
+mvn package<br>
+# Result: target/simple-hello-rashi-1.0.0.jar created<br>
+ls -la target/*.jar
+                    </div>
+                </li>
+                
+                <li><strong>Install to Local Repository:</strong>
+                    <div class="code-block">
+mvn install<br>
+# Artifact copied to ~/.m2/repository/com/example/simple-hello-rashi/1.0.0/
+                    </div>
+                </li>
+                
+                <li><strong>Run Application:</strong>
+                    <div class="code-block">
+mvn spring-boot:run<br>
+# Access: http://localhost:8080/<br>
+# Expected: "Hello world, this is Rashi"
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 11: Troubleshooting and Best Practices -->
+<div class="slide">
+    <div class="content">
+        <h2>Troubleshooting and Best Practices</h2>
+        
+        <h3>Common Issues and Solutions</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Dependency Conflicts</h4>
+                <p><strong>Issue:</strong> Version conflicts between dependencies<br>
+                <strong>Solution:</strong> Use <code>mvn dependency:tree</code> and exclusions</p>
+            </div>
+            <div class="feature-card">
+                <h4>Build Failures</h4>
+                <p><strong>Issue:</strong> Compilation or test failures<br>
+                <strong>Solution:</strong> Check Java version, dependencies, and test configuration</p>
+            </div>
+            <div class="feature-card">
+                <h4>Repository Issues</h4>
+                <p><strong>Issue:</strong> Cannot download dependencies<br>
+                <strong>Solution:</strong> Check network, proxy settings, and repository URLs</p>
+            </div>
+            <div class="feature-card">
+                <h4>Memory Issues</h4>
+                <p><strong>Issue:</strong> OutOfMemoryError during build<br>
+                <strong>Solution:</strong> Set MAVEN_OPTS environment variable</p>
+            </div>
+        </div>
+
+        <h3>Maven Best Practices</h3>
+        <ul>
+            <li><strong>Version Management:</strong> Use properties for version numbers and dependency management sections</li>
+            <li><strong>Repository Configuration:</strong> Configure corporate repositories and mirrors in settings.xml</li>
+            <li><strong>Profile Usage:</strong> Use profiles for environment-specific configurations</li>
+            <li><strong>Plugin Versions:</strong> Always specify plugin versions for reproducible builds</li>
+            <li><strong>Clean Builds:</strong> Regularly run <code>mvn clean</code> to avoid stale artifacts</li>
+            <li><strong>Dependency Scope:</strong> Use appropriate dependency scopes to minimize artifact size</li>
+        </ul>
+
+        <h3>Performance Optimization</h3>
+        <div class="code-block">
+# Parallel builds<br>
+mvn -T 4 clean install<br><br>
+
+# Skip tests for faster builds (when appropriate)<br>
+mvn clean install -DskipTests<br><br>
+
+# Offline mode (use local repository only)<br>
+mvn -o clean install<br><br>
+
+# Set memory options<br>
+export MAVEN_OPTS="-Xmx2048m -XX:MaxPermSize=256m"
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 12: Summary and Next Steps -->
+<div class="slide">
+    <div class="content">
+        <h2>Summary and Next Steps</h2>
+        
+        <h3>Key Concepts Covered</h3>
+        <div class="highlight-box">
+            <ul>
+                <li>Maven as a comprehensive build automation and project management tool</li>
+                <li>Maven's critical role in modern DevOps pipelines and CI/CD processes</li>
+                <li>Understanding of Maven lifecycle phases and their execution order</li>
+                <li>POM.xml structure and configuration management</li>
+                <li>Dependency management system and scope definitions</li>
+                <li>Practical experience with essential Maven commands</li>
+            </ul>
+        </div>
+
+        <h3>Practical Skills Acquired</h3>
+        <ul>
+            <li>Creating Maven projects using archetypes and Spring Boot initializer</li>
+            <li>Executing complete build lifecycle with <code>mvn clean install</code></li>
+            <li>Running Spring Boot applications using Maven plugin</li>
+            <li>Troubleshooting common Maven build issues</li>
+            <li>Understanding dependency management and conflict resolution</li>
+        </ul>
+
+        <h3>Recommended Next Steps</h3>
+        <ol>
+            <li><strong>Advanced Maven Features:</strong> Explore multi-module projects, profiles, and custom plugins</li>
+            <li><strong>Integration with IDEs:</strong> Configure Maven in IntelliJ IDEA, Eclipse, or VS Code</li>
+            <li><strong>CI/CD Integration:</strong> Implement Maven builds in Jenkins, GitLab CI, or GitHub Actions</li>
+            <li><strong>Repository Management:</strong> Set up Nexus or Artifactory for artifact management</li>
+            <li><strong>Build Optimization:</strong> Implement parallel builds and build caching strategies</li>
+        </ol>
+
+        <h3>Additional Resources</h3>
+        <ul>
+            <li>Apache Maven Official Documentation: https://maven.apache.org/guides/</li>
+            <li>Maven Central Repository: https://search.maven.org/</li>
+            <li>Spring Boot Maven Plugin: https://docs.spring.io/spring-boot/docs/current/maven-plugin/</li>
+            <li>Maven Best Practices Guide: https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+</body>
+</html>

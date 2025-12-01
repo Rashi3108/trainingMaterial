@@ -1,0 +1,160 @@
+Batch 4 - Milestone 1
+SCENARIO-BASED QUESTION 1: Development Team Log Management
+================================================================================
+
+SCENARIO DESCRIPTION:
+You are a Junior DevOps Engineer at WebApp Solutions. The development team has been working on a new web application and they generate lots of log files during development and testing. The team lead has asked you to help them manage these log files better.
+
+CURRENT SITUATION:
+The development team has the following issues:
+- Log files are scattered across different directories: /var/log/app/, /tmp/debug/, and ~/logs/
+- Some log files are very large (over 100MB) and slowing down the system
+- Developers can't easily find error messages in the log files
+- Old log files from last month are still taking up disk space
+- The team wants a daily summary of errors and warnings
+
+WHAT THE TEAM NEEDS:
+1. A way to find all log files on the system
+2. Identify which log files are too large (over 50MB)
+3. Count how many ERROR and WARNING messages are in today's logs
+4. Clean up log files older than 7 days
+5. Create a simple daily report
+
+SAMPLE LOG FILE CONTENT:
+```
+2024-01-15 09:30:15 INFO Application started successfully
+2024-01-15 09:30:20 INFO Database connection established  
+2024-01-15 09:35:10 ERROR Connection timeout to database
+2024-01-15 09:35:15 WARNING Retrying database connection
+2024-01-15 09:35:20 INFO Database connection restored
+2024-01-15 09:40:05 ERROR Disk space low on /var partition
+2024-01-15 09:45:30 INFO Daily backup completed successfully
+```
+
+================================================================================
+
+YOUR TASKS:
+
+PART A: BASIC LINUX COMMANDS (30 points)
+Write the Linux commands to:
+1. Find all files with .log extension in the system
+2. Display the size of each log file in human-readable format
+3. Show the first 10 lines of a log file called "app.log"
+4. Show the last 20 lines of the same log file
+5. Count the total number of lines in all .log files
+
+PART B: TEXT PROCESSING (25 points)
+Write Linux commands to:
+1. Find all lines containing "ERROR" in a log file
+2. Count how many ERROR messages are in the log file
+3. Find all lines containing either "ERROR" or "WARNING"
+4. Display only the timestamp and message (remove the log level)
+5. Sort the log entries by timestamp
+
+PART C: SIMPLE SHELL SCRIPT (35 points)
+Create a shell script called "log_manager.sh" that:
+1. Checks if log files exist in the three directories
+2. Lists all log files larger than 50MB
+3. Counts ERROR and WARNING messages in today's logs
+4. Deletes log files older than 7 days
+5. Creates a simple summary report
+
+PART D: AUTOMATION BASICS (10 points)
+1. Explain how you would run this script automatically every day
+2. How would you make the script executable?
+3. What would you do if the script fails to run?
+
+================================================================================
+
+SOLUTION TEMPLATE:
+
+PART A: BASIC LINUX COMMANDS
+
+1. Find all .log files:
+[Your command here]
+
+2. Show file sizes:
+[Your command here]
+
+3. First 10 lines of app.log:
+[Your command here]
+
+4. Last 20 lines of app.log:
+[Your command here]
+
+5. Count total lines in all .log files:
+[Your command here]
+
+PART B: TEXT PROCESSING
+
+1. Find ERROR lines:
+[Your command here]
+
+2. Count ERROR messages:
+[Your command here]
+
+3. Find ERROR or WARNING lines:
+[Your command here]
+
+4. Show timestamp and message only:
+[Your command here]
+
+5. Sort by timestamp:
+[Your command here]
+
+PART C: SHELL SCRIPT
+
+```bash
+#!/bin/bash
+# log_manager.sh - Simple log file management script
+
+# [Your complete shell script here]
+```
+
+PART D: AUTOMATION BASICS
+
+1. Daily automation:
+[Your explanation here]
+
+2. Make script executable:
+[Your command here]
+
+3. Handle script failures:
+[Your approach here]
+
+================================================================================
+
+EXPECTED SCRIPT OUTPUT EXAMPLE:
+```
+=== LOG MANAGEMENT REPORT ===
+Date: 2024-01-15 10:30:00
+
+Log Directories Status:
+✓ /var/log/app/ - 5 files found
+✓ /tmp/debug/ - 2 files found  
+✓ ~/logs/ - 3 files found
+
+Large Files (>50MB):
+- /var/log/app/application.log (75MB)
+- /tmp/debug/debug.log (120MB)
+
+Today's Log Summary:
+- Total ERROR messages: 15
+- Total WARNING messages: 8
+- Total INFO messages: 245
+
+Cleanup Results:
+- Deleted 3 old log files
+- Freed up 45MB of disk space
+
+=== REPORT COMPLETE ===
+
+BONUS POINTS (5%):
+- Add colors to your script output
+- Include progress indicators
+- Add command-line options to your script
+
+================================================================================
+
+SUBMISSION FORMAT: Text file with clearly labeled sections
+COLLABORATION: Individual work only

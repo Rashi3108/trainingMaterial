@@ -1,0 +1,186 @@
+# Complete nginx application with all Kubernetes objects
+# Deploy with: kubectl apply -f nginx-complete-app.yaml
+
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-app
+  labels:
+    name: nginx-app
+---
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: nginx-app
+  labels:
+    app: nginx
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+        
+        location / {
+            root /usr/share/nginx/html;
+            index index.html index.htm;
+        }
+        
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+    }
+  
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>nginx on EKS</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; text-align: center; }
+            .container { max-width: 600px; margin: 0 auto; }
+            .header { background: #232F3E; color: white; padding: 20px; border-radius: 5px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🚀 Hello from EKS!</h1>
+                <p>nginx running on Amazon EKS</p>
+            </div>
+        </div>
+    </body>
+    </html>
+---
+# Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nginx-secret
+  namespace: nginx-app
+  labels:
+    app: nginx
+type: Opaque
+data:
+  username: YWRtaW4=  # admin
+  password: cGFzc3dvcmQxMjM=  # password123
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: nginx-app
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+        - name: secret-volume
+          mountPath: /etc/nginx/secrets
+          readOnly: true
+      volumes:
+      - name: config-volume
+        configMap:
+          name: nginx-config
+          items:
+          - key: default.conf
+            path: default.conf
+      - name: html-volume
+        configMap:
+          name: nginx-config
+          items:
+          - key: index.html
+            path: index.html
+      - name: secret-volume
+        secret:
+          secretName: nginx-secret
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: nginx-app
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: nginx-app
+  labels:
+    app: nginx
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+spec:
+  rules:
+  - host: nginx.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port:
+              number: 80

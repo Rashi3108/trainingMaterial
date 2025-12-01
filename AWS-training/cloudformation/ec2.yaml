@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: EC2 instance and security group
+# Resources section
+Resources:
+  MySecurityGroup: 
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+
+  MyEC2Instance: 
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-052064a798f08f0d3
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+      

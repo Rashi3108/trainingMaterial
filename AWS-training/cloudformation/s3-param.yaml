@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: S3 bucket with parameters
+
+Parameters:
+  BucketNameParam:
+    Description: my bucket name
+    Type: String
+
+# Resources section
+Resources:
+  MyS3Bucket: 
+    Type: AWS::S3::Bucket
+    Properties: 
+      BucketName: !Ref BucketNameParam

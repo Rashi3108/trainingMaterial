@@ -1,0 +1,2571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Administration - Day 8: Jira Fundamentals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0052cc 0%, #2684ff 100%);
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            padding: 35px;
+            min-height: 85vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            page-break-after: always;
+            page-break-inside: avoid;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #0052cc;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #0052cc;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #2684ff;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #0052cc;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        h3 {
+            color: #2684ff;
+            font-size: 1.4em;
+            margin-bottom: 12px;
+            margin-top: 20px;
+        }
+
+        h4 {
+            color: #0052cc;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            margin-top: 15px;
+        }
+
+        p, li {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
+            border-left: 5px solid #2684ff;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: white;
+            border: 2px solid #e6f3ff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 82, 204, 0.2);
+        }
+
+        .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background: #0052cc;
+            color: white;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .step-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .step-number {
+            background: #0052cc;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .screenshot-placeholder {
+            background: #f0f8ff;
+            border: 2px dashed #2684ff;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .author-credit {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            border-left: 5px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .slide {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                margin-bottom: 20px;
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Title Slide -->
+        <div class="slide">
+            <div class="slide-number">1</div>
+            <h1>🎯 Tool Administration - Day 8</h1>
+            <div class="concept-box">
+                <h2>Jira Fundamentals: Project Management Made Simple</h2>
+                <p style="font-size: 1.3em; margin-top: 15px;">Master the essentials of Atlassian Jira for effective project tracking and team collaboration</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="font-size: 1.2em; color: #0052cc;"><strong>Training Period:</strong> 23rd July - 19th September, 2025</p>
+                <p style="font-size: 1.1em; margin-top: 15px;"><strong>Focus:</strong> Jira Setup, Project Management, User Administration & Best Practices</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px;">
+                <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-radius: 15px;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">📊</div>
+                    <h3 style="color: #1976d2; margin: 0;">Project Setup</h3>
+                    <p style="font-size: 0.9em; color: #666;">Learn to create and configure projects</p>
+                </div>
+                <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f3e5f5, #e1bee7); border-radius: 15px;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">⚙️</div>
+                    <h3 style="color: #7b1fa2; margin: 0;">Board Configuration</h3>
+                    <p style="font-size: 0.9em; color: #666;">Master Kanban and Scrum boards</p>
+                </div>
+                <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #e8f5e8, #c8e6c9); border-radius: 15px;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">👥</div>
+                    <h3 style="color: #388e3c; margin: 0;">User Management</h3>
+                    <p style="font-size: 0.9em; color: #666;">Control access and permissions</p>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 2: Day 8 Learning Objectives -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h1>🎯 Day 8: Learning Objectives</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🚀 "From Zero to Jira Hero in One Day"
+                    </h2>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="concept-box">
+                    <h3>🔍 Introduction to Jira</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>• Understand what Jira is and why it's essential</li>
+                        <li>• Learn about Jira's role in project management</li>
+                        <li>• Explore the Jira interface and navigation</li>
+                        <li>• Understand key Jira terminology</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>📋 Project Types in Jira</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>• Compare different project types</li>
+                        <li>• Understand when to use each type</li>
+                        <li>• Learn about templates and workflows</li>
+                        <li>• Explore project customization options</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🏗️ Creating Projects</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>• Step-by-step project creation process</li>
+                        <li>• Configure project settings and details</li>
+                        <li>• Set up project categories and components</li>
+                        <li>• Define project roles and responsibilities</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>⚙️ Configuring Boards</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>• Create and customize Kanban boards</li>
+                        <li>• Set up Scrum boards and sprints</li>
+                        <li>• Configure columns, swimlanes, and filters</li>
+                        <li>• Optimize board layouts for team workflow</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>👥 Managing Users and Permissions</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>• Add and manage user accounts</li>
+                        <li>• Configure permission schemes</li>
+                        <li>• Set up groups and project roles</li>
+                        <li>• Implement security best practices</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🎯 Practical Skills</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>• Hands-on project setup exercises</li>
+                        <li>• Real-world configuration scenarios</li>
+                        <li>• Troubleshooting common issues</li>
+                        <li>• Best practices and tips</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 20px; border-radius: 10px; margin-top: 25px; text-align: center;">
+                <h3 style="color: white; margin: 0;">💡 By the End of Today</h3>
+                <p style="margin: 10px 0 0 0; font-size: 1.1em;">You'll be able to set up complete Jira projects, configure boards, and manage users with confidence!</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: What is Jira? -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h1>🔍 What is Jira?</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #2684ff, #0052cc); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        📊 The World's #1 Project Management Tool
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Simple Definition</h3>
+                <p style="font-size: 1.2em; font-weight: 500;">
+                    <strong>Jira</strong> is a powerful project management and issue tracking tool developed by Atlassian. 
+                    It helps teams plan, track, and manage their work efficiently from start to finish.
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>🏢 What Jira Does</h3>
+                    <ul>
+                        <li><strong>Issue Tracking:</strong> Track bugs, tasks, and user stories</li>
+                        <li><strong>Project Management:</strong> Plan and organize work</li>
+                        <li><strong>Team Collaboration:</strong> Enable seamless teamwork</li>
+                        <li><strong>Workflow Management:</strong> Automate processes</li>
+                        <li><strong>Reporting:</strong> Generate insights and analytics</li>
+                        <li><strong>Integration:</strong> Connect with other tools</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🌟 Why Teams Love Jira</h3>
+                    <ul>
+                        <li><strong>Flexibility:</strong> Adapts to any workflow</li>
+                        <li><strong>Scalability:</strong> Works for small teams to enterprises</li>
+                        <li><strong>Customization:</strong> Tailored to your needs</li>
+                        <li><strong>Visibility:</strong> Clear project status</li>
+                        <li><strong>Collaboration:</strong> Keeps everyone aligned</li>
+                        <li><strong>Reliability:</strong> Trusted by millions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Key Concept: Issues</h3>
+                <p>In Jira, everything is an <strong>"Issue"</strong> - whether it's a bug to fix, a feature to build, 
+                a task to complete, or a story to implement. Issues are the building blocks of all work in Jira.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0;">
+                <div style="text-align: center; padding: 15px; background: #e3f2fd; border-radius: 10px;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">🐛</div>
+                    <h4 style="color: #1976d2; margin: 0;">Bug</h4>
+                    <p style="font-size: 0.9em; color: #666;">Something broken</p>
+                </div>
+                <div style="text-align: center; padding: 15px; background: #f3e5f5; border-radius: 10px;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">✨</div>
+                    <h4 style="color: #7b1fa2; margin: 0;">Feature</h4>
+                    <p style="font-size: 0.9em; color: #666;">New functionality</p>
+                </div>
+                <div style="text-align: center; padding: 15px; background: #e8f5e8; border-radius: 10px;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">✅</div>
+                    <h4 style="color: #388e3c; margin: 0;">Task</h4>
+                    <p style="font-size: 0.9em; color: #666;">Work to be done</p>
+                </div>
+                <div style="text-align: center; padding: 15px; background: #fff3e0; border-radius: 10px;">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">📖</div>
+                    <h4 style="color: #f57c00; margin: 0;">Story</h4>
+                    <p style="font-size: 0.9em; color: #666;">User requirement</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>💡 Real-World Example</h3>
+                <p>Imagine you're building a mobile app. You might have:</p>
+                <ul>
+                    <li><strong>Story:</strong> "As a user, I want to login with my email"</li>
+                    <li><strong>Task:</strong> "Design the login screen"</li>
+                    <li><strong>Bug:</strong> "Login button doesn't work on iOS"</li>
+                    <li><strong>Feature:</strong> "Add social media login options"</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Jira Interface Overview -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h1>🖥️ Jira Interface Overview</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🧭 Navigate Jira Like a Pro
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🏠 Main Navigation Areas</h3>
+                <p>Jira's interface is organized into logical sections that make it easy to find what you need:</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                <div class="step-container">
+                    <h3>1️⃣ Top Navigation Bar</h3>
+                    <ul>
+                        <li><strong>Jira Logo:</strong> Home button</li>
+                        <li><strong>Your Work:</strong> Assigned to you</li>
+                        <li><strong>Projects:</strong> All your projects</li>
+                        <li><strong>Filters:</strong> Saved searches</li>
+                        <li><strong>Dashboards:</strong> Custom views</li>
+                        <li><strong>Apps:</strong> Additional tools</li>
+                    </ul>
+                </div>
+
+                <div class="step-container">
+                    <h3>2️⃣ Project Sidebar</h3>
+                    <ul>
+                        <li><strong>Backlog:</strong> Planned work</li>
+                        <li><strong>Active Sprints:</strong> Current work</li>
+                        <li><strong>Board:</strong> Visual workflow</li>
+                        <li><strong>Reports:</strong> Analytics</li>
+                        <li><strong>Issues:</strong> All project items</li>
+                        <li><strong>Settings:</strong> Configuration</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="screenshot-placeholder">
+                <h3>📸 Jira Interface Screenshot</h3>
+                <p>Main dashboard showing navigation, project list, and recent activity</p>
+                <p style="color: #0052cc; font-weight: bold;">Live Demo: We'll explore this together!</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0;">
+                <div class="concept-box">
+                    <h4>🔍 Search & Filters</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li>Quick search bar</li>
+                        <li>Advanced search (JQL)</li>
+                        <li>Saved filters</li>
+                        <li>Recent items</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h4>📊 Dashboards</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li>Customizable widgets</li>
+                        <li>Project overviews</li>
+                        <li>Team performance</li>
+                        <li>Personal workspace</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h4>⚙️ Settings</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li>User preferences</li>
+                        <li>Project configuration</li>
+                        <li>System administration</li>
+                        <li>App management</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Pro Tips for Navigation</h3>
+                <ul>
+                    <li><strong>Keyboard Shortcuts:</strong> Press "?" to see all shortcuts</li>
+                    <li><strong>Quick Search:</strong> Use "/" to quickly search for issues</li>
+                    <li><strong>Breadcrumbs:</strong> Always visible at the top to show your location</li>
+                    <li><strong>Recent Items:</strong> Access your recently viewed projects and issues</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5: Essential Jira Terminology -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h1>📚 Essential Jira Terminology</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #2684ff, #0052cc); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🗣️ Speak Jira Fluently
+                    </h2>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                <div class="concept-box">
+                    <h3>🎯 Core Concepts</h3>
+                    <div style="margin: 15px 0;">
+                        <h4>📋 Issue</h4>
+                        <p>Any piece of work - bug, task, story, or feature</p>
+                        
+                        <h4>📁 Project</h4>
+                        <p>Collection of issues for a specific goal or team</p>
+                        
+                        <h4>🔄 Workflow</h4>
+                        <p>The path an issue takes from creation to completion</p>
+                        
+                        <h4>📊 Board</h4>
+                        <p>Visual representation of your team's work</p>
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h3>👥 People & Roles</h3>
+                    <div style="margin: 15px 0;">
+                        <h4>👤 Assignee</h4>
+                        <p>Person responsible for working on the issue</p>
+                        
+                        <h4>📝 Reporter</h4>
+                        <p>Person who created or reported the issue</p>
+                        
+                        <h4>👁️ Watcher</h4>
+                        <p>Person who wants to be notified of changes</p>
+                        
+                        <h4>🏢 Project Lead</h4>
+                        <p>Person responsible for the overall project</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                <div class="concept-box">
+                    <h3>🏃‍♂️ Agile Terms</h3>
+                    <div style="margin: 15px 0;">
+                        <h4>📚 Backlog</h4>
+                        <p>List of work items waiting to be done</p>
+                        
+                        <h4>🏃 Sprint</h4>
+                        <p>Time-boxed period for completing work (usually 1-4 weeks)</p>
+                        
+                        <h4>📖 Epic</h4>
+                        <p>Large piece of work that can be broken into smaller stories</p>
+                        
+                        <h4>📝 Story Points</h4>
+                        <p>Estimation unit for measuring work complexity</p>
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h3>⚙️ Configuration Terms</h3>
+                    <div style="margin: 15px 0;">
+                        <h4>🎨 Scheme</h4>
+                        <p>Configuration template (workflow, permission, etc.)</p>
+                        
+                        <h4>🏷️ Component</h4>
+                        <p>Subsection of a project (e.g., Frontend, Backend)</p>
+                        
+                        <h4>🔖 Version</h4>
+                        <p>Release or milestone marker</p>
+                        
+                        <h4>🏷️ Label</h4>
+                        <p>Flexible tag for categorizing issues</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Status Categories</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 15px 0;">
+                    <div style="text-align: center; padding: 15px; background: #e3f2fd; border-radius: 8px;">
+                        <div style="font-size: 2em; margin-bottom: 5px;">📝</div>
+                        <h4 style="color: #1976d2; margin: 0;">To Do</h4>
+                        <p style="font-size: 0.9em; color: #666;">Work not started</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #fff3e0; border-radius: 8px;">
+                        <div style="font-size: 2em; margin-bottom: 5px;">⚡</div>
+                        <h4 style="color: #f57c00; margin: 0;">In Progress</h4>
+                        <p style="font-size: 0.9em; color: #666;">Work being done</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #e8f5e8; border-radius: 8px;">
+                        <div style="font-size: 2em; margin-bottom: 5px;">✅</div>
+                        <h4 style="color: #388e3c; margin: 0;">Done</h4>
+                        <p style="font-size: 0.9em; color: #666;">Work completed</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>💡 Remember This</h3>
+                <p>Don't worry about memorizing everything! Jira has helpful tooltips and help text throughout the interface. 
+                The key is understanding the basic concepts so you can navigate confidently.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Project Types Overview -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h1>📋 Project Types in Jira</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🎯 Choose the Right Project Type for Your Team
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🤔 Why Different Project Types?</h3>
+                <p>Different teams work differently. Jira offers various project types to match your team's workflow, 
+                methodology, and needs. Each type comes with pre-configured settings, workflows, and boards.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="feature-card" style="border-left: 5px solid #2684ff;">
+                    <div class="icon">🏃‍♂️</div>
+                    <h3>Scrum Project</h3>
+                    <p><strong>Best for:</strong> Teams using Scrum methodology</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>Sprint planning and management</li>
+                        <li>Backlog prioritization</li>
+                        <li>Burndown charts and reports</li>
+                        <li>Story point estimation</li>
+                        <li>Sprint reviews and retrospectives</li>
+                    </ul>
+                    <div style="background: #e3f2fd; padding: 10px; border-radius: 5px; margin-top: 15px;">
+                        <strong>Perfect for:</strong> Development teams, Product teams
+                    </div>
+                </div>
+
+                <div class="feature-card" style="border-left: 5px solid #00bcd4;">
+                    <div class="icon">📊</div>
+                    <h3>Kanban Project</h3>
+                    <p><strong>Best for:</strong> Continuous flow of work</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>Visual workflow management</li>
+                        <li>Work-in-progress limits</li>
+                        <li>Continuous delivery</li>
+                        <li>Flexible prioritization</li>
+                        <li>Cumulative flow diagrams</li>
+                    </ul>
+                    <div style="background: #e0f2f1; padding: 10px; border-radius: 5px; margin-top: 15px;">
+                        <strong>Perfect for:</strong> Support teams, Operations teams
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="feature-card" style="border-left: 5px solid #4caf50;">
+                    <div class="icon">🐛</div>
+                    <h3>Bug Tracking Project</h3>
+                    <p><strong>Best for:</strong> Issue and bug management</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>Bug reporting and tracking</li>
+                        <li>Issue prioritization</li>
+                        <li>Resolution workflows</li>
+                        <li>Quality assurance</li>
+                        <li>Customer support integration</li>
+                    </ul>
+                    <div style="background: #e8f5e8; padding: 10px; border-radius: 5px; margin-top: 15px;">
+                        <strong>Perfect for:</strong> QA teams, Support teams
+                    </div>
+                </div>
+
+                <div class="feature-card" style="border-left: 5px solid #ff9800;">
+                    <div class="icon">📈</div>
+                    <h3>Business Project</h3>
+                    <p><strong>Best for:</strong> Non-technical teams</p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li>Task management</li>
+                        <li>Process workflows</li>
+                        <li>Team collaboration</li>
+                        <li>Simple reporting</li>
+                        <li>Goal tracking</li>
+                    </ul>
+                    <div style="background: #fff3e0; padding: 10px; border-radius: 5px; margin-top: 15px;">
+                        <strong>Perfect for:</strong> Marketing, HR, Finance teams
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Quick Decision Guide</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>Choose Scrum if:</h4>
+                        <ul>
+                            <li>You work in fixed-length sprints</li>
+                            <li>You need backlog management</li>
+                            <li>You do sprint planning meetings</li>
+                            <li>You want burndown charts</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Choose Kanban if:</h4>
+                        <ul>
+                            <li>Work flows continuously</li>
+                            <li>Priorities change frequently</li>
+                            <li>You want to limit work-in-progress</li>
+                            <li>You need flexible workflows</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Detailed Project Type Comparison -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h1>⚖️ Project Types: Detailed Comparison</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #2684ff, #0052cc); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        📊 Feature-by-Feature Breakdown
+                    </h2>
+                </div>
+            </div>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>🏃‍♂️ Scrum</th>
+                        <th>📊 Kanban</th>
+                        <th>🐛 Bug Tracking</th>
+                        <th>📈 Business</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sprint Planning</strong></td>
+                        <td style="background: #c8e6c9;">✅ Full Support</td>
+                        <td style="background: #ffcdd2;">❌ Not Available</td>
+                        <td style="background: #ffcdd2;">❌ Not Available</td>
+                        <td style="background: #ffcdd2;">❌ Not Available</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Backlog Management</strong></td>
+                        <td style="background: #c8e6c9;">✅ Advanced</td>
+                        <td style="background: #fff3e0;">⚠️ Basic</td>
+                        <td style="background: #fff3e0;">⚠️ Basic</td>
+                        <td style="background: #fff3e0;">⚠️ Basic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kanban Board</strong></td>
+                        <td style="background: #c8e6c9;">✅ Available</td>
+                        <td style="background: #c8e6c9;">✅ Primary Feature</td>
+                        <td style="background: #c8e6c9;">✅ Available</td>
+                        <td style="background: #c8e6c9;">✅ Available</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Story Points</strong></td>
+                        <td style="background: #c8e6c9;">✅ Built-in</td>
+                        <td style="background: #fff3e0;">⚠️ Optional</td>
+                        <td style="background: #ffcdd2;">❌ Not Typical</td>
+                        <td style="background: #ffcdd2;">❌ Not Available</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Burndown Charts</strong></td>
+                        <td style="background: #c8e6c9;">✅ Multiple Types</td>
+                        <td style="background: #ffcdd2;">❌ Not Available</td>
+                        <td style="background: #ffcdd2;">❌ Not Available</td>
+                        <td style="background: #ffcdd2;">❌ Not Available</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cumulative Flow</strong></td>
+                        <td style="background: #fff3e0;">⚠️ Basic</td>
+                        <td style="background: #c8e6c9;">✅ Advanced</td>
+                        <td style="background: #fff3e0;">⚠️ Basic</td>
+                        <td style="background: #fff3e0;">⚠️ Basic</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Issue Types</strong></td>
+                        <td style="background: #c8e6c9;">Story, Bug, Task, Epic</td>
+                        <td style="background: #c8e6c9;">Story, Bug, Task</td>
+                        <td style="background: #c8e6c9;">Bug, Improvement, Task</td>
+                        <td style="background: #c8e6c9;">Task, Sub-task</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Complexity</strong></td>
+                        <td style="background: #ffcdd2;">High</td>
+                        <td style="background: #fff3e0;">Medium</td>
+                        <td style="background: #fff3e0;">Medium</td>
+                        <td style="background: #c8e6c9;">Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Learning Curve</strong></td>
+                        <td style="background: #ffcdd2;">Steep</td>
+                        <td style="background: #fff3e0;">Moderate</td>
+                        <td style="background: #c8e6c9;">Easy</td>
+                        <td style="background: #c8e6c9;">Very Easy</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>🎯 When to Use Each Type</h3>
+                    <div style="margin: 10px 0;">
+                        <h4 style="color: #2684ff;">🏃‍♂️ Scrum Projects</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Software development teams</li>
+                            <li>Product development</li>
+                            <li>Teams that plan in iterations</li>
+                            <li>Need detailed reporting and metrics</li>
+                        </ul>
+                        
+                        <h4 style="color: #00bcd4; margin-top: 15px;">📊 Kanban Projects</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Support and maintenance teams</li>
+                            <li>Operations teams</li>
+                            <li>Continuous delivery workflows</li>
+                            <li>Unpredictable work patterns</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🎯 Specialized Use Cases</h3>
+                    <div style="margin: 10px 0;">
+                        <h4 style="color: #4caf50;">🐛 Bug Tracking</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Quality assurance teams</li>
+                            <li>Customer support</li>
+                            <li>Issue management focus</li>
+                            <li>Simple workflow needs</li>
+                        </ul>
+                        
+                        <h4 style="color: #ff9800; margin-top: 15px;">📈 Business Projects</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Non-technical teams</li>
+                            <li>Marketing campaigns</li>
+                            <li>HR processes</li>
+                            <li>Simple task management</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>💡 Pro Tip</h3>
+                <p>You can always change project types later, but it's easier to start with the right one. 
+                When in doubt, start with Kanban - it's the most flexible and can be adapted to most workflows.</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Project Templates and Workflows -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h1>🎨 Project Templates and Workflows</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        ⚙️ Understanding the Foundation of Every Project
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 What are Templates?</h3>
+                <p>Templates are pre-configured project setups that include workflows, issue types, screens, and permissions. 
+                They provide a starting point that matches common team practices and can be customized as needed.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>📋 Template Components</h3>
+                    <ul>
+                        <li><strong>Issue Types:</strong> Bug, Story, Task, Epic, etc.</li>
+                        <li><strong>Workflows:</strong> Status transitions and rules</li>
+                        <li><strong>Screens:</strong> Fields shown when creating/editing</li>
+                        <li><strong>Permissions:</strong> Who can do what</li>
+                        <li><strong>Notifications:</strong> Email and alert settings</li>
+                        <li><strong>Board Configuration:</strong> Columns and swimlanes</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🔄 Understanding Workflows</h3>
+                    <p>A workflow defines the path an issue takes from creation to completion:</p>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.9em;">
+                            <span style="background: #e3f2fd; padding: 8px 12px; border-radius: 5px;">📝 To Do</span>
+                            <span>→</span>
+                            <span style="background: #fff3e0; padding: 8px 12px; border-radius: 5px;">⚡ In Progress</span>
+                            <span>→</span>
+                            <span style="background: #e8f5e8; padding: 8px 12px; border-radius: 5px;">✅ Done</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.95em; margin-top: 10px;">Each transition can have conditions, validators, and post-functions.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎨 Popular Template Examples</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>🏃‍♂️ Scrum Template Includes:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Epic, Story, Bug, Task issue types</li>
+                            <li>Sprint-based workflow</li>
+                            <li>Story point field</li>
+                            <li>Backlog and sprint boards</li>
+                            <li>Burndown chart configuration</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>📊 Kanban Template Includes:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Story, Bug, Task issue types</li>
+                            <li>Simple workflow (To Do → Done)</li>
+                            <li>Kanban board with WIP limits</li>
+                            <li>Cumulative flow diagram</li>
+                            <li>Continuous delivery focus</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0;">
+                <div class="step-container">
+                    <h4>1️⃣ Choose Template</h4>
+                    <p style="font-size: 0.95em;">Select based on your team's methodology and needs</p>
+                </div>
+                <div class="step-container">
+                    <h4>2️⃣ Customize</h4>
+                    <p style="font-size: 0.95em;">Modify workflows, fields, and permissions to match your process</p>
+                </div>
+                <div class="step-container">
+                    <h4>3️⃣ Iterate</h4>
+                    <p style="font-size: 0.95em;">Refine and improve based on team feedback and usage</p>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🔧 Workflow Customization Options</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>Status Configuration:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Add custom statuses</li>
+                            <li>Define status categories</li>
+                            <li>Set status colors</li>
+                            <li>Configure resolution types</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Transition Rules:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Who can perform transitions</li>
+                            <li>Required fields for transitions</li>
+                            <li>Automatic actions on transition</li>
+                            <li>Validation rules</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Important Considerations</h3>
+                <ul>
+                    <li><strong>Start Simple:</strong> Begin with standard templates and customize gradually</li>
+                    <li><strong>Team Input:</strong> Involve your team in workflow design decisions</li>
+                    <li><strong>Test Changes:</strong> Use a test project to validate workflow changes</li>
+                    <li><strong>Document Process:</strong> Keep track of customizations and reasons</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Creating Your First Project -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h1>🏗️ Creating Your First Project</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #2684ff, #0052cc); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🚀 Step-by-Step Project Creation
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Before You Start</h3>
+                <p>Creating a project is more than just clicking "Create." Good planning ensures your project serves your team effectively from day one.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>📋 Pre-Creation Checklist</h3>
+                    <ul>
+                        <li><strong>Project Purpose:</strong> What will this project track?</li>
+                        <li><strong>Team Members:</strong> Who needs access?</li>
+                        <li><strong>Workflow Type:</strong> Scrum, Kanban, or other?</li>
+                        <li><strong>Issue Types:</strong> What work will you track?</li>
+                        <li><strong>Permissions:</strong> Who can do what?</li>
+                        <li><strong>Integration Needs:</strong> Other tools to connect?</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🎨 Project Information Needed</h3>
+                    <ul>
+                        <li><strong>Project Name:</strong> Clear, descriptive name</li>
+                        <li><strong>Project Key:</strong> Short abbreviation (3-10 chars)</li>
+                        <li><strong>Project Type:</strong> Based on your workflow</li>
+                        <li><strong>Template:</strong> Starting configuration</li>
+                        <li><strong>Lead:</strong> Project administrator</li>
+                        <li><strong>Description:</strong> Project purpose and scope</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-container">
+                <h3>🚀 Step-by-Step Creation Process</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4>Access Project Creation</h4>
+                            <p>Navigate to <strong>Projects → Create Project</strong> or use the "+" button in the top navigation</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4>Choose Project Type</h4>
+                            <p>Select from Scrum, Kanban, Bug Tracking, or Business project based on your needs</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4>Select Template</h4>
+                            <p>Choose a template that matches your workflow or start with a basic template</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h4>Configure Details</h4>
+                            <p>Enter project name, key, and description. Choose project lead and access settings</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">5</div>
+                        <div>
+                            <h4>Review and Create</h4>
+                            <p>Double-check all settings and click "Create" to generate your new project</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">6</div>
+                        <div>
+                            <h4>Initial Configuration</h4>
+                            <p>Set up boards, add team members, and customize workflows as needed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔑 Project Key Best Practices</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>✅ Good Project Keys:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>WEBAPP</strong> - Web Application</li>
+                            <li><strong>MOBILE</strong> - Mobile App Project</li>
+                            <li><strong>SUPPORT</strong> - Customer Support</li>
+                            <li><strong>INFRA</strong> - Infrastructure Team</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>❌ Avoid These:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>PROJ1</strong> - Too generic</li>
+                            <li><strong>TEST</strong> - Confusing purpose</li>
+                            <li><strong>ABC</strong> - No meaning</li>
+                            <li><strong>VERYLONGPROJECTKEY</strong> - Too long</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="screenshot-placeholder">
+                <h3>📸 Live Demo: Project Creation</h3>
+                <p>We'll walk through creating a sample project together, showing each step in the Jira interface</p>
+                <p style="color: #0052cc; font-weight: bold;">Hands-on Exercise: You'll create your own practice project!</p>
+            </div>
+        </div>
+
+        <!-- Slide 10: Project Settings and Configuration -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h1>⚙️ Project Settings and Configuration</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🔧 Fine-Tune Your Project for Success
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Why Configure Your Project?</h3>
+                <p>Default settings are a good start, but customizing your project ensures it matches your team's specific needs, 
+                processes, and terminology. Proper configuration improves adoption and productivity.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>📋 Essential Settings</h3>
+                    <h4>Project Details:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>Name & Description:</strong> Clear project identity</li>
+                        <li><strong>Project Lead:</strong> Primary administrator</li>
+                        <li><strong>Default Assignee:</strong> Who gets unassigned issues</li>
+                        <li><strong>Avatar:</strong> Visual project identifier</li>
+                    </ul>
+                    
+                    <h4>Access Control:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>Access Level:</strong> Open, restricted, or private</li>
+                        <li><strong>Permission Scheme:</strong> Who can do what</li>
+                        <li><strong>Issue Security:</strong> Sensitive issue handling</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🏷️ Components and Versions</h3>
+                    <h4>Components (Project Subsections):</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>Frontend:</strong> UI/UX related work</li>
+                        <li><strong>Backend:</strong> Server-side development</li>
+                        <li><strong>Database:</strong> Data layer issues</li>
+                        <li><strong>Documentation:</strong> User guides, specs</li>
+                    </ul>
+                    
+                    <h4>Versions (Release Tracking):</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>v1.0:</strong> Initial release</li>
+                        <li><strong>v1.1:</strong> Bug fix release</li>
+                        <li><strong>v2.0:</strong> Major feature release</li>
+                        <li><strong>Future:</strong> Planned features</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-container">
+                <h3>🔧 Configuration Walkthrough</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                    <div>
+                        <h4>📍 Accessing Project Settings</h4>
+                        <ol style="font-size: 0.95em;">
+                            <li>Go to your project</li>
+                            <li>Click "Project Settings" in the sidebar</li>
+                            <li>Navigate through different configuration sections</li>
+                            <li>Make changes and save</li>
+                        </ol>
+                    </div>
+                    
+                    <div>
+                        <h4>🎯 Key Configuration Areas</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Details:</strong> Basic project information</li>
+                            <li><strong>People:</strong> Team members and roles</li>
+                            <li><strong>Issue Types:</strong> Types of work items</li>
+                            <li><strong>Workflows:</strong> Process definitions</li>
+                            <li><strong>Screens:</strong> Field layouts</li>
+                            <li><strong>Permissions:</strong> Access control</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0;">
+                <div class="feature-card">
+                    <div class="icon">🏷️</div>
+                    <h4>Components Setup</h4>
+                    <p style="font-size: 0.9em;">Organize work by functional areas or team responsibilities</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Example:</strong> Frontend, Backend, QA, DevOps
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🔖</div>
+                    <h4>Version Management</h4>
+                    <p style="font-size: 0.9em;">Track releases and plan future development cycles</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Example:</strong> v1.0, v1.1, v2.0-beta
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">👥</div>
+                    <h4>Project Roles</h4>
+                    <p style="font-size: 0.9em;">Define who can perform specific actions in the project</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Example:</strong> Developers, Testers, Managers
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>💡 Configuration Best Practices</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>✅ Do This:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Start with simple configurations</li>
+                            <li>Involve team in decision making</li>
+                            <li>Document configuration choices</li>
+                            <li>Test changes in a safe environment</li>
+                            <li>Train team on new configurations</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>❌ Avoid This:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Over-complicating initial setup</li>
+                            <li>Making changes without team input</li>
+                            <li>Frequent configuration changes</li>
+                            <li>Ignoring user feedback</li>
+                            <li>Not backing up configurations</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Important Notes</h3>
+                <ul>
+                    <li><strong>Permissions:</strong> Some configuration changes require project admin rights</li>
+                    <li><strong>Impact:</strong> Changes affect all project users immediately</li>
+                    <li><strong>Testing:</strong> Use a test project to validate major changes</li>
+                    <li><strong>Communication:</strong> Notify team members of significant changes</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 11: Project Categories and Organization -->
+        <div class="slide">
+            <div class="slide-number">11</div>
+            <h1>📁 Project Categories and Organization</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #2684ff, #0052cc); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🗂️ Keep Your Projects Organized and Discoverable
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Why Organize Projects?</h3>
+                <p>As your organization grows, you'll have many projects. Good organization helps users find relevant projects quickly, 
+                improves navigation, and makes administration easier. Categories are your primary organizational tool.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>📋 Project Categories</h3>
+                    <p>Categories group related projects together and can be used for:</p>
+                    <ul>
+                        <li><strong>Department-based:</strong> Engineering, Marketing, HR</li>
+                        <li><strong>Product-based:</strong> Mobile App, Web Platform, API</li>
+                        <li><strong>Function-based:</strong> Development, Support, Operations</li>
+                        <li><strong>Status-based:</strong> Active, Archived, Planning</li>
+                        <li><strong>Client-based:</strong> Customer A, Customer B, Internal</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🏷️ Category Benefits</h3>
+                    <ul>
+                        <li><strong>Improved Navigation:</strong> Easier project discovery</li>
+                        <li><strong>Better Permissions:</strong> Category-based access control</li>
+                        <li><strong>Cleaner Interface:</strong> Organized project lists</li>
+                        <li><strong>Reporting:</strong> Category-based analytics</li>
+                        <li><strong>Administration:</strong> Bulk operations on categories</li>
+                        <li><strong>User Experience:</strong> Logical project grouping</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏢 Example Category Structures</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>🏭 By Department:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Engineering</strong>
+                                <ul style="margin-left: 20px; font-size: 0.9em;">
+                                    <li>Web Application</li>
+                                    <li>Mobile App</li>
+                                    <li>Infrastructure</li>
+                                </ul>
+                            </li>
+                            <li><strong>Marketing</strong>
+                                <ul style="margin-left: 20px; font-size: 0.9em;">
+                                    <li>Campaign Management</li>
+                                    <li>Content Creation</li>
+                                    <li>Social Media</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>📱 By Product:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Platform Core</strong>
+                                <ul style="margin-left: 20px; font-size: 0.9em;">
+                                    <li>Authentication Service</li>
+                                    <li>User Management</li>
+                                    <li>Payment System</li>
+                                </ul>
+                            </li>
+                            <li><strong>Customer Facing</strong>
+                                <ul style="margin-left: 20px; font-size: 0.9em;">
+                                    <li>Web Portal</li>
+                                    <li>Mobile Apps</li>
+                                    <li>Customer Support</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-container">
+                <h3>🔧 Setting Up Categories</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4>Access Administration</h4>
+                            <p>Go to <strong>Settings → Projects → Project categories</strong> (requires admin rights)</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4>Create Categories</h4>
+                            <p>Add new categories with descriptive names and clear descriptions</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4>Assign Projects</h4>
+                            <p>Move existing projects to appropriate categories or set category during creation</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h4>Configure Permissions</h4>
+                            <p>Set category-level permissions if needed for access control</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0;">
+                <div class="feature-card">
+                    <div class="icon">🎯</div>
+                    <h4>Naming Strategy</h4>
+                    <p style="font-size: 0.9em;">Use clear, consistent naming that reflects your organization structure</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Good:</strong> "Engineering - Backend"<br>
+                        <strong>Bad:</strong> "Stuff - Team 1"
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">📊</div>
+                    <h4>Hierarchy Planning</h4>
+                    <p style="font-size: 0.9em;">Plan your category structure before creating to avoid reorganization later</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Tip:</strong> Start broad, then add subcategories as needed
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🔄</div>
+                    <h4>Regular Review</h4>
+                    <p style="font-size: 0.9em;">Periodically review and update categories as your organization evolves</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Schedule:</strong> Quarterly or bi-annual reviews
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>💡 Pro Tips for Project Organization</h3>
+                <ul>
+                    <li><strong>Start Simple:</strong> Begin with a few broad categories and refine over time</li>
+                    <li><strong>User Input:</strong> Ask teams how they naturally group their work</li>
+                    <li><strong>Consistency:</strong> Use consistent naming conventions across categories</li>
+                    <li><strong>Documentation:</strong> Document the purpose and scope of each category</li>
+                    <li><strong>Training:</strong> Help users understand the category structure</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 12: Introduction to Jira Boards -->
+        <div class="slide">
+            <div class="slide-number">12</div>
+            <h1>📊 Introduction to Jira Boards</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        👁️ Visualize Your Team's Work Flow
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 What are Jira Boards?</h3>
+                <p>Boards are visual representations of your team's work that help you track progress, identify bottlenecks, 
+                and manage workflow efficiently. They transform your issues into an easy-to-understand visual format.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="feature-card" style="border-left: 5px solid #2684ff;">
+                    <div class="icon">🏃‍♂️</div>
+                    <h3>Scrum Boards</h3>
+                    <p><strong>Sprint-based workflow visualization</strong></p>
+                    <ul style="text-align: left; margin-top: 15px; font-size: 0.95em;">
+                        <li>Backlog management</li>
+                        <li>Sprint planning interface</li>
+                        <li>Sprint progress tracking</li>
+                        <li>Burndown charts</li>
+                        <li>Sprint reports and metrics</li>
+                        <li>Story point estimation</li>
+                    </ul>
+                    <div style="background: #e3f2fd; padding: 10px; border-radius: 5px; margin-top: 15px;">
+                        <strong>Best for:</strong> Teams using Scrum methodology with fixed sprints
+                    </div>
+                </div>
+
+                <div class="feature-card" style="border-left: 5px solid #00bcd4;">
+                    <div class="icon">📋</div>
+                    <h3>Kanban Boards</h3>
+                    <p><strong>Continuous flow workflow visualization</strong></p>
+                    <ul style="text-align: left; margin-top: 15px; font-size: 0.95em;">
+                        <li>Continuous workflow</li>
+                        <li>Work-in-progress (WIP) limits</li>
+                        <li>Flexible prioritization</li>
+                        <li>Cumulative flow diagrams</li>
+                        <li>Cycle time tracking</li>
+                        <li>Real-time updates</li>
+                    </ul>
+                    <div style="background: #e0f2f1; padding: 10px; border-radius: 5px; margin-top: 15px;">
+                        <strong>Best for:</strong> Support teams, operations, continuous delivery
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🏗️ Board Components</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 15px 0;">
+                    <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">📋</div>
+                        <h4>Columns</h4>
+                        <p style="font-size: 0.9em; color: #666;">Represent workflow stages (To Do, In Progress, Done)</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🎫</div>
+                        <h4>Cards</h4>
+                        <p style="font-size: 0.9em; color: #666;">Individual issues displayed as moveable cards</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🏊‍♂️</div>
+                        <h4>Swimlanes</h4>
+                        <p style="font-size: 0.9em; color: #666;">Horizontal groupings (by assignee, priority, etc.)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎨 Board Visualization Example</h3>
+                <div style="background: white; border: 2px solid #e0e0e0; border-radius: 10px; padding: 20px; margin: 15px 0;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h4 style="color: #1976d2; margin: 0 0 10px 0;">📝 To Do</h4>
+                            <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 3px solid #2196f3;">
+                                <strong>PROJ-123</strong><br>
+                                <span style="font-size: 0.9em;">Login page design</span>
+                            </div>
+                            <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 3px solid #f44336;">
+                                <strong>PROJ-124</strong><br>
+                                <span style="font-size: 0.9em;">Fix login bug</span>
+                            </div>
+                        </div>
+                        <div style="background: #fff3e0; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h4 style="color: #f57c00; margin: 0 0 10px 0;">⚡ In Progress</h4>
+                            <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 3px solid #4caf50;">
+                                <strong>PROJ-125</strong><br>
+                                <span style="font-size: 0.9em;">User dashboard</span>
+                            </div>
+                        </div>
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; text-align: center;">
+                            <h4 style="color: #388e3c; margin: 0 0 10px 0;">✅ Done</h4>
+                            <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 3px solid #4caf50;">
+                                <strong>PROJ-122</strong><br>
+                                <span style="font-size: 0.9em;">Database setup</span>
+                            </div>
+                            <div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 3px solid #2196f3;">
+                                <strong>PROJ-121</strong><br>
+                                <span style="font-size: 0.9em;">Project planning</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>💡 Why Boards Are Powerful</h3>
+                <ul>
+                    <li><strong>Visual Clarity:</strong> See all work at a glance</li>
+                    <li><strong>Real-time Updates:</strong> Changes reflect immediately</li>
+                    <li><strong>Drag & Drop:</strong> Easy status updates</li>
+                    <li><strong>Team Collaboration:</strong> Shared understanding of progress</li>
+                    <li><strong>Bottleneck Identification:</strong> Spot workflow issues quickly</li>
+                    <li><strong>Customizable:</strong> Adapt to your team's needs</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 13: Configuring Kanban Boards -->
+        <div class="slide">
+            <div class="slide-number">13</div>
+            <h1>📋 Configuring Kanban Boards</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #2684ff, #0052cc); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🔧 Master Kanban Board Setup and Customization
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Kanban Board Configuration Overview</h3>
+                <p>Kanban boards are highly customizable to match your team's workflow. Proper configuration ensures the board 
+                reflects your actual process and provides maximum value for tracking and managing work.</p>
+            </div>
+
+            <div class="step-container">
+                <h3>🚀 Step-by-Step Kanban Configuration</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4>Create or Access Board</h4>
+                            <p>Go to your project → Boards → Create Board or select existing Kanban board</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4>Configure Columns</h4>
+                            <p>Board Settings → Columns → Add, remove, or modify columns to match your workflow</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4>Set Column Constraints</h4>
+                            <p>Configure minimum/maximum limits for each column to control work-in-progress</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h4>Configure Swimlanes</h4>
+                            <p>Set up horizontal groupings by assignee, priority, epic, or custom fields</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">5</div>
+                        <div>
+                            <h4>Set Up Filters</h4>
+                            <p>Define which issues appear on the board using JQL (Jira Query Language)</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">6</div>
+                        <div>
+                            <h4>Customize Card Layout</h4>
+                            <p>Choose which fields to display on issue cards for quick information access</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>📋 Column Configuration</h3>
+                    <h4>Common Column Setups:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>Basic:</strong> To Do → In Progress → Done</li>
+                        <li><strong>Development:</strong> Backlog → Development → Testing → Done</li>
+                        <li><strong>Support:</strong> New → Investigating → Waiting → Resolved</li>
+                        <li><strong>Marketing:</strong> Ideas → Planning → Creating → Review → Published</li>
+                    </ul>
+                    
+                    <h4>Column Mapping:</h4>
+                    <p style="font-size: 0.95em;">Each column maps to one or more issue statuses from your workflow.</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🏊‍♂️ Swimlane Options</h3>
+                    <h4>Popular Swimlane Configurations:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>Assignee:</strong> Group by person responsible</li>
+                        <li><strong>Priority:</strong> High, Medium, Low priority lanes</li>
+                        <li><strong>Epic:</strong> Group by larger work items</li>
+                        <li><strong>Component:</strong> Frontend, Backend, etc.</li>
+                        <li><strong>Issue Type:</strong> Stories, Bugs, Tasks</li>
+                        <li><strong>Custom Field:</strong> Team, Client, etc.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>⚡ Work-in-Progress (WIP) Limits</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>Why Use WIP Limits?</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Prevent team overload</li>
+                            <li>Identify bottlenecks quickly</li>
+                            <li>Improve focus and quality</li>
+                            <li>Encourage collaboration</li>
+                            <li>Reduce context switching</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Setting WIP Limits:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Start Conservative:</strong> Begin with lower limits</li>
+                            <li><strong>Team Size Based:</strong> Usually 1-2 items per person</li>
+                            <li><strong>Column Specific:</strong> Different limits per column</li>
+                            <li><strong>Monitor & Adjust:</strong> Refine based on experience</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0;">
+                <div class="feature-card">
+                    <div class="icon">🎨</div>
+                    <h4>Card Appearance</h4>
+                    <p style="font-size: 0.9em;">Customize what information appears on issue cards</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Options:</strong> Assignee, Priority, Due Date, Labels, Story Points
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🔍</div>
+                    <h4>Board Filters</h4>
+                    <p style="font-size: 0.9em;">Control which issues appear on your board using JQL queries</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Example:</strong> project = "MYPROJ" AND assignee = currentUser()
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">📊</div>
+                    <h4>Quick Filters</h4>
+                    <p style="font-size: 0.9em;">Add one-click filters for common views (My Issues, High Priority, etc.)</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Benefit:</strong> Instant board filtering without complex queries
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Configuration Best Practices</h3>
+                <ul>
+                    <li><strong>Start Simple:</strong> Begin with basic columns and add complexity gradually</li>
+                    <li><strong>Team Input:</strong> Involve the team in board design decisions</li>
+                    <li><strong>Regular Review:</strong> Periodically assess and adjust board configuration</li>
+                    <li><strong>Test Changes:</strong> Make incremental changes and monitor impact</li>
+                    <li><strong>Document Decisions:</strong> Keep track of why certain configurations were chosen</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 14: Configuring Scrum Boards -->
+        <div class="slide">
+            <div class="slide-number">14</div>
+            <h1>🏃‍♂️ Configuring Scrum Boards</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🎯 Sprint-Based Workflow Configuration
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Scrum Board Essentials</h3>
+                <p>Scrum boards are designed for teams using the Scrum framework with fixed-length sprints. They provide 
+                specialized features for backlog management, sprint planning, and progress tracking that Kanban boards don't offer.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>🏃‍♂️ Scrum Board Features</h3>
+                    <ul>
+                        <li><strong>Backlog Management:</strong> Prioritized list of work</li>
+                        <li><strong>Sprint Planning:</strong> Drag issues into sprints</li>
+                        <li><strong>Sprint Board:</strong> Active sprint visualization</li>
+                        <li><strong>Burndown Charts:</strong> Progress tracking</li>
+                        <li><strong>Story Points:</strong> Effort estimation</li>
+                        <li><strong>Sprint Reports:</strong> Detailed analytics</li>
+                        <li><strong>Velocity Tracking:</strong> Team performance metrics</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>📊 Board Views</h3>
+                    <h4>Backlog View:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li>Product backlog prioritization</li>
+                        <li>Sprint planning interface</li>
+                        <li>Story point estimation</li>
+                        <li>Epic and version management</li>
+                    </ul>
+                    
+                    <h4>Active Sprint View:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li>Current sprint progress</li>
+                        <li>Drag-and-drop status updates</li>
+                        <li>Sprint burndown chart</li>
+                        <li>Team workload visibility</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-container">
+                <h3>🔧 Scrum Board Configuration Steps</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4>Create Scrum Board</h4>
+                            <p>Project → Boards → Create Board → Choose Scrum template</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4>Configure Columns</h4>
+                            <p>Set up workflow columns (To Do, In Progress, Done) and map to statuses</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4>Set Up Estimation</h4>
+                            <p>Configure story points or time-based estimation for sprint planning</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h4>Configure Sprints</h4>
+                            <p>Set default sprint duration and configure sprint settings</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">5</div>
+                        <div>
+                            <h4>Customize Card Fields</h4>
+                            <p>Choose which fields to display on issue cards (assignee, story points, etc.)</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin: 15px 0;">
+                        <div class="step-number">6</div>
+                        <div>
+                            <h4>Set Up Reports</h4>
+                            <p>Configure burndown charts and other sprint reports</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📈 Sprint Planning Configuration</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>Estimation Setup:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Story Points:</strong> Fibonacci sequence (1,2,3,5,8,13)</li>
+                            <li><strong>Time Tracking:</strong> Hours or days</li>
+                            <li><strong>T-Shirt Sizes:</strong> XS, S, M, L, XL</li>
+                            <li><strong>Custom Scale:</strong> Define your own values</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Sprint Settings:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Duration:</strong> 1-4 weeks (2 weeks common)</li>
+                            <li><strong>Start Day:</strong> Monday, Tuesday, etc.</li>
+                            <li><strong>Working Days:</strong> Exclude weekends/holidays</li>
+                            <li><strong>Capacity:</strong> Team velocity planning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0;">
+                <div class="feature-card">
+                    <div class="icon">📊</div>
+                    <h4>Burndown Charts</h4>
+                    <p style="font-size: 0.9em;">Visual progress tracking showing work remaining vs. time</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Types:</strong> Sprint burndown, Release burndown, Epic burndown
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">⚡</div>
+                    <h4>Velocity Tracking</h4>
+                    <p style="font-size: 0.9em;">Measure team's delivery capacity over multiple sprints</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Use:</strong> Sprint planning, capacity forecasting
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">📋</div>
+                    <h4>Backlog Grooming</h4>
+                    <p style="font-size: 0.9em;">Prioritize and estimate backlog items for future sprints</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Features:</strong> Drag-drop prioritization, bulk estimation
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Scrum Board Best Practices</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>✅ Do This:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Keep sprint duration consistent</li>
+                            <li>Involve team in estimation</li>
+                            <li>Review velocity regularly</li>
+                            <li>Use burndown charts for daily standups</li>
+                            <li>Maintain a well-groomed backlog</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>❌ Avoid This:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Changing sprint scope mid-sprint</li>
+                            <li>Ignoring velocity trends</li>
+                            <li>Over-committing in sprint planning</li>
+                            <li>Skipping retrospectives</li>
+                            <li>Not updating story points</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>💡 Pro Tips for Scrum Success</h3>
+                <ul>
+                    <li><strong>Start with Standard Settings:</strong> Use default configurations initially</li>
+                    <li><strong>Team Involvement:</strong> Include the team in board configuration decisions</li>
+                    <li><strong>Regular Reviews:</strong> Assess board effectiveness in retrospectives</li>
+                    <li><strong>Gradual Customization:</strong> Add complexity as team matures</li>
+                    <li><strong>Training:</strong> Ensure team understands Scrum principles</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 15: User Management Overview -->
+        <div class="slide">
+            <div class="slide-number">15</div>
+            <h1>👥 User Management in Jira</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #2684ff, #0052cc); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🔐 Control Access and Collaboration
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Why User Management Matters</h3>
+                <p>Proper user management ensures the right people have access to the right projects with appropriate permissions. 
+                It's crucial for security, collaboration, and maintaining organized workflows across your organization.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>👤 User Types in Jira</h3>
+                    <h4>Licensed Users:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>Jira Software Users:</strong> Full access to software features</li>
+                        <li><strong>Jira Core Users:</strong> Basic project management</li>
+                        <li><strong>Jira Service Management:</strong> Service desk access</li>
+                    </ul>
+                    
+                    <h4>Special User Types:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>Administrators:</strong> System-wide control</li>
+                        <li><strong>Project Admins:</strong> Project-level control</li>
+                        <li><strong>Customers:</strong> Limited portal access</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🏢 User Management Levels</h3>
+                    <h4>Global Level:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li>System administration</li>
+                        <li>User account creation</li>
+                        <li>Global permissions</li>
+                        <li>License management</li>
+                    </ul>
+                    
+                    <h4>Project Level:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li>Project access control</li>
+                        <li>Role assignments</li>
+                        <li>Project-specific permissions</li>
+                        <li>Team member management</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔑 Key User Management Concepts</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 15px 0;">
+                    <div style="text-align: center; padding: 15px; background: #e3f2fd; border-radius: 8px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">👤</div>
+                        <h4>Users</h4>
+                        <p style="font-size: 0.9em; color: #666;">Individual accounts with login credentials</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #f3e5f5; border-radius: 8px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">👥</div>
+                        <h4>Groups</h4>
+                        <p style="font-size: 0.9em; color: #666;">Collections of users for easier management</p>
+                    </div>
+                    <div style="text-align: center; padding: 15px; background: #e8f5e8; border-radius: 8px;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🎭</div>
+                        <h4>Roles</h4>
+                        <p style="font-size: 0.9em; color: #666;">Project-specific user functions</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="step-container">
+                    <h3>➕ Adding Users</h3>
+                    <ol style="font-size: 0.95em;">
+                        <li><strong>Access User Management:</strong> Settings → User Management</li>
+                        <li><strong>Create User:</strong> Click "Create User" button</li>
+                        <li><strong>Enter Details:</strong> Email, full name, username</li>
+                        <li><strong>Set Password:</strong> Temporary or permanent</li>
+                        <li><strong>Assign Groups:</strong> Add to relevant groups</li>
+                        <li><strong>Send Invitation:</strong> Email notification to user</li>
+                    </ol>
+                </div>
+
+                <div class="step-container">
+                    <h3>🔧 Managing Existing Users</h3>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>Edit Profile:</strong> Update user information</li>
+                        <li><strong>Reset Password:</strong> Help with login issues</li>
+                        <li><strong>Deactivate User:</strong> Temporarily disable access</li>
+                        <li><strong>Change Groups:</strong> Modify permissions</li>
+                        <li><strong>View Activity:</strong> Monitor user actions</li>
+                        <li><strong>Delete User:</strong> Permanent removal (careful!)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ User Management Best Practices</h3>
+                <ul>
+                    <li><strong>Principle of Least Privilege:</strong> Give users minimum necessary access</li>
+                    <li><strong>Regular Audits:</strong> Review user access periodically</li>
+                    <li><strong>Deactivate vs Delete:</strong> Deactivate users who might return</li>
+                    <li><strong>Group Management:</strong> Use groups instead of individual permissions</li>
+                    <li><strong>Onboarding Process:</strong> Standardize new user setup</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 16: Permissions and Security -->
+        <div class="slide">
+            <div class="slide-number">16</div>
+            <h1>🔐 Permissions and Security</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🛡️ Secure Your Jira Environment
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Understanding Jira Permissions</h3>
+                <p>Jira uses a multi-layered permission system that controls what users can see and do. Understanding this system 
+                is crucial for maintaining security while enabling productive collaboration.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>🏗️ Permission Hierarchy</h3>
+                    <div style="margin: 15px 0;">
+                        <div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; background: #e3f2fd; border-radius: 5px;">
+                            <div style="background: #1976d2; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 0.8em;">1</div>
+                            <div>
+                                <strong>Global Permissions</strong><br>
+                                <span style="font-size: 0.9em; color: #666;">System-wide access control</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; background: #f3e5f5; border-radius: 5px;">
+                            <div style="background: #7b1fa2; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 0.8em;">2</div>
+                            <div>
+                                <strong>Project Permissions</strong><br>
+                                <span style="font-size: 0.9em; color: #666;">Project-specific access</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; background: #e8f5e8; border-radius: 5px;">
+                            <div style="background: #388e3c; color: white; width: 25px; height: 25px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 0.8em;">3</div>
+                            <div>
+                                <strong>Issue Security</strong><br>
+                                <span style="font-size: 0.9em; color: #666;">Individual issue access</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🔑 Permission Types</h3>
+                    <h4>Project Permissions:</h4>
+                    <ul style="font-size: 0.95em;">
+                        <li><strong>Browse Projects:</strong> View project content</li>
+                        <li><strong>Create Issues:</strong> Add new work items</li>
+                        <li><strong>Edit Issues:</strong> Modify existing issues</li>
+                        <li><strong>Delete Issues:</strong> Remove issues</li>
+                        <li><strong>Assign Issues:</strong> Change assignees</li>
+                        <li><strong>Resolve Issues:</strong> Mark as complete</li>
+                        <li><strong>Administer Projects:</strong> Manage settings</li>
+                    </ul>
+                </div>
+            </div>
+
+            <table class="comparison-table" style="margin: 25px 0;">
+                <thead>
+                    <tr>
+                        <th>Permission</th>
+                        <th>Description</th>
+                        <th>Typical Users</th>
+                        <th>Risk Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Browse Projects</strong></td>
+                        <td>View project and its issues</td>
+                        <td>All team members</td>
+                        <td style="background: #c8e6c9;">Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Create Issues</strong></td>
+                        <td>Add new issues to project</td>
+                        <td>Team members, stakeholders</td>
+                        <td style="background: #c8e6c9;">Low</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Edit Issues</strong></td>
+                        <td>Modify issue details</td>
+                        <td>Assignees, project members</td>
+                        <td style="background: #fff3e0;">Medium</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delete Issues</strong></td>
+                        <td>Permanently remove issues</td>
+                        <td>Project leads, admins</td>
+                        <td style="background: #ffcdd2;">High</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Administer Projects</strong></td>
+                        <td>Manage project settings</td>
+                        <td>Project administrators</td>
+                        <td style="background: #ffcdd2;">High</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <h3>👥 Groups and Roles</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>🏢 Groups (Global):</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>jira-administrators:</strong> Full system access</li>
+                            <li><strong>jira-software-users:</strong> Software license holders</li>
+                            <li><strong>jira-core-users:</strong> Basic license holders</li>
+                            <li><strong>developers:</strong> Custom development team</li>
+                            <li><strong>managers:</strong> Custom management group</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>🎭 Project Roles:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li><strong>Administrators:</strong> Project management</li>
+                            <li><strong>Developers:</strong> Development team</li>
+                            <li><strong>Users:</strong> General project access</li>
+                            <li><strong>Viewers:</strong> Read-only access</li>
+                            <li><strong>Custom Roles:</strong> Specific to needs</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0;">
+                <div class="feature-card">
+                    <div class="icon">🛡️</div>
+                    <h4>Permission Schemes</h4>
+                    <p style="font-size: 0.9em;">Templates that define who can do what in projects</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Benefit:</strong> Consistent permissions across projects
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🔒</div>
+                    <h4>Issue Security</h4>
+                    <p style="font-size: 0.9em;">Control access to specific sensitive issues</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Use Case:</strong> Confidential bugs, security issues
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">👁️</div>
+                    <h4>Field Security</h4>
+                    <p style="font-size: 0.9em;">Hide or protect specific fields from certain users</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Example:</strong> Salary info, customer data
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>💡 Security Best Practices</h3>
+                <ul>
+                    <li><strong>Least Privilege:</strong> Grant minimum necessary permissions</li>
+                    <li><strong>Regular Audits:</strong> Review permissions quarterly</li>
+                    <li><strong>Group Management:</strong> Use groups instead of individual permissions</li>
+                    <li><strong>Role Clarity:</strong> Clearly define what each role can do</li>
+                    <li><strong>Documentation:</strong> Document permission decisions and changes</li>
+                    <li><strong>Testing:</strong> Test permission changes in a safe environment</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 17: Hands-On Exercise -->
+        <div class="slide">
+            <div class="slide-number">17</div>
+            <h1>🎯 Hands-On Exercise: Complete Project Setup</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #2684ff, #0052cc); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🚀 Put Your Knowledge into Practice
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 Exercise Objective</h3>
+                <p>Create a complete Jira project from scratch, configure boards, and set up user access. This exercise 
+                integrates all the concepts we've covered today into a real-world scenario.</p>
+            </div>
+
+            <div class="step-container">
+                <h3>📋 Exercise Scenario</h3>
+                <p style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; font-style: italic;">
+                    <strong>Scenario:</strong> You're setting up a Jira project for a new mobile app development team. 
+                    The team consists of 2 developers, 1 designer, 1 QA tester, and 1 project manager. 
+                    They want to use Scrum methodology with 2-week sprints.
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>📝 Part 1: Project Creation (15 minutes)</h3>
+                    <ol style="font-size: 0.95em;">
+                        <li><strong>Create Project:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Name: "Mobile App Development"</li>
+                                <li>Key: "MOBILE"</li>
+                                <li>Type: Scrum</li>
+                                <li>Template: Scrum template</li>
+                            </ul>
+                        </li>
+                        <li><strong>Configure Project Details:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Add project description</li>
+                                <li>Set project avatar</li>
+                                <li>Configure default assignee</li>
+                            </ul>
+                        </li>
+                        <li><strong>Set Up Components:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Frontend (iOS/Android)</li>
+                                <li>Backend (API)</li>
+                                <li>Design (UI/UX)</li>
+                                <li>Testing (QA)</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="concept-box">
+                    <h3>⚙️ Part 2: Board Configuration (15 minutes)</h3>
+                    <ol style="font-size: 0.95em;">
+                        <li><strong>Configure Scrum Board:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Set up columns: To Do, In Progress, Review, Done</li>
+                                <li>Map columns to workflow statuses</li>
+                                <li>Configure card layout (show assignee, story points)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Set Up Estimation:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Enable story points</li>
+                                <li>Use Fibonacci sequence (1,2,3,5,8,13)</li>
+                                <li>Configure sprint duration (2 weeks)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Create Sample Issues:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>2 Epics (User Authentication, Core Features)</li>
+                                <li>5 User Stories</li>
+                                <li>3 Tasks</li>
+                                <li>2 Bugs</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>👥 Part 3: User Management (10 minutes)</h3>
+                    <ol style="font-size: 0.95em;">
+                        <li><strong>Create User Groups:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>mobile-developers</li>
+                                <li>mobile-designers</li>
+                                <li>mobile-qa</li>
+                                <li>mobile-managers</li>
+                            </ul>
+                        </li>
+                        <li><strong>Add Team Members:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Create 5 test users</li>
+                                <li>Assign to appropriate groups</li>
+                                <li>Set project roles</li>
+                            </ul>
+                        </li>
+                        <li><strong>Configure Permissions:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Developers: Create, Edit, Assign issues</li>
+                                <li>QA: Create, Edit issues, Resolve</li>
+                                <li>Manager: All permissions</li>
+                                <li>Designer: Create, Edit issues</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🧪 Part 4: Testing & Validation (10 minutes)</h3>
+                    <ol style="font-size: 0.95em;">
+                        <li><strong>Test Board Functionality:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Move issues between columns</li>
+                                <li>Create and start a sprint</li>
+                                <li>View burndown chart</li>
+                            </ul>
+                        </li>
+                        <li><strong>Validate Permissions:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Test different user access levels</li>
+                                <li>Verify group memberships</li>
+                                <li>Check project visibility</li>
+                            </ul>
+                        </li>
+                        <li><strong>Review Configuration:</strong>
+                            <ul style="margin-left: 20px; font-size: 0.9em;">
+                                <li>Verify all components are set up</li>
+                                <li>Check board configuration</li>
+                                <li>Confirm user assignments</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Success Criteria</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>✅ Project Setup Complete:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Project created with correct details</li>
+                            <li>Components configured</li>
+                            <li>Sample issues created</li>
+                            <li>Project accessible to team</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>✅ Team Ready to Work:</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Board configured for Scrum workflow</li>
+                            <li>Users added with correct permissions</li>
+                            <li>Sprint can be created and started</li>
+                            <li>Issues can be moved through workflow</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h3>💡 Exercise Tips</h3>
+                <ul>
+                    <li><strong>Work in Pairs:</strong> Collaborate with a partner for better learning</li>
+                    <li><strong>Ask Questions:</strong> Don't hesitate to ask for help</li>
+                    <li><strong>Take Notes:</strong> Document any challenges or insights</li>
+                    <li><strong>Experiment:</strong> Try different configurations to see what works</li>
+                    <li><strong>Share Results:</strong> Compare your setup with others</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 18: Day 8 Summary and Next Steps -->
+        <div class="slide">
+            <div class="slide-number">18</div>
+            <h1>🎉 Day 8 Summary & Next Steps</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🚀 You've Mastered Jira Fundamentals!
+                    </h2>
+                </div>
+            </div>
+
+            <div class="concept-box">
+                <h3>🎯 What You've Accomplished Today</h3>
+                <p>Congratulations! You've built a solid foundation in Jira administration. You now understand the core concepts 
+                and have hands-on experience with project setup, board configuration, and user management.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 25px 0;">
+                <div class="concept-box">
+                    <h3>✅ Skills Mastered</h3>
+                    <ul>
+                        <li><strong>Jira Fundamentals:</strong> Interface, terminology, concepts</li>
+                        <li><strong>Project Types:</strong> Scrum, Kanban, Bug Tracking, Business</li>
+                        <li><strong>Project Creation:</strong> Setup, configuration, organization</li>
+                        <li><strong>Board Configuration:</strong> Kanban and Scrum board setup</li>
+                        <li><strong>User Management:</strong> Adding users, groups, permissions</li>
+                        <li><strong>Security:</strong> Permission schemes, access control</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>🛠️ Practical Experience</h3>
+                    <ul>
+                        <li><strong>Created:</strong> Complete project from scratch</li>
+                        <li><strong>Configured:</strong> Scrum board with proper workflow</li>
+                        <li><strong>Organized:</strong> Components and project structure</li>
+                        <li><strong>Managed:</strong> Users, groups, and permissions</li>
+                        <li><strong>Tested:</strong> End-to-end functionality</li>
+                        <li><strong>Validated:</strong> Security and access controls</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔮 Coming Up: Days 9 & 10</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+                    <div>
+                        <h4>📅 Day 9: Advanced Jira Administration</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Custom workflows and automation</li>
+                            <li>Advanced reporting and dashboards</li>
+                            <li>Jira integrations and apps</li>
+                            <li>Performance optimization</li>
+                            <li>Backup and maintenance</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>📅 Day 10: Enterprise Jira & Best Practices</h4>
+                        <ul style="font-size: 0.95em;">
+                            <li>Scaling Jira for large organizations</li>
+                            <li>Advanced security configurations</li>
+                            <li>Compliance and governance</li>
+                            <li>Troubleshooting common issues</li>
+                            <li>Migration and upgrade strategies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0;">
+                <div class="feature-card">
+                    <div class="icon">📚</div>
+                    <h4>Continue Learning</h4>
+                    <p style="font-size: 0.9em;">Practice with your own projects and explore advanced features</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Tip:</strong> Set up a personal Jira instance for experimentation
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🤝</div>
+                    <h4>Share Knowledge</h4>
+                    <p style="font-size: 0.9em;">Help colleagues and team members with Jira setup and best practices</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Impact:</strong> Become the Jira expert in your organization
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="icon">🔧</div>
+                    <h4>Apply Skills</h4>
+                    <p style="font-size: 0.9em;">Implement what you've learned in real projects and workflows</p>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 10px; font-size: 0.85em;">
+                        <strong>Goal:</strong> Improve team productivity and collaboration
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h3>🎯 Key Takeaways</h3>
+                <ul>
+                    <li><strong>Start Simple:</strong> Begin with basic configurations and add complexity gradually</li>
+                    <li><strong>User-Centric:</strong> Always consider the end-user experience in your configurations</li>
+                    <li><strong>Security First:</strong> Implement proper permissions and access controls from the start</li>
+                    <li><strong>Iterate and Improve:</strong> Regularly review and refine your Jira setup</li>
+                    <li><strong>Documentation:</strong> Keep track of configurations and decisions for future reference</li>
+                    <li><strong>Team Collaboration:</strong> Involve your team in Jira setup and configuration decisions</li>
+                </ul>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #0052cc, #2684ff); color: white; padding: 25px; border-radius: 15px; margin-top: 25px; text-align: center;">
+                <h3 style="color: white; margin: 0 0 15px 0;">🌟 Congratulations!</h3>
+                <p style="margin: 0; font-size: 1.1em;">
+                    You're now equipped with the fundamental skills to set up and manage Jira projects effectively. 
+                    Tomorrow, we'll dive deeper into advanced administration and enterprise-level configurations.
+                </p>
+                <p style="margin: 15px 0 0 0; font-size: 1.2em; font-weight: bold;">
+                    Ready for Day 9? Let's continue the journey! 🚀
+                </p>
+            </div>
+            
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: memory-hog
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: memory-hog
+  template:
+    metadata:
+      labels:
+        app: memory-hog
+    spec:
+      tolerations:
+        - operator: "Exists"
+      containers:
+        - name: hog
+          image: polinux/stress
+          args: ["--vm", "1", "--vm-bytes", "500M", "--vm-hang", "0"]
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "600Mi"

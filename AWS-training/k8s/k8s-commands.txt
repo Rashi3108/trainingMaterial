@@ -1,0 +1,17 @@
+kubectl create ns <namespace_name>
+kubectl create -f <filename>
+kubectl get pods
+kubectl get deploy
+kubectl get ns
+kubectl delete pods <pod_name>
+kubectl config set-context --current --namespace='rashi'
+kubectl get svc -n <namespace>
+kubectl get ep -n <namespace>
+kubectl get pods -o wide -n <namespace>
+kubectl exec -it nginx-84968b8886-2skbq -- bin/bash
+kubectl apply -f <filename>
+kubectl delete po --all -n <namespace>
+kubectl get <object> -n <namespace> -o yaml
+kubectl get cm
+kubectl get secret
+echo -n "rashirana" | base64

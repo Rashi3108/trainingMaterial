@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot Hello World - Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide {
+            margin-bottom: 60px;
+            padding: 40px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            page-break-after: always;
+        }
+
+        .slide h1 {
+            color: #4f46e5;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4f46e5;
+            padding-bottom: 15px;
+        }
+
+        .slide h2 {
+            color: #1f2937;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+
+        .slide h3 {
+            color: #374151;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #4b5563;
+        }
+
+        .slide ul, .slide ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4f46e5;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .architecture-diagram {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .endpoint-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .endpoint-table th,
+        .endpoint-table td {
+            border: 1px solid #d1d5db;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .endpoint-table th {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .endpoint-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .method-get {
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .title-slide {
+            text-align: center;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+
+        .title-slide h1 {
+            color: white;
+            border-bottom: 3px solid white;
+            font-size: 3rem;
+        }
+
+        .project-structure {
+            font-family: 'Courier New', monospace;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .presentation-container {
+                background: white;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+            .slide {
+                page-break-after: always;
+                box-shadow: none;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Title Slide -->
+        <div class="slide title-slide">
+            <h1>🚀 Spring Boot Hello World</h1>
+            <h2>Complete Professional Application Guide</h2>
+            <p style="font-size: 1.3rem; margin-top: 30px;">
+                A comprehensive tutorial covering Spring Boot fundamentals,<br>
+                modern web development, and professional deployment practices
+            </p>
+            <div style="margin-top: 40px;">
+                <p><strong>Version:</strong> Spring Boot 3.2.0</p>
+                <p><strong>Java:</strong> 17+</p>
+                <p><strong>Build Tool:</strong> Maven 3.6+</p>
+            </div>
+        </div>
+        <!-- What is Spring Boot Slide -->
+        <div class="slide">
+            <h1>What is Spring Boot?</h1>
+            
+            <h2>🎯 Definition</h2>
+            <p>Spring Boot is a <span class="highlight">powerful framework</span> that makes it easy to create stand-alone, production-grade Spring-based applications with minimal configuration.</p>
+
+            <h2>🔑 Key Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>⚡ Auto-Configuration</h4>
+                    <p>Automatically configures your application based on the dependencies you add to the classpath.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🖥️ Embedded Server</h4>
+                    <p>Includes embedded Tomcat, Jetty, or Undertow servers - no need for external deployment.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📦 Starter Dependencies</h4>
+                    <p>Pre-configured dependency sets for common use cases like web, data, security, etc.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🏥 Production Ready</h4>
+                    <p>Built-in health checks, metrics, monitoring, and externalized configuration.</p>
+                </div>
+            </div>
+
+            <h2>🆚 Spring vs Spring Boot</h2>
+            <ul>
+                <li><strong>Spring Framework:</strong> Comprehensive programming model, requires extensive configuration</li>
+                <li><strong>Spring Boot:</strong> Opinionated defaults, convention over configuration, rapid development</li>
+                <li><strong>Key Difference:</strong> Spring Boot eliminates boilerplate configuration and setup</li>
+            </ul>
+        </div>
+
+        <!-- Prerequisites Slide -->
+        <div class="slide">
+            <h1>📋 Prerequisites & Setup</h1>
+
+            <h2>☕ Java Development Kit (JDK) 17+</h2>
+            <h3>Check Installation:</h3>
+            <div class="code-block">java -version
+javac -version</div>
+
+            <h3>Install on macOS:</h3>
+            <div class="code-block"># Using Homebrew
+brew install openjdk@17
+
+# Add to shell profile (.zshrc or .bash_profile)
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+export PATH=$JAVA_HOME/bin:$PATH</div>
+
+            <h3>Install on Linux (Ubuntu/Debian):</h3>
+            <div class="code-block">sudo apt update
+sudo apt install openjdk-17-jdk</div>
+
+            <h2>📦 Apache Maven 3.6+</h2>
+            <h3>Check Installation:</h3>
+            <div class="code-block">mvn -version</div>
+
+            <h3>Install on macOS:</h3>
+            <div class="code-block">brew install maven</div>
+
+            <h3>Install on Linux:</h3>
+            <div class="code-block">sudo apt update
+sudo apt install maven</div>
+        </div>
+
+        <!-- Project Structure Slide -->
+        <div class="slide">
+            <h1>🏗️ Project Structure</h1>
+
+            <div class="project-structure">
+springboot-hello-world/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/example/helloworld/
+│   │   │       ├── HelloWorldApplication.java      # Main application class
+│   │   │       └── controller/
+│   │   │           └── HelloWorldController.java   # Web controller
+│   │   └── resources/
+│   │       ├── static/                             # Static web assets
+│   │       │   ├── css/style.css                   # Professional styling
+│   │       │   ├── js/script.js                    # Interactive JavaScript
+│   │       │   └── favicon.ico                     # Favicon
+│   │       ├── templates/                          # Thymeleaf templates
+│   │       │   └── index.html                      # Main HTML template
+│   │       └── application.properties              # Application configuration
+│   └── test/
+│       ├── java/
+│       │   └── com/example/helloworld/
+│       │       ├── HelloWorldApplicationTests.java # Integration tests
+│       │       └── controller/
+│       │           └── HelloWorldControllerTest.java # Unit tests
+│       └── resources/
+│           └── application-test.properties         # Test configuration
+├── target/                                         # Build output
+│   └── springboot-hello-world-1.0.0.jar          # Executable JAR
+├── pom.xml                                         # Maven configuration
+├── README.md                                       # Documentation
+├── start.sh                                        # Quick start script
+└── .gitignore                                      # Git ignore rules
+            </div>
+
+            <h2>📁 Key Directories Explained</h2>
+            <ul>
+                <li><strong>src/main/java:</strong> Java source code</li>
+                <li><strong>src/main/resources:</strong> Configuration files, templates, static assets</li>
+                <li><strong>src/test/java:</strong> Test classes</li>
+                <li><strong>target/:</strong> Compiled classes and packaged JAR</li>
+            </ul>
+        </div>
+        <!-- Core Components Slide -->
+        <div class="slide">
+            <h1>🔧 Core Spring Boot Components</h1>
+
+            <h2>📱 Main Application Class</h2>
+            <div class="code-block">@SpringBootApplication
+public class HelloWorldApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(HelloWorldApplication.class, args);
+    }
+}</div>
+
+            <h3>@SpringBootApplication Annotation</h3>
+            <ul>
+                <li><strong>@Configuration:</strong> Tags the class as a source of bean definitions</li>
+                <li><strong>@EnableAutoConfiguration:</strong> Enables Spring Boot's auto-configuration</li>
+                <li><strong>@ComponentScan:</strong> Enables component scanning in the current package</li>
+            </ul>
+
+            <h2>🌐 Web Controller</h2>
+            <div class="code-block">@Controller
+public class HelloWorldController {
+    
+    @GetMapping("/")
+    public String home(@RequestParam(defaultValue = "World") String name, Model model) {
+        model.addAttribute("greeting", "Hello, " + name + "!");
+        return "index";
+    }
+    
+    @GetMapping("/api/hello")
+    @ResponseBody
+    public String helloApi(@RequestParam(defaultValue = "World") String name) {
+        return "{\"message\": \"Hello, " + name + "!\"}";
+    }
+}</div>
+
+            <h3>Key Annotations Explained</h3>
+            <ul>
+                <li><strong>@Controller:</strong> Marks class as a web controller</li>
+                <li><strong>@GetMapping:</strong> Maps HTTP GET requests to handler methods</li>
+                <li><strong>@RequestParam:</strong> Binds request parameters to method parameters</li>
+                <li><strong>@ResponseBody:</strong> Indicates return value should be written directly to HTTP response</li>
+            </ul>
+        </div>
+
+        <!-- API Endpoints Slide -->
+        <div class="slide">
+            <h1>🌐 API Endpoints</h1>
+
+            <table class="endpoint-table">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Endpoint</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="method-get">GET</span></td>
+                        <td>/</td>
+                        <td>Main web interface with Thymeleaf template</td>
+                        <td>http://localhost:8080</td>
+                    </tr>
+                    <tr>
+                        <td><span class="method-get">GET</span></td>
+                        <td>/?name=John</td>
+                        <td>Personalized greeting page</td>
+                        <td>http://localhost:8080?name=John</td>
+                    </tr>
+                    <tr>
+                        <td><span class="method-get">GET</span></td>
+                        <td>/api/hello</td>
+                        <td>JSON API endpoint</td>
+                        <td>http://localhost:8080/api/hello</td>
+                    </tr>
+                    <tr>
+                        <td><span class="method-get">GET</span></td>
+                        <td>/api/hello?name=John</td>
+                        <td>Personalized JSON response</td>
+                        <td>http://localhost:8080/api/hello?name=John</td>
+                    </tr>
+                    <tr>
+                        <td><span class="method-get">GET</span></td>
+                        <td>/health</td>
+                        <td>Application health status</td>
+                        <td>http://localhost:8080/health</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>📊 Response Examples</h2>
+            <h3>JSON API Response:</h3>
+            <div class="code-block">{
+  "message": "Hello, John!",
+  "timestamp": "2024-01-01T12:00:00"
+}</div>
+
+            <h3>Health Check Response:</h3>
+            <div class="code-block">{
+  "status": "UP",
+  "service": "Spring Boot Hello World"
+}</div>
+        </div>
+
+        <!-- Frontend Features Slide -->
+        <div class="slide">
+            <h1>🎨 Frontend Features</h1>
+
+            <h2>🖼️ Professional UI Design</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🎨 Modern Styling</h4>
+                    <p>Gradient backgrounds, glassmorphism effects, and smooth animations</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📱 Responsive Design</h4>
+                    <p>Works perfectly on desktop, tablet, and mobile devices</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⚡ Interactive Elements</h4>
+                    <p>Hover effects, form validation, and real-time updates</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎯 User Experience</h4>
+                    <p>Intuitive navigation, notifications, and accessibility features</p>
+                </div>
+            </div>
+
+            <h2>🔧 Technical Implementation</h2>
+            <ul>
+                <li><strong>Thymeleaf Templating:</strong> Server-side template engine for dynamic content</li>
+                <li><strong>CSS3 Features:</strong> Flexbox, Grid, animations, and modern styling</li>
+                <li><strong>JavaScript Enhancements:</strong> Form validation, API testing, notifications</li>
+                <li><strong>Font Integration:</strong> Google Fonts (Inter) for professional typography</li>
+            </ul>
+
+            <h2>🎮 Interactive Features</h2>
+            <ul>
+                <li>Real-time timestamp updates every second</li>
+                <li>Form validation with user-friendly error messages</li>
+                <li>Click-to-test API endpoints</li>
+                <li>Scroll-to-top functionality</li>
+                <li>Easter eggs (Konami code activation!)</li>
+                <li>Notification system for user feedback</li>
+            </ul>
+        </div>
+        <!-- Running the Application Slide -->
+        <div class="slide">
+            <h1>🚀 Running the Application</h1>
+
+            <h2>🎯 Three Ways to Run</h2>
+
+            <h3>Option 1: Using the Start Script</h3>
+            <div class="code-block">cd springboot-hello-world
+./start.sh</div>
+            <p>The start script automatically checks prerequisites and starts the application.</p>
+
+            <h3>Option 2: Using Maven Directly</h3>
+            <div class="code-block">cd springboot-hello-world
+mvn spring-boot:run</div>
+            <p>Maven will compile and run the application in development mode.</p>
+
+            <h3>Option 3: Using the JAR File</h3>
+            <div class="code-block"># Build the JAR
+mvn clean package
+
+# Run the JAR
+java -jar target/springboot-hello-world-1.0.0.jar</div>
+            <p>This creates a standalone executable JAR that can run anywhere with Java installed.</p>
+
+            <h2>🌐 Accessing the Application</h2>
+            <ul>
+                <li><strong>Main Application:</strong> http://localhost:8080</li>
+                <li><strong>API Endpoint:</strong> http://localhost:8080/api/hello</li>
+                <li><strong>Health Check:</strong> http://localhost:8080/health</li>
+            </ul>
+
+            <h2>🔧 Development Features</h2>
+            <ul>
+                <li><strong>Hot Reload:</strong> Java code changes trigger automatic restart</li>
+                <li><strong>Live Reload:</strong> Static resources reload without restart</li>
+                <li><strong>DevTools:</strong> Enhanced development experience</li>
+            </ul>
+        </div>
+
+        <!-- Testing Slide -->
+        <div class="slide">
+            <h1>🧪 Testing</h1>
+
+            <h2>📊 Test Results</h2>
+            <div class="code-block">mvn test
+
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS</div>
+
+            <h2>🔍 Test Types</h2>
+
+            <h3>Integration Tests</h3>
+            <div class="code-block">@SpringBootTest
+class HelloWorldApplicationTests {
+    @Test
+    void contextLoads() {
+        // Tests that Spring context loads successfully
+    }
+}</div>
+
+            <h3>Unit Tests</h3>
+            <div class="code-block">@WebMvcTest(HelloWorldController.class)
+class HelloWorldControllerTest {
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    void testHomeEndpoint() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"));
+    }
+}</div>
+
+            <h2>🎯 Testing Best Practices</h2>
+            <ul>
+                <li><strong>@SpringBootTest:</strong> Full application context testing</li>
+                <li><strong>@WebMvcTest:</strong> Web layer testing with MockMvc</li>
+                <li><strong>Test Profiles:</strong> Separate configuration for testing</li>
+                <li><strong>MockMvc:</strong> Testing web endpoints without starting server</li>
+            </ul>
+        </div>
+
+        <!-- Configuration Slide -->
+        <div class="slide">
+            <h1>⚙️ Configuration</h1>
+
+            <h2>📄 application.properties</h2>
+            <div class="code-block"># Server Configuration
+server.port=8080
+server.servlet.context-path=/
+
+# Application Information
+spring.application.name=Spring Boot Hello World
+info.app.name=Spring Boot Hello World
+info.app.version=1.0.0
+
+# Thymeleaf Configuration
+spring.thymeleaf.cache=false
+spring.thymeleaf.enabled=true
+
+# Development Configuration
+spring.devtools.restart.enabled=true
+spring.devtools.livereload.enabled=true
+
+# Logging Configuration
+logging.level.com.example.helloworld=INFO</div>
+
+            <h2>📦 Maven Dependencies (pom.xml)</h2>
+            <div class="code-block">&lt;dependencies&gt;
+    &lt;!-- Spring Boot Web Starter --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    
+    &lt;!-- Thymeleaf Template Engine --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+    
+    &lt;!-- Development Tools --&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;</div>
+        </div>
+
+        <!-- Deployment Slide -->
+        <div class="slide">
+            <h1>🚀 Deployment & Production</h1>
+
+            <h2>📦 Building for Production</h2>
+            <div class="code-block"># Create production JAR
+mvn clean package -DskipTests
+
+# JAR file created at:
+target/springboot-hello-world-1.0.0.jar</div>
+
+            <h2>🐳 Docker Deployment</h2>
+            <div class="code-block"># Dockerfile
+FROM openjdk:17-jdk-slim
+COPY target/springboot-hello-world-1.0.0.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+# Build and run
+docker build -t springboot-hello-world .
+docker run -p 8080:8080 springboot-hello-world</div>
+
+            <h2>☁️ Cloud Deployment Options</h2>
+            <ul>
+                <li><strong>AWS:</strong> Elastic Beanstalk, ECS, Lambda</li>
+                <li><strong>Azure:</strong> App Service, Container Instances</li>
+                <li><strong>Google Cloud:</strong> App Engine, Cloud Run</li>
+                <li><strong>Heroku:</strong> Simple git-based deployment</li>
+            </ul>
+
+            <h2>🔧 Production Considerations</h2>
+            <ul>
+                <li>Environment-specific configuration</li>
+                <li>Database integration</li>
+                <li>Security configuration</li>
+                <li>Monitoring and logging</li>
+                <li>Load balancing and scaling</li>
+            </ul>
+        </div>
+
+        <!-- Next Steps Slide -->
+        <div class="slide">
+            <h1>🎯 Next Steps & Learning Path</h1>
+
+            <h2>🔄 Immediate Enhancements</h2>
+            <ul>
+                <li><strong>Database Integration:</strong> Add JPA and H2/PostgreSQL</li>
+                <li><strong>Security:</strong> Implement Spring Security</li>
+                <li><strong>REST APIs:</strong> Build comprehensive RESTful services</li>
+                <li><strong>Validation:</strong> Add input validation and error handling</li>
+            </ul>
+
+            <h2>🏗️ Advanced Topics</h2>
+            <ul>
+                <li><strong>Microservices:</strong> Split into multiple services</li>
+                <li><strong>Cloud Native:</strong> Spring Cloud, service discovery</li>
+                <li><strong>Reactive Programming:</strong> WebFlux, reactive streams</li>
+                <li><strong>Monitoring:</strong> Actuator, Micrometer, distributed tracing</li>
+            </ul>
+
+            <h2>📚 Learning Resources</h2>
+            <ul>
+                <li><strong>Official Documentation:</strong> spring.io/projects/spring-boot</li>
+                <li><strong>Spring Guides:</strong> spring.io/guides</li>
+                <li><strong>Spring Boot Reference:</strong> Comprehensive documentation</li>
+                <li><strong>Community:</strong> Stack Overflow, Spring forums</li>
+            </ul>
+
+            <h2>🎉 Congratulations!</h2>
+            <p>You've successfully created a professional Spring Boot application with:</p>
+            <ul>
+                <li>✅ Modern web interface with professional styling</li>
+                <li>✅ RESTful API endpoints</li>
+                <li>✅ Comprehensive testing</li>
+                <li>✅ Production-ready configuration</li>
+                <li>✅ Complete documentation</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>

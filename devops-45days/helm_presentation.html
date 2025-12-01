@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helm: Package Manager for Kubernetes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .slide:last-child {
+            page-break-after: auto;
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .slide-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #0f1419 0%, #326ce5 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide .slide-title {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .slide-subtitle {
+            font-size: 1.5rem;
+            color: #a5c9ff;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #0f1419;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f3f4f6;
+            border-left: 5px solid #0f1419;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #0f1419;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f3f4f6;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid #0f1419;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .lab-section {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .lab-section h3 {
+            color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 20px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0ea5e9;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.95rem;
+        }
+
+        .yaml-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .workflow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .workflow-phase {
+            background: #0f1419;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            text-align: center;
+            min-width: 120px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #0f1419;
+            margin: 0 10px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .architecture-diagram {
+            background: #f8fafc;
+            border: 2px solid #0f1419;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .component-box {
+            background: #0f1419;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .slide {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title Slide -->
+<div class="slide title-slide">
+    <div class="content">
+        <h1 class="slide-title">Helm: Package Manager for Kubernetes</h1>
+        <p class="slide-subtitle">Managing Kubernetes Applications with Charts, Templates, and Repositories</p>
+    </div>
+    <div class="slide-footer" style="color: #a5c9ff;">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 2: Why We Need Helm -->
+<div class="slide">
+    <div class="content">
+        <h2>Why We Need Helm</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Helm</strong> addresses the complexity of managing Kubernetes applications by providing templating, packaging, and deployment capabilities that make application management scalable and maintainable.</p>
+        </div>
+
+        <h3>Challenges with Raw Kubernetes YAML</h3>
+        <ul>
+            <li><strong>Repetitive Configuration:</strong> Similar YAML files across environments</li>
+            <li><strong>Hard-coded Values:</strong> Environment-specific values embedded in manifests</li>
+            <li><strong>Complex Deployments:</strong> Multiple interdependent resources</li>
+            <li><strong>Version Management:</strong> Tracking application versions and rollbacks</li>
+            <li><strong>Configuration Drift:</strong> Inconsistencies across environments</li>
+            <li><strong>Dependency Management:</strong> Managing application dependencies</li>
+            <li><strong>Lifecycle Management:</strong> Install, upgrade, rollback operations</li>
+        </ul>
+
+        <h3>Problems Helm Solves</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Templating</h4>
+                <p>Dynamic YAML generation with variables and logic for different environments</p>
+            </div>
+            <div class="feature-card">
+                <h4>Packaging</h4>
+                <p>Bundle related Kubernetes resources into reusable packages called Charts</p>
+            </div>
+            <div class="feature-card">
+                <h4>Release Management</h4>
+                <p>Track deployments, perform upgrades, and rollback to previous versions</p>
+            </div>
+            <div class="feature-card">
+                <h4>Dependency Management</h4>
+                <p>Manage complex application dependencies and sub-charts</p>
+            </div>
+        </div>
+
+        <h3>Real-World Scenarios</h3>
+        <ul>
+            <li><strong>Multi-Environment Deployments:</strong> Same application across dev, staging, production</li>
+            <li><strong>Microservices Architecture:</strong> Managing dozens of interconnected services</li>
+            <li><strong>Application Marketplace:</strong> Sharing and distributing applications</li>
+            <li><strong>CI/CD Pipelines:</strong> Automated deployments with parameterized configurations</li>
+            <li><strong>Disaster Recovery:</strong> Quick restoration of complex application stacks</li>
+        </ul>
+
+        <h3>Before and After Helm</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Without Helm</th>
+                    <th>With Helm</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Configuration</strong></td>
+                    <td>Multiple static YAML files</td>
+                    <td>Single parameterized template</td>
+                </tr>
+                <tr>
+                    <td><strong>Deployment</strong></td>
+                    <td>kubectl apply -f *.yaml</td>
+                    <td>helm install myapp ./chart</td>
+                </tr>
+                <tr>
+                    <td><strong>Updates</strong></td>
+                    <td>Manual YAML editing</td>
+                    <td>helm upgrade with new values</td>
+                </tr>
+                <tr>
+                    <td><strong>Rollback</strong></td>
+                    <td>Manual restoration</td>
+                    <td>helm rollback myapp 1</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="success-box">
+            <p><strong>Key Benefit:</strong> Helm transforms Kubernetes from imperative resource management to declarative application management, making complex deployments simple and repeatable.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 3: What is Helm -->
+<div class="slide">
+    <div class="content">
+        <h2>What is Helm</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Helm</strong> is the package manager for Kubernetes, often called "the Kubernetes package manager." It helps you manage Kubernetes applications through Helm Charts, which are packages of pre-configured Kubernetes resources.</p>
+        </div>
+
+        <h3>Helm Overview</h3>
+        <ul>
+            <li><strong>Package Manager:</strong> Like apt, yum, or brew for Kubernetes applications</li>
+            <li><strong>Templating Engine:</strong> Generate Kubernetes YAML from templates</li>
+            <li><strong>Release Manager:</strong> Track and manage application deployments</li>
+            <li><strong>Repository System:</strong> Share and distribute applications</li>
+            <li><strong>Dependency Manager:</strong> Handle complex application dependencies</li>
+        </ul>
+
+        <h3>Helm Architecture</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #e53e3e;">Helm Client</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #0f1419;">communicates with</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #38a169;">Kubernetes API Server</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1.2rem; color: #0f1419;">manages</div>
+            <div>
+                <div class="component-box">Charts</div>
+                <div class="component-box">Releases</div>
+                <div class="component-box">Repositories</div>
+            </div>
+        </div>
+
+        <h3>Key Components</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Helm Client</h4>
+                <p>Command-line tool that interacts with Kubernetes API server to manage charts and releases</p>
+            </div>
+            <div class="feature-card">
+                <h4>Charts</h4>
+                <p>Packages containing Kubernetes resource templates and configuration</p>
+            </div>
+            <div class="feature-card">
+                <h4>Releases</h4>
+                <p>Instances of charts deployed to Kubernetes cluster with specific configuration</p>
+            </div>
+            <div class="feature-card">
+                <h4>Repositories</h4>
+                <p>Collections of charts that can be shared and distributed</p>
+            </div>
+        </div>
+
+        <h3>Helm Evolution</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Helm v2<br>(Tiller)</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Helm v3<br>(Client-only)</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Current<br>(v3.12+)</div>
+        </div>
+
+        <h3>Helm v3 Improvements</h3>
+        <ul>
+            <li><strong>No Tiller:</strong> Removed server-side component for better security</li>
+            <li><strong>Namespace Support:</strong> Better namespace handling and scoping</li>
+            <li><strong>Library Charts:</strong> Reusable chart components</li>
+            <li><strong>JSON Schema:</strong> Values validation support</li>
+            <li><strong>Release Secrets:</strong> Store release information as Kubernetes secrets</li>
+            <li><strong>Improved Hooks:</strong> Better lifecycle management</li>
+        </div>
+
+        <h3>Helm Workflow</h3>
+        <ol class="step-list">
+            <li><strong>Create/Find Chart:</strong> Develop chart or find existing one in repository</li>
+            <li><strong>Customize Values:</strong> Configure chart parameters for your environment</li>
+            <li><strong>Install Release:</strong> Deploy chart to Kubernetes cluster</li>
+            <li><strong>Manage Lifecycle:</strong> Upgrade, rollback, or uninstall as needed</li>
+        </ol>
+
+        <div class="success-box">
+            <p><strong>Modern Approach:</strong> Helm v3's client-only architecture eliminates security concerns while providing powerful templating and package management capabilities.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 4: Managing Kubernetes Applications with Helm -->
+<div class="slide">
+    <div class="content">
+        <h2>Managing Kubernetes Applications with Helm</h2>
+        
+        <div class="highlight-box">
+            <p>Helm provides a comprehensive solution for <strong>application lifecycle management</strong> in Kubernetes, from initial deployment through updates, scaling, and eventual decommissioning.</p>
+        </div>
+
+        <h3>Application Lifecycle with Helm</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Package</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Install</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Upgrade</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Rollback</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Uninstall</div>
+        </div>
+
+        <h3>Key Management Capabilities</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Installation</h4>
+                <p>Deploy complex applications with single command, handling dependencies automatically</p>
+            </div>
+            <div class="feature-card">
+                <h4>Configuration</h4>
+                <p>Parameterize deployments for different environments without changing templates</p>
+            </div>
+            <div class="feature-card">
+                <h4>Upgrades</h4>
+                <p>Update applications with new versions while preserving configuration and data</p>
+            </div>
+            <div class="feature-card">
+                <h4>Rollbacks</h4>
+                <p>Quickly revert to previous working versions when issues arise</p>
+            </div>
+        </div>
+
+        <h3>Release Management</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Operation</th>
+                    <th>Command</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Install</strong></td>
+                    <td>helm install myapp ./chart</td>
+                    <td>Deploy new application instance</td>
+                </tr>
+                <tr>
+                    <td><strong>Upgrade</strong></td>
+                    <td>helm upgrade myapp ./chart</td>
+                    <td>Update existing deployment</td>
+                </tr>
+                <tr>
+                    <td><strong>Rollback</strong></td>
+                    <td>helm rollback myapp 1</td>
+                    <td>Revert to previous version</td>
+                </tr>
+                <tr>
+                    <td><strong>Uninstall</strong></td>
+                    <td>helm uninstall myapp</td>
+                    <td>Remove application completely</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Configuration Management</h3>
+        <ul>
+            <li><strong>Values Files:</strong> Environment-specific configuration in YAML files</li>
+            <li><strong>Command-line Overrides:</strong> Quick parameter changes during deployment</li>
+            <li><strong>Template Functions:</strong> Dynamic value generation and transformation</li>
+            <li><strong>Conditional Logic:</strong> Include/exclude resources based on conditions</li>
+            <li><strong>Validation:</strong> JSON Schema validation for configuration values</li>
+        </ul>
+
+        <h3>Multi-Environment Strategy</h3>
+        <div class="code-block">
+# Development environment<br>
+helm install myapp ./chart -f values-dev.yaml<br><br>
+
+# Staging environment<br>
+helm install myapp ./chart -f values-staging.yaml<br><br>
+
+# Production environment<br>
+helm install myapp ./chart -f values-prod.yaml<br><br>
+
+# Override specific values<br>
+helm install myapp ./chart --set image.tag=v2.0.0 --set replicas=5
+        </div>
+
+        <h3>Benefits for DevOps Teams</h3>
+        <ul>
+            <li><strong>Standardization:</strong> Consistent deployment patterns across teams</li>
+            <li><strong>Reusability:</strong> Share charts across projects and organizations</li>
+            <li><strong>Automation:</strong> Integrate with CI/CD pipelines seamlessly</li>
+            <li><strong>Observability:</strong> Track deployment history and changes</li>
+            <li><strong>Collaboration:</strong> Version-controlled application definitions</li>
+        </ul>
+
+        <div class="warning-box">
+            <p><strong>Best Practice:</strong> Always use values files for environment-specific configuration rather than modifying chart templates directly.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 5: Charts -->
+<div class="slide">
+    <div class="content">
+        <h2>Charts</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Helm Charts</strong> are packages of pre-configured Kubernetes resources. A chart is a collection of files that describe a related set of Kubernetes resources.</p>
+        </div>
+
+        <h3>Chart Structure</h3>
+        <div class="yaml-block">
+mychart/<br>
+├── Chart.yaml          # Chart metadata<br>
+├── values.yaml         # Default configuration values<br>
+├── charts/             # Chart dependencies<br>
+├── templates/          # Kubernetes resource templates<br>
+│   ├── deployment.yaml<br>
+│   ├── service.yaml<br>
+│   ├── ingress.yaml<br>
+│   ├── _helpers.tpl    # Template helpers<br>
+│   └── NOTES.txt       # Usage notes<br>
+├── .helmignore         # Files to ignore<br>
+└── README.md           # Chart documentation
+        </div>
+
+        <h3>Chart.yaml Example</h3>
+        <div class="yaml-block">
+apiVersion: v2<br>
+name: nginx-app<br>
+description: A Helm chart for Nginx application<br>
+type: application<br>
+version: 0.1.0<br>
+appVersion: "1.21.0"<br>
+keywords:<br>
+  - nginx<br>
+  - web<br>
+  - server<br>
+home: https://nginx.org<br>
+sources:<br>
+  - https://github.com/nginx/nginx<br>
+maintainers:<br>
+  - name: John Doe<br>
+    email: john@example.com<br>
+dependencies:<br>
+  - name: postgresql<br>
+    version: "11.6.12"<br>
+    repository: https://charts.bitnami.com/bitnami
+        </div>
+
+        <h3>Chart Types</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Application Charts</h4>
+                <p>Complete applications with all necessary resources (deployments, services, etc.)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Library Charts</h4>
+                <p>Reusable templates and functions shared across multiple charts</p>
+            </div>
+            <div class="feature-card">
+                <h4>Umbrella Charts</h4>
+                <p>Charts that primarily contain dependencies to other charts</p>
+            </div>
+            <div class="feature-card">
+                <h4>Operator Charts</h4>
+                <p>Charts that deploy Kubernetes operators for complex applications</p>
+            </div>
+        </div>
+
+        <h3>values.yaml Example</h3>
+        <div class="yaml-block">
+# Default values for nginx-app<br>
+replicaCount: 1<br><br>
+
+image:<br>
+  repository: nginx<br>
+  pullPolicy: IfNotPresent<br>
+  tag: "1.21"<br><br>
+
+service:<br>
+  type: ClusterIP<br>
+  port: 80<br><br>
+
+ingress:<br>
+  enabled: false<br>
+  className: ""<br>
+  annotations: {}<br>
+  hosts:<br>
+    - host: chart-example.local<br>
+      paths:<br>
+        - path: /<br>
+          pathType: Prefix<br><br>
+
+resources:<br>
+  limits:<br>
+    cpu: 500m<br>
+    memory: 512Mi<br>
+  requests:<br>
+    cpu: 250m<br>
+    memory: 256Mi<br><br>
+
+autoscaling:<br>
+  enabled: false<br>
+  minReplicas: 1<br>
+  maxReplicas: 100<br>
+  targetCPUUtilizationPercentage: 80
+        </div>
+
+        <h3>Chart Commands</h3>
+        <div class="code-block">
+# Create new chart<br>
+helm create mychart<br><br>
+
+# Validate chart<br>
+helm lint mychart<br><br>
+
+# Package chart<br>
+helm package mychart<br><br>
+
+# Install chart<br>
+helm install myrelease mychart<br><br>
+
+# Dry run (template rendering)<br>
+helm install myrelease mychart --dry-run --debug<br><br>
+
+# Template only (no installation)<br>
+helm template myrelease mychart
+        </div>
+
+        <h3>Chart Best Practices</h3>
+        <ul>
+            <li><strong>Semantic Versioning:</strong> Use proper version numbering</li>
+            <li><strong>Resource Naming:</strong> Use consistent naming conventions</li>
+            <li><strong>Labels and Selectors:</strong> Include standard labels</li>
+            <li><strong>Documentation:</strong> Provide clear README and NOTES.txt</li>
+            <li><strong>Security:</strong> Follow security best practices</li>
+            <li><strong>Testing:</strong> Include chart tests for validation</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 6: Templates -->
+<div class="slide">
+    <div class="content">
+        <h2>Templates</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Helm Templates</strong> use the Go template language to generate Kubernetes YAML files dynamically. Templates allow you to parameterize and customize Kubernetes resources.</p>
+        </div>
+
+        <h3>Template Syntax</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Variables</h4>
+                <p>{{ .Values.image.repository }}</p>
+            </div>
+            <div class="feature-card">
+                <h4>Functions</h4>
+                <p>{{ .Values.name | upper }}</p>
+            </div>
+            <div class="feature-card">
+                <h4>Conditionals</h4>
+                <p>{{- if .Values.ingress.enabled }}</p>
+            </div>
+            <div class="feature-card">
+                <h4>Loops</h4>
+                <p>{{- range .Values.hosts }}</p>
+            </div>
+        </div>
+
+        <h3>Deployment Template Example</h3>
+        <div class="yaml-block">
+apiVersion: apps/v1<br>
+kind: Deployment<br>
+metadata:<br>
+  name: {{ include "mychart.fullname" . }}<br>
+  labels:<br>
+    {{- include "mychart.labels" . | nindent 4 }}<br>
+spec:<br>
+  {{- if not .Values.autoscaling.enabled }}<br>
+  replicas: {{ .Values.replicaCount }}<br>
+  {{- end }}<br>
+  selector:<br>
+    matchLabels:<br>
+      {{- include "mychart.selectorLabels" . | nindent 6 }}<br>
+  template:<br>
+    metadata:<br>
+      labels:<br>
+        {{- include "mychart.selectorLabels" . | nindent 8 }}<br>
+    spec:<br>
+      containers:<br>
+        - name: {{ .Chart.Name }}<br>
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"<br>
+          imagePullPolicy: {{ .Values.image.pullPolicy }}<br>
+          ports:<br>
+            - name: http<br>
+              containerPort: 80<br>
+              protocol: TCP<br>
+          resources:<br>
+            {{- toYaml .Values.resources | nindent 12 }}
+        </div>
+
+        <h3>Built-in Objects</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Object</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>.Values</strong></td>
+                    <td>Values from values.yaml and overrides</td>
+                    <td>{{ .Values.image.tag }}</td>
+                </tr>
+                <tr>
+                    <td><strong>.Chart</strong></td>
+                    <td>Chart metadata from Chart.yaml</td>
+                    <td>{{ .Chart.Name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>.Release</strong></td>
+                    <td>Release information</td>
+                    <td>{{ .Release.Name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>.Capabilities</strong></td>
+                    <td>Kubernetes cluster capabilities</td>
+                    <td>{{ .Capabilities.KubeVersion }}</td>
+                </tr>
+                <tr>
+                    <td><strong>.Template</strong></td>
+                    <td>Current template information</td>
+                    <td>{{ .Template.Name }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Template Functions</h3>
+        <div class="code-block">
+# String functions<br>
+{{ .Values.name | upper }}           # Convert to uppercase<br>
+{{ .Values.name | quote }}           # Add quotes<br>
+{{ .Values.name | default "nginx" }} # Default value<br><br>
+
+# Type conversion<br>
+{{ .Values.port | toString }}        # Convert to string<br>
+{{ .Values.enabled | toYaml }}       # Convert to YAML<br><br>
+
+# Conditionals<br>
+{{- if .Values.ingress.enabled }}<br>
+# Include ingress resource<br>
+{{- end }}<br><br>
+
+# Loops<br>
+{{- range .Values.hosts }}<br>
+- host: {{ . }}<br>
+{{- end }}
+        </div>
+
+        <h3>Helper Templates (_helpers.tpl)</h3>
+        <div class="yaml-block">
+{{/*<br>
+Expand the name of the chart.<br>
+*/}}<br>
+{{- define "mychart.name" -}}<br>
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}<br>
+{{- end }}<br><br>
+
+{{/*<br>
+Create a default fully qualified app name.<br>
+*/}}<br>
+{{- define "mychart.fullname" -}}<br>
+{{- if .Values.fullnameOverride }}<br>
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}<br>
+{{- else }}<br>
+{{- $name := default .Chart.Name .Values.nameOverride }}<br>
+{{- if contains $name .Release.Name }}<br>
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}<br>
+{{- else }}<br>
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}<br>
+{{- end }}<br>
+{{- end }}<br>
+{{- end }}
+        </div>
+
+        <h3>Template Best Practices</h3>
+        <ul>
+            <li><strong>Use Helper Templates:</strong> Create reusable template snippets</li>
+            <li><strong>Validate Input:</strong> Check for required values and types</li>
+            <li><strong>Handle Defaults:</strong> Provide sensible default values</li>
+            <li><strong>Comment Templates:</strong> Document complex template logic</li>
+            <li><strong>Test Templates:</strong> Use helm template to verify output</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 7: Repositories -->
+<div class="slide">
+    <div class="content">
+        <h2>Repositories</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Helm Repositories</strong> are collections of Helm charts that can be shared and distributed. They serve as centralized locations for storing and accessing packaged charts.</p>
+        </div>
+
+        <h3>Repository Types</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Public Repositories</h4>
+                <p>Community-maintained repositories like Bitnami, Stable, and official charts</p>
+            </div>
+            <div class="feature-card">
+                <h4>Private Repositories</h4>
+                <p>Organization-specific repositories for internal charts and applications</p>
+            </div>
+            <div class="feature-card">
+                <h4>OCI Repositories</h4>
+                <p>Container registry-based repositories using OCI (Open Container Initiative) format</p>
+            </div>
+            <div class="feature-card">
+                <h4>Local Repositories</h4>
+                <p>File system-based repositories for development and testing</p>
+            </div>
+        </div>
+
+        <h3>Popular Public Repositories</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Repository</th>
+                    <th>URL</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Bitnami</strong></td>
+                    <td>https://charts.bitnami.com/bitnami</td>
+                    <td>Production-ready charts for popular applications</td>
+                </tr>
+                <tr>
+                    <td><strong>Prometheus Community</strong></td>
+                    <td>https://prometheus-community.github.io/helm-charts</td>
+                    <td>Monitoring and alerting stack charts</td>
+                </tr>
+                <tr>
+                    <td><strong>Ingress Nginx</strong></td>
+                    <td>https://kubernetes.github.io/ingress-nginx</td>
+                    <td>Nginx ingress controller charts</td>
+                </tr>
+                <tr>
+                    <td><strong>Jetstack</strong></td>
+                    <td>https://charts.jetstack.io</td>
+                    <td>cert-manager and security-focused charts</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Repository Management Commands</h3>
+        <div class="code-block">
+# Add repository<br>
+helm repo add bitnami https://charts.bitnami.com/bitnami<br><br>
+
+# List repositories<br>
+helm repo list<br><br>
+
+# Update repository index<br>
+helm repo update<br><br>
+
+# Search charts in repositories<br>
+helm search repo nginx<br><br>
+
+# Search Helm Hub<br>
+helm search hub wordpress<br><br>
+
+# Remove repository<br>
+helm repo remove bitnami<br><br>
+
+# Show chart information<br>
+helm show chart bitnami/nginx<br>
+helm show values bitnami/nginx
+        </div>
+
+        <h3>Installing from Repositories</h3>
+        <div class="code-block">
+# Install from repository<br>
+helm install my-nginx bitnami/nginx<br><br>
+
+# Install specific version<br>
+helm install my-nginx bitnami/nginx --version 13.2.23<br><br>
+
+# Install with custom values<br>
+helm install my-nginx bitnami/nginx -f my-values.yaml<br><br>
+
+# Install with inline values<br>
+helm install my-nginx bitnami/nginx \<br>
+  --set service.type=LoadBalancer \<br>
+  --set replicaCount=3
+        </div>
+
+        <h3>Creating Private Repository</h3>
+        <ol class="step-list">
+            <li><strong>Package Charts:</strong> Create .tgz files from your charts</li>
+            <li><strong>Generate Index:</strong> Create index.yaml with chart metadata</li>
+            <li><strong>Host Files:</strong> Serve files via HTTP server (nginx, Apache, S3, etc.)</li>
+            <li><strong>Add Repository:</strong> Add your repository URL to Helm</li>
+        </ol>
+
+        <div class="code-block">
+# Package chart<br>
+helm package mychart<br><br>
+
+# Generate repository index<br>
+helm repo index . --url https://my-repo.example.com<br><br>
+
+# Upload to web server<br>
+# mychart-0.1.0.tgz and index.yaml<br><br>
+
+# Add private repository<br>
+helm repo add myrepo https://my-repo.example.com
+        </div>
+
+        <h3>OCI Registry Support</h3>
+        <div class="code-block">
+# Login to OCI registry<br>
+helm registry login registry.example.com<br><br>
+
+# Push chart to OCI registry<br>
+helm push mychart-0.1.0.tgz oci://registry.example.com/charts<br><br>
+
+# Install from OCI registry<br>
+helm install my-release oci://registry.example.com/charts/mychart --version 0.1.0
+        </div>
+
+        <div class="success-box">
+            <p><strong>Modern Approach:</strong> OCI registries are becoming the preferred method for storing Helm charts, providing better security, versioning, and integration with existing container workflows.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 8: Helm Commands Examples -->
+<div class="slide">
+    <div class="content">
+        <h2>Helm Commands Examples</h2>
+        
+        <div class="highlight-box">
+            <p>Master these essential <strong>Helm commands</strong> for effective chart and release management in your Kubernetes environment.</p>
+        </div>
+
+        <h3>Repository Management</h3>
+        <div class="code-block">
+# Add popular repositories<br>
+helm repo add bitnami https://charts.bitnami.com/bitnami<br>
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts<br>
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx<br><br>
+
+# Update repository indexes<br>
+helm repo update<br><br>
+
+# List all repositories<br>
+helm repo list<br><br>
+
+# Search for charts<br>
+helm search repo nginx<br>
+helm search repo --versions nginx  # Show all versions<br><br>
+
+# Get chart information<br>
+helm show chart bitnami/nginx<br>
+helm show values bitnami/nginx<br>
+helm show readme bitnami/nginx
+        </div>
+
+        <h3>Release Management</h3>
+        <div class="code-block">
+# Install release<br>
+helm install my-nginx bitnami/nginx<br>
+helm install my-nginx bitnami/nginx --namespace production --create-namespace<br><br>
+
+# Install with custom values<br>
+helm install my-nginx bitnami/nginx -f values.yaml<br>
+helm install my-nginx bitnami/nginx --set service.type=LoadBalancer<br><br>
+
+# List releases<br>
+helm list<br>
+helm list --all-namespaces<br>
+helm list --namespace production<br><br>
+
+# Get release status<br>
+helm status my-nginx<br><br>
+
+# Get release values<br>
+helm get values my-nginx<br>
+helm get values my-nginx --all  # Include default values
+        </div>
+
+        <h3>Upgrade and Rollback</h3>
+        <div class="code-block">
+# Upgrade release<br>
+helm upgrade my-nginx bitnami/nginx<br>
+helm upgrade my-nginx bitnami/nginx --version 13.2.24<br>
+helm upgrade my-nginx bitnami/nginx -f new-values.yaml<br><br>
+
+# Upgrade with install fallback<br>
+helm upgrade --install my-nginx bitnami/nginx<br><br>
+
+# View release history<br>
+helm history my-nginx<br><br>
+
+# Rollback to previous version<br>
+helm rollback my-nginx<br>
+helm rollback my-nginx 2  # Rollback to specific revision<br><br>
+
+# Uninstall release<br>
+helm uninstall my-nginx<br>
+helm uninstall my-nginx --keep-history  # Keep release history
+        </div>
+
+        <h3>Chart Development</h3>
+        <div class="code-block">
+# Create new chart<br>
+helm create mychart<br><br>
+
+# Validate chart<br>
+helm lint mychart<br><br>
+
+# Render templates (dry run)<br>
+helm template my-release mychart<br>
+helm template my-release mychart --debug<br><br>
+
+# Install with dry run<br>
+helm install my-release mychart --dry-run --debug<br><br>
+
+# Package chart<br>
+helm package mychart<br><br>
+
+# Test chart<br>
+helm test my-release
+        </div>
+
+        <h3>Advanced Commands</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Dependency Management</h4>
+                <div class="code-block" style="font-size: 0.8rem; margin: 10px 0;">
+helm dependency update<br>
+helm dependency build<br>
+helm dependency list
+                </div>
+            </div>
+            <div class="feature-card">
+                <h4>Plugin Management</h4>
+                <div class="code-block" style="font-size: 0.8rem; margin: 10px 0;">
+helm plugin install &lt;plugin-url&gt;<br>
+helm plugin list<br>
+helm plugin update &lt;plugin&gt;
+                </div>
+            </div>
+            <div class="feature-card">
+                <h4>Environment Management</h4>
+                <div class="code-block" style="font-size: 0.8rem; margin: 10px 0;">
+helm env<br>
+export HELM_NAMESPACE=production<br>
+export KUBECONFIG=~/.kube/config
+                </div>
+            </div>
+            <div class="feature-card">
+                <h4>Debugging</h4>
+                <div class="code-block" style="font-size: 0.8rem; margin: 10px 0;">
+helm get manifest my-release<br>
+helm get hooks my-release<br>
+helm get notes my-release
+                </div>
+            </div>
+        </div>
+
+        <h3>Common Command Patterns</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Command</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Quick Install</strong></td>
+                    <td>helm install app repo/chart</td>
+                    <td>Fast deployment with defaults</td>
+                </tr>
+                <tr>
+                    <td><strong>Production Install</strong></td>
+                    <td>helm install app repo/chart -f prod-values.yaml</td>
+                    <td>Controlled production deployment</td>
+                </tr>
+                <tr>
+                    <td><strong>Safe Upgrade</strong></td>
+                    <td>helm upgrade app repo/chart --dry-run</td>
+                    <td>Preview changes before applying</td>
+                </tr>
+                <tr>
+                    <td><strong>Emergency Rollback</strong></td>
+                    <td>helm rollback app</td>
+                    <td>Quick revert to previous version</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="warning-box">
+            <p><strong>Safety Tip:</strong> Always use --dry-run flag to preview changes before applying them in production environments.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 9: Lab - Installing Helm -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Installing Helm</h2>
+        
+        <div class="lab-section">
+            <h3>Hands-on Lab: Helm Installation and Setup</h3>
+            <p>Install Helm on your system and configure it for Kubernetes cluster management.</p>
+        </div>
+
+        <h3>Lab Objectives</h3>
+        <ul>
+            <li>Install Helm CLI on your operating system</li>
+            <li>Verify Helm installation and configuration</li>
+            <li>Add popular Helm repositories</li>
+            <li>Explore available charts and their configurations</li>
+        </ul>
+
+        <h3>Installation Methods</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Script Installation</h4>
+                <p>Quick installation using official script</p>
+            </div>
+            <div class="feature-card">
+                <h4>Package Manager</h4>
+                <p>Install using system package managers</p>
+            </div>
+            <div class="feature-card">
+                <h4>Binary Download</h4>
+                <p>Download and install binary manually</p>
+            </div>
+            <div class="feature-card">
+                <h4>Container Image</h4>
+                <p>Run Helm from container image</p>
+            </div>
+        </div>
+
+        <h3>Step 1: Install Helm (Choose Your Method)</h3>
+        
+        <h4>Method 1: Script Installation (Recommended)</h4>
+        <div class="code-block">
+# Download and run installation script<br>
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash<br><br>
+
+# Alternative: Download script first, then run<br>
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3<br>
+chmod 700 get_helm.sh<br>
+./get_helm.sh
+        </div>
+
+        <h4>Method 2: Package Managers</h4>
+        <div class="code-block">
+# macOS (Homebrew)<br>
+brew install helm<br><br>
+
+# Ubuntu/Debian<br>
+curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null<br>
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list<br>
+sudo apt-get update<br>
+sudo apt-get install helm<br><br>
+
+# CentOS/RHEL/Fedora<br>
+sudo dnf install helm<br><br>
+
+# Windows (Chocolatey)<br>
+choco install kubernetes-helm<br><br>
+
+# Windows (Scoop)<br>
+scoop install helm
+        </div>
+
+        <h4>Method 3: Binary Download</h4>
+        <div class="code-block">
+# Download latest release<br>
+wget https://get.helm.sh/helm-v3.12.0-linux-amd64.tar.gz<br><br>
+
+# Extract and install<br>
+tar -zxvf helm-v3.12.0-linux-amd64.tar.gz<br>
+sudo mv linux-amd64/helm /usr/local/bin/helm<br><br>
+
+# Make executable<br>
+chmod +x /usr/local/bin/helm
+        </div>
+
+        <h3>Step 2: Verify Installation</h3>
+        <div class="code-block">
+# Check Helm version<br>
+helm version<br><br>
+
+# Check Helm environment<br>
+helm env<br><br>
+
+# Verify Kubernetes connection<br>
+kubectl cluster-info<br>
+helm list
+        </div>
+
+        <h3>Step 3: Configure Helm</h3>
+        <div class="code-block">
+# Check Helm configuration<br>
+helm env<br><br>
+
+# Set default namespace (optional)<br>
+export HELM_NAMESPACE=default<br><br>
+
+# Enable shell completion (bash)<br>
+echo 'source <(helm completion bash)' >> ~/.bashrc<br>
+source ~/.bashrc<br><br>
+
+# Enable shell completion (zsh)<br>
+echo 'source <(helm completion zsh)' >> ~/.zshrc<br>
+source ~/.zshrc
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 10: Lab - Repository Management -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Repository Management</h2>
+        
+        <h3>Step 4: Add Popular Repositories</h3>
+        <div class="code-block">
+# Add Bitnami repository (popular applications)<br>
+helm repo add bitnami https://charts.bitnami.com/bitnami<br><br>
+
+# Add Prometheus Community (monitoring stack)<br>
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts<br><br>
+
+# Add Ingress Nginx (ingress controller)<br>
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx<br><br>
+
+# Add Jetstack (cert-manager)<br>
+helm repo add jetstack https://charts.jetstack.io<br><br>
+
+# Update repository indexes<br>
+helm repo update
+        </div>
+
+        <h3>Step 5: Explore Repositories</h3>
+        <div class="code-block">
+# List all repositories<br>
+helm repo list<br><br>
+
+# Search for charts<br>
+helm search repo nginx<br>
+helm search repo database<br>
+helm search repo monitoring<br><br>
+
+# Search with versions<br>
+helm search repo nginx --versions<br><br>
+
+# Search Helm Hub (public registry)<br>
+helm search hub wordpress<br>
+helm search hub postgresql
+        </div>
+
+        <h3>Step 6: Examine Chart Details</h3>
+        <div class="code-block">
+# Show chart information<br>
+helm show chart bitnami/nginx<br><br>
+
+# Show default values<br>
+helm show values bitnami/nginx<br><br>
+
+# Show chart README<br>
+helm show readme bitnami/nginx<br><br>
+
+# Show all chart information<br>
+helm show all bitnami/nginx
+        </div>
+
+        <h3>Expected Output Examples</h3>
+        <div class="yaml-block">
+# helm repo list output<br>
+NAME                    URL<br>
+bitnami                 https://charts.bitnami.com/bitnami<br>
+prometheus-community    https://prometheus-community.github.io/helm-charts<br>
+ingress-nginx          https://kubernetes.github.io/ingress-nginx<br>
+jetstack               https://charts.jetstack.io<br><br>
+
+# helm search repo nginx output<br>
+NAME                    CHART VERSION   APP VERSION     DESCRIPTION<br>
+bitnami/nginx          13.2.23         1.25.2          NGINX Open Source is a web server that can be a...<br>
+ingress-nginx/ingress-nginx 4.7.1      1.8.1           Ingress controller for Kubernetes using NGINX a...
+        </div>
+
+        <h3>Troubleshooting Common Issues</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Permission Issues</h4>
+                <p>Use sudo for system-wide installation or install to user directory</p>
+            </div>
+            <div class="feature-card">
+                <h4>Network Issues</h4>
+                <p>Check firewall settings and proxy configuration</p>
+            </div>
+            <div class="feature-card">
+                <h4>Kubernetes Access</h4>
+                <p>Verify kubectl configuration and cluster connectivity</p>
+            </div>
+            <div class="feature-card">
+                <h4>Version Compatibility</h4>
+                <p>Ensure Helm version is compatible with Kubernetes version</p>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Verification:</strong> If you can run <code>helm version</code> and <code>helm repo list</code> successfully, your Helm installation is complete and ready for use!</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 11: Lab - Install NGINX using Helm Chart -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Install NGINX using Helm Chart</h2>
+        
+        <div class="lab-section">
+            <h3>Hands-on Lab: Deploy NGINX Application</h3>
+            <p>Install and manage NGINX web server using Helm charts with different configurations and service types.</p>
+        </div>
+
+        <h3>Lab Objectives</h3>
+        <ul>
+            <li>Install NGINX using Bitnami Helm chart</li>
+            <li>Customize deployment with values files</li>
+            <li>Perform upgrades and rollbacks</li>
+            <li>Manage release lifecycle</li>
+        </ul>
+
+        <h3>Step 1: Basic NGINX Installation</h3>
+        <div class="code-block">
+# Install NGINX with default values<br>
+helm install my-nginx bitnami/nginx<br><br>
+
+# Check installation status<br>
+helm status my-nginx<br><br>
+
+# List all releases<br>
+helm list<br><br>
+
+# Check created Kubernetes resources<br>
+kubectl get all -l app.kubernetes.io/instance=my-nginx
+        </div>
+
+        <h3>Step 2: Create Custom Values File</h3>
+        <div class="yaml-block">
+# nginx-values.yaml<br>
+replicaCount: 2<br><br>
+
+image:<br>
+  tag: "1.25.2"<br><br>
+
+service:<br>
+  type: NodePort<br>
+  nodePorts:<br>
+    http: 30080<br><br>
+
+resources:<br>
+  limits:<br>
+    cpu: 500m<br>
+    memory: 512Mi<br>
+  requests:<br>
+    cpu: 250m<br>
+    memory: 256Mi<br><br>
+
+ingress:<br>
+  enabled: true<br>
+  hostname: nginx.local<br>
+  path: /<br><br>
+
+metrics:<br>
+  enabled: true<br><br>
+
+autoscaling:<br>
+  enabled: true<br>
+  minReplicas: 2<br>
+  maxReplicas: 5<br>
+  targetCPU: 70
+        </div>
+
+        <h3>Step 3: Install with Custom Values</h3>
+        <div class="code-block">
+# Create the values file<br>
+cat > nginx-values.yaml << 'EOF'<br>
+replicaCount: 2<br>
+service:<br>
+  type: NodePort<br>
+  nodePorts:<br>
+    http: 30080<br>
+resources:<br>
+  limits:<br>
+    cpu: 500m<br>
+    memory: 512Mi<br>
+  requests:<br>
+    cpu: 250m<br>
+    memory: 256Mi<br>
+EOF<br><br>
+
+# Install with custom values<br>
+helm install my-nginx-custom bitnami/nginx -f nginx-values.yaml<br><br>
+
+# Verify installation<br>
+helm get values my-nginx-custom<br>
+kubectl get pods -l app.kubernetes.io/instance=my-nginx-custom
+        </div>
+
+        <h3>Step 4: Test the Deployment</h3>
+        <div class="code-block">
+# Get service information<br>
+kubectl get services -l app.kubernetes.io/instance=my-nginx-custom<br><br>
+
+# Test NodePort service (if using NodePort)<br>
+kubectl get nodes -o wide<br>
+curl http://&lt;node-ip&gt;:30080<br><br>
+
+# Alternative: Port forward for testing<br>
+kubectl port-forward service/my-nginx-custom 8080:80<br><br>
+
+# Test from another terminal<br>
+curl http://localhost:8080
+        </div>
+
+        <h3>Step 5: Upgrade the Release</h3>
+        <div class="code-block">
+# Update values file for upgrade<br>
+cat > nginx-values-v2.yaml << 'EOF'<br>
+replicaCount: 3<br>
+service:<br>
+  type: LoadBalancer<br>
+resources:<br>
+  limits:<br>
+    cpu: 1000m<br>
+    memory: 1Gi<br>
+  requests:<br>
+    cpu: 500m<br>
+    memory: 512Mi<br>
+EOF<br><br>
+
+# Perform upgrade<br>
+helm upgrade my-nginx-custom bitnami/nginx -f nginx-values-v2.yaml<br><br>
+
+# Check upgrade status<br>
+helm status my-nginx-custom<br>
+helm history my-nginx-custom
+        </div>
+
+        <h3>Step 6: Rollback and Cleanup</h3>
+        <div class="code-block">
+# View release history<br>
+helm history my-nginx-custom<br><br>
+
+# Rollback to previous version<br>
+helm rollback my-nginx-custom 1<br><br>
+
+# Verify rollback<br>
+kubectl get pods -l app.kubernetes.io/instance=my-nginx-custom<br>
+helm get values my-nginx-custom<br><br>
+
+# Uninstall releases<br>
+helm uninstall my-nginx<br>
+helm uninstall my-nginx-custom<br><br>
+
+# Verify cleanup<br>
+helm list<br>
+kubectl get all -l app.kubernetes.io/name=nginx
+        </div>
+
+        <h3>Expected Outputs</h3>
+        <div class="yaml-block">
+# helm status output<br>
+NAME: my-nginx-custom<br>
+LAST DEPLOYED: Mon Oct 23 10:30:00 2023<br>
+NAMESPACE: default<br>
+STATUS: deployed<br>
+REVISION: 1<br>
+TEST SUITE: None<br>
+NOTES:<br>
+NGINX can be accessed through the following DNS name from within your cluster:<br>
+    my-nginx-custom.default.svc.cluster.local (port 80)<br><br>
+
+# kubectl get pods output<br>
+NAME                               READY   STATUS    RESTARTS   AGE<br>
+my-nginx-custom-7d4b7b8c9d-abc12   1/1     Running   0          2m<br>
+my-nginx-custom-7d4b7b8c9d-def34   1/1     Running   0          2m
+        </div>
+
+        <div class="success-box">
+            <p><strong>Lab Complete:</strong> You've successfully installed, configured, upgraded, and managed NGINX using Helm charts!</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 12: Lab - Write a Basic Custom Helm Chart -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Write a Basic Custom Helm Chart</h2>
+        
+        <div class="lab-section">
+            <h3>Hands-on Lab: Create Custom Helm Chart</h3>
+            <p>Build a custom Helm chart for a simple web application with deployment, service, and configurable values.</p>
+        </div>
+
+        <h3>Lab Objectives</h3>
+        <ul>
+            <li>Create a new Helm chart from scratch</li>
+            <li>Customize templates for deployment and service</li>
+            <li>Configure values.yaml for parameterization</li>
+            <li>Test and deploy the custom chart</li>
+        </ul>
+
+        <h3>Step 1: Create New Chart</h3>
+        <div class="code-block">
+# Create new chart<br>
+helm create webapp<br><br>
+
+# Explore chart structure<br>
+tree webapp<br>
+# or<br>
+find webapp -type f<br><br>
+
+# Chart structure:<br>
+# webapp/<br>
+# ├── Chart.yaml<br>
+# ├── values.yaml<br>
+# ├── templates/<br>
+# │   ├── deployment.yaml<br>
+# │   ├── service.yaml<br>
+# │   ├── ingress.yaml<br>
+# │   ├── _helpers.tpl<br>
+# │   └── NOTES.txt<br>
+# └── charts/
+        </div>
+
+        <h3>Step 2: Customize Chart.yaml</h3>
+        <div class="yaml-block">
+# webapp/Chart.yaml<br>
+apiVersion: v2<br>
+name: webapp<br>
+description: A simple web application Helm chart<br>
+type: application<br>
+version: 0.1.0<br>
+appVersion: "1.0.0"<br>
+keywords:<br>
+  - web<br>
+  - application<br>
+  - demo<br>
+home: https://github.com/myorg/webapp<br>
+maintainers:<br>
+  - name: Your Name<br>
+    email: your.email@example.com
+        </div>
+
+        <h3>Step 3: Configure values.yaml</h3>
+        <div class="yaml-block">
+# webapp/values.yaml<br>
+replicaCount: 2<br><br>
+
+image:<br>
+  repository: nginx<br>
+  pullPolicy: IfNotPresent<br>
+  tag: "1.25.2"<br><br>
+
+nameOverride: ""<br>
+fullnameOverride: ""<br><br>
+
+service:<br>
+  type: ClusterIP<br>
+  port: 80<br>
+  targetPort: 80<br><br>
+
+ingress:<br>
+  enabled: false<br>
+  className: ""<br>
+  annotations: {}<br>
+  hosts:<br>
+    - host: webapp.local<br>
+      paths:<br>
+        - path: /<br>
+          pathType: Prefix<br>
+  tls: []<br><br>
+
+resources:<br>
+  limits:<br>
+    cpu: 500m<br>
+    memory: 512Mi<br>
+  requests:<br>
+    cpu: 250m<br>
+    memory: 256Mi<br><br>
+
+autoscaling:<br>
+  enabled: false<br>
+  minReplicas: 1<br>
+  maxReplicas: 100<br>
+  targetCPUUtilizationPercentage: 80<br><br>
+
+nodeSelector: {}<br>
+tolerations: []<br>
+affinity: {}
+        </div>
+
+        <h3>Step 4: Customize Deployment Template</h3>
+        <div class="yaml-block">
+# webapp/templates/deployment.yaml<br>
+apiVersion: apps/v1<br>
+kind: Deployment<br>
+metadata:<br>
+  name: {{ include "webapp.fullname" . }}<br>
+  labels:<br>
+    {{- include "webapp.labels" . | nindent 4 }}<br>
+spec:<br>
+  {{- if not .Values.autoscaling.enabled }}<br>
+  replicas: {{ .Values.replicaCount }}<br>
+  {{- end }}<br>
+  selector:<br>
+    matchLabels:<br>
+      {{- include "webapp.selectorLabels" . | nindent 6 }}<br>
+  template:<br>
+    metadata:<br>
+      labels:<br>
+        {{- include "webapp.selectorLabels" . | nindent 8 }}<br>
+    spec:<br>
+      containers:<br>
+        - name: {{ .Chart.Name }}<br>
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"<br>
+          imagePullPolicy: {{ .Values.image.pullPolicy }}<br>
+          ports:<br>
+            - name: http<br>
+              containerPort: {{ .Values.service.targetPort }}<br>
+              protocol: TCP<br>
+          livenessProbe:<br>
+            httpGet:<br>
+              path: /<br>
+              port: http<br>
+            initialDelaySeconds: 30<br>
+            periodSeconds: 10<br>
+          readinessProbe:<br>
+            httpGet:<br>
+              path: /<br>
+              port: http<br>
+            initialDelaySeconds: 5<br>
+            periodSeconds: 5<br>
+          resources:<br>
+            {{- toYaml .Values.resources | nindent 12 }}
+        </div>
+
+        <h3>Step 5: Test and Deploy Chart</h3>
+        <div class="code-block">
+# Validate chart syntax<br>
+helm lint webapp<br><br>
+
+# Render templates (dry run)<br>
+helm template my-webapp webapp<br><br>
+
+# Install with dry run<br>
+helm install my-webapp webapp --dry-run --debug<br><br>
+
+# Install the chart<br>
+helm install my-webapp webapp<br><br>
+
+# Check deployment<br>
+helm status my-webapp<br>
+kubectl get all -l app.kubernetes.io/instance=my-webapp
+        </div>
+
+        <h3>Step 6: Test with Custom Values</h3>
+        <div class="code-block">
+# Create custom values file<br>
+cat > custom-values.yaml << 'EOF'<br>
+replicaCount: 3<br>
+service:<br>
+  type: NodePort<br>
+  port: 8080<br>
+image:<br>
+  tag: "1.24.0"<br>
+resources:<br>
+  requests:<br>
+    cpu: 100m<br>
+    memory: 128Mi<br>
+EOF<br><br>
+
+# Install with custom values<br>
+helm install my-webapp-custom webapp -f custom-values.yaml<br><br>
+
+# Verify custom configuration<br>
+helm get values my-webapp-custom<br>
+kubectl describe deployment my-webapp-custom
+        </div>
+
+        <h3>Step 7: Package and Share</h3>
+        <div class="code-block">
+# Package the chart<br>
+helm package webapp<br><br>
+
+# This creates: webapp-0.1.0.tgz<br><br>
+
+# Install from package<br>
+helm install my-webapp-pkg ./webapp-0.1.0.tgz<br><br>
+
+# Cleanup<br>
+helm uninstall my-webapp<br>
+helm uninstall my-webapp-custom<br>
+helm uninstall my-webapp-pkg
+        </div>
+
+        <div class="success-box">
+            <p><strong>Chart Created!</strong> You've successfully created, customized, and deployed your own Helm chart. This chart can now be shared, versioned, and reused across different environments.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 13: Summary and Next Steps -->
+<div class="slide">
+    <div class="content">
+        <h2>Summary and Next Steps</h2>
+        
+        <h3>Key Concepts Covered</h3>
+        <div class="highlight-box">
+            <ul>
+                <li>Why Helm is essential for Kubernetes application management</li>
+                <li>Helm architecture and core components (Charts, Releases, Repositories)</li>
+                <li>Chart structure and templating with Go templates</li>
+                <li>Repository management and chart distribution</li>
+                <li>Essential Helm commands for lifecycle management</li>
+                <li>Hands-on installation and configuration of Helm</li>
+                <li>Deploying NGINX using existing Helm charts</li>
+                <li>Creating custom Helm charts from scratch</li>
+            </ul>
+        </div>
+
+        <h3>Practical Skills Gained</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Helm Installation</h4>
+                <p>Multiple installation methods and environment setup</p>
+            </div>
+            <div class="feature-card">
+                <h4>Repository Management</h4>
+                <p>Adding, updating, and searching chart repositories</p>
+            </div>
+            <div class="feature-card">
+                <h4>Application Deployment</h4>
+                <p>Installing and managing applications with Helm</p>
+            </div>
+            <div class="feature-card">
+                <h4>Chart Development</h4>
+                <p>Creating custom charts with templates and values</p>
+            </div>
+        </div>
+
+        <h3>Lab Accomplishments</h3>
+        <ul>
+            <li><strong>Helm Setup:</strong> Installed Helm and configured popular repositories</li>
+            <li><strong>NGINX Deployment:</strong> Deployed and managed NGINX with custom configurations</li>
+            <li><strong>Release Management:</strong> Performed upgrades, rollbacks, and lifecycle operations</li>
+            <li><strong>Custom Chart:</strong> Created a complete Helm chart with templates and values</li>
+            <li><strong>Best Practices:</strong> Applied Helm best practices for production use</li>
+        </ul>
+
+        <h3>Advanced Helm Topics</h3>
+        <ol class="step-list">
+            <li><strong>Advanced Templating:</strong> Complex template functions, conditionals, and loops</li>
+            <li><strong>Chart Dependencies:</strong> Managing sub-charts and dependency relationships</li>
+            <li><strong>Hooks and Tests:</strong> Pre/post-install hooks and chart testing</li>
+            <li><strong>Security:</strong> Chart signing, verification, and security best practices</li>
+            <li><strong>CI/CD Integration:</strong> Automated chart testing and deployment pipelines</li>
+            <li><strong>Helm Plugins:</strong> Extending Helm functionality with custom plugins</li>
+            <li><strong>GitOps with Helm:</strong> ArgoCD and Flux integration patterns</li>
+            <li><strong>Multi-Environment:</strong> Advanced strategies for environment management</li>
+        </ol>
+
+        <h3>Recommended Tools and Ecosystem</h3>
+        <ul>
+            <li><strong>Chart Development:</strong> Helm lint, helm-docs, chart-testing</li>
+            <li><strong>Security:</strong> Helm secrets, SOPS, sealed-secrets</li>
+            <li><strong>GitOps:</strong> ArgoCD, Flux, Helmfile</li>
+            <li><strong>Repository Hosting:</strong> ChartMuseum, Harbor, Artifactory</li>
+            <li><strong>Monitoring:</strong> Helm dashboard, Prometheus operator charts</li>
+        </ul>
+
+        <h3>Best Practices Learned</h3>
+        <ul>
+            <li><strong>Values Organization:</strong> Use structured values files for different environments</li>
+            <li><strong>Template Reusability:</strong> Create helper templates for common patterns</li>
+            <li><strong>Version Management:</strong> Follow semantic versioning for charts</li>
+            <li><strong>Documentation:</strong> Maintain clear README and NOTES.txt files</li>
+            <li><strong>Testing:</strong> Always use --dry-run before production deployments</li>
+            <li><strong>Security:</strong> Never hardcode secrets in values files</li>
+        </ul>
+
+        <h3>Next Learning Path</h3>
+        <ul>
+            <li><strong>Kubernetes Operators:</strong> Advanced application management patterns</li>
+            <li><strong>Service Mesh:</strong> Istio, Linkerd with Helm integration</li>
+            <li><strong>Monitoring Stack:</strong> Prometheus, Grafana, AlertManager deployment</li>
+            <li><strong>Security Hardening:</strong> Pod Security Standards, Network Policies</li>
+            <li><strong>Multi-Cluster Management:</strong> Cluster API, fleet management</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Congratulations!</strong> You've mastered Helm fundamentals and can now efficiently manage Kubernetes applications using charts, templates, and repositories. Continue practicing with complex applications and explore advanced Helm features for production environments.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+</body>
+</html>

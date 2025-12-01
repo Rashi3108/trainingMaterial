@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS VPC: Virtual Private Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .slide:last-child {
+            page-break-after: auto;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #232F3E 0%, #FF9900 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide .slide-title {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .slide-subtitle {
+            font-size: 1.5rem;
+            color: #FFD700;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #FF9900;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f3f4f6;
+            border-left: 5px solid #FF9900;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #232F3E;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f3f4f6;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid #FF9900;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .lab-section {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .lab-section h3 {
+            color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 20px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0ea5e9;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.95rem;
+        }
+
+        .cidr-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .workflow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .workflow-phase {
+            background: #232F3E;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            text-align: center;
+            min-width: 120px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #232F3E;
+            margin: 0 10px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .danger-box {
+            background: #fee2e2;
+            border-left: 5px solid #ef4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .architecture-diagram {
+            background: #f8fafc;
+            border: 2px solid #232F3E;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .component-box {
+            background: #232F3E;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .aws-orange {
+            color: #FF9900;
+            font-weight: bold;
+        }
+
+        .aws-blue {
+            color: #232F3E;
+            font-weight: bold;
+        }
+
+        .cidr-calculator {
+            background: #e0f2fe;
+            border: 2px solid #0277bd;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .cidr-calculator h4 {
+            color: #01579b;
+            margin-bottom: 15px;
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .slide {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title Slide -->
+<div class="slide title-slide">
+    <div class="content">
+        <h1 class="slide-title">AWS VPC: Virtual Private Cloud</h1>
+        <p class="slide-subtitle">Networking Fundamentals and Best Practices - Associate Level</p>
+    </div>
+    <div class="slide-footer" style="color: #FFD700;">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 2: What is AWS VPC -->
+<div class="slide">
+    <div class="content">
+        <h2>What is AWS VPC</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Amazon Virtual Private Cloud (VPC)</strong> is a logically isolated section of the AWS Cloud where you can launch AWS resources in a virtual network that you define. You have complete control over your virtual networking environment.</p>
+        </div>
+
+        <h3>Core Purpose</h3>
+        <ul>
+            <li><strong>Network Isolation:</strong> Create isolated network environments in the cloud</li>
+            <li><strong>Security Control:</strong> Define security groups and network ACLs</li>
+            <li><strong>Connectivity:</strong> Control how resources communicate with each other and the internet</li>
+            <li><strong>Customization:</strong> Configure IP address ranges, subnets, and routing tables</li>
+        </ul>
+
+        <h3>Key Benefits</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Complete Control</h4>
+                <p>Full control over virtual networking environment including IP ranges and routing</p>
+            </div>
+            <div class="feature-card">
+                <h4>Security</h4>
+                <p>Multiple layers of security including security groups and network ACLs</p>
+            </div>
+            <div class="feature-card">
+                <h4>Flexibility</h4>
+                <p>Support for both IPv4 and IPv6, multiple connectivity options</p>
+            </div>
+            <div class="feature-card">
+                <h4>Integration</h4>
+                <p>Seamless integration with other AWS services and on-premises networks</p>
+            </div>
+        </div>
+
+        <h3>VPC vs Traditional Networking</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Traditional Data Center</th>
+                    <th>AWS VPC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Infrastructure</strong></td>
+                    <td>Physical hardware and cables</td>
+                    <td>Software-defined networking</td>
+                </tr>
+                <tr>
+                    <td><strong>Scalability</strong></td>
+                    <td>Limited by physical capacity</td>
+                    <td>Virtually unlimited scalability</td>
+                </tr>
+                <tr>
+                    <td><strong>Setup Time</strong></td>
+                    <td>Weeks to months</td>
+                    <td>Minutes to hours</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>High upfront capital expenditure</td>
+                    <td>Pay-as-you-use operational expenditure</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>VPC Architecture Overview</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #FF9900;">VPC (10.0.0.0/16)</div>
+            </div>
+            <div style="margin: 10px 0;">
+                <div class="component-box" style="background: #0ea5e9;">Public Subnet</div>
+                <div class="component-box" style="background: #0ea5e9;">Private Subnet</div>
+            </div>
+            <div style="margin: 20px 0; font-size: 1rem; color: #232F3E;">Connected via</div>
+            <div>
+                <div class="component-box">Internet Gateway</div>
+                <div class="component-box">NAT Gateway</div>
+                <div class="component-box">Route Tables</div>
+            </div>
+        </div>
+
+        <h3>Real-World Use Cases</h3>
+        <ul>
+            <li><strong>Web Applications:</strong> Host multi-tier web applications with public and private subnets</li>
+            <li><strong>Hybrid Cloud:</strong> Extend on-premises networks to the cloud</li>
+            <li><strong>Disaster Recovery:</strong> Create backup environments in different regions</li>
+            <li><strong>Development/Testing:</strong> Isolated environments for development and testing</li>
+            <li><strong>Compliance:</strong> Meet regulatory requirements with network isolation</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Key Concept:</strong> VPC provides the networking foundation for all your AWS resources, giving you complete control over your virtual networking environment while maintaining the scalability and flexibility of the cloud.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 3: VPC Core Components -->
+<div class="slide">
+    <div class="content">
+        <h2>VPC Core Components</h2>
+        
+        <div class="highlight-box">
+            <p>AWS VPC consists of several key components that work together to provide a complete virtual networking solution: <strong>Subnets, Route Tables, Internet Gateways, NAT Gateways, and Security Groups</strong>.</p>
+        </div>
+
+        <h3>Essential VPC Components</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Subnets</h4>
+                <p>Segments of VPC IP address range where you can launch AWS resources</p>
+            </div>
+            <div class="feature-card">
+                <h4>Route Tables</h4>
+                <p>Rules that determine where network traffic is directed</p>
+            </div>
+            <div class="feature-card">
+                <h4>Internet Gateway</h4>
+                <p>Allows communication between VPC and the internet</p>
+            </div>
+            <div class="feature-card">
+                <h4>NAT Gateway</h4>
+                <p>Enables outbound internet access for private subnet resources</p>
+            </div>
+        </div>
+
+        <h3>Security Components</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Security Groups</h4>
+                <p>Virtual firewalls that control inbound and outbound traffic at instance level</p>
+            </div>
+            <div class="feature-card">
+                <h4>Network ACLs</h4>
+                <p>Subnet-level firewalls that provide additional layer of security</p>
+            </div>
+            <div class="feature-card">
+                <h4>VPC Flow Logs</h4>
+                <p>Capture information about IP traffic going to and from network interfaces</p>
+            </div>
+            <div class="feature-card">
+                <h4>VPC Endpoints</h4>
+                <p>Private connections to AWS services without internet gateway</p>
+            </div>
+        </div>
+
+        <h3>Component Relationships</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">VPC</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Subnets</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Route Tables</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Gateways</div>
+        </div>
+
+        <h3>Component Comparison</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Level</th>
+                    <th>Purpose</th>
+                    <th>Scope</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>VPC</strong></td>
+                    <td>Regional</td>
+                    <td>Logical isolation</td>
+                    <td>Entire virtual network</td>
+                </tr>
+                <tr>
+                    <td><strong>Subnet</strong></td>
+                    <td>Availability Zone</td>
+                    <td>Resource placement</td>
+                    <td>Segment of VPC</td>
+                </tr>
+                <tr>
+                    <td><strong>Security Group</strong></td>
+                    <td>Instance</td>
+                    <td>Traffic filtering</td>
+                    <td>Individual resources</td>
+                </tr>
+                <tr>
+                    <td><strong>Network ACL</strong></td>
+                    <td>Subnet</td>
+                    <td>Additional security</td>
+                    <td>All resources in subnet</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>VPC Limits and Considerations</h3>
+        <ul>
+            <li><strong>VPCs per Region:</strong> 5 VPCs per region (can be increased)</li>
+            <li><strong>Subnets per VPC:</strong> 200 subnets per VPC</li>
+            <li><strong>Route Tables:</strong> 200 route tables per VPC</li>
+            <li><strong>Security Groups:</strong> 2,500 security groups per VPC</li>
+            <li><strong>Rules per Security Group:</strong> 60 inbound and 60 outbound rules</li>
+        </ul>
+
+        <div class="warning-box">
+            <p><strong>Important:</strong> Plan your VPC architecture carefully as some components like CIDR blocks cannot be changed after creation, though you can add additional CIDR blocks.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 4: Understanding CIDR and IP Addressing -->
+<div class="slide">
+    <div class="content">
+        <h2>Understanding CIDR and IP Addressing</h2>
+        
+        <div class="highlight-box">
+            <p><strong>CIDR (Classless Inter-Domain Routing)</strong> is a method for allocating IP addresses and routing. Understanding CIDR is crucial for designing VPC networks and calculating available IP addresses.</p>
+        </div>
+
+        <h3>CIDR Notation Basics</h3>
+        <div class="cidr-calculator">
+            <h4>CIDR Format: IP Address/Prefix Length</h4>
+            <div class="cidr-block">
+Example: 10.0.0.0/16<br>
+- 10.0.0.0 = Network Address<br>
+- /16 = Subnet Mask (first 16 bits are network, remaining 16 bits are host)<br>
+- Available IPs = 2^(32-16) = 2^16 = 65,536 addresses
+            </div>
+        </div>
+
+        <h3>Common CIDR Blocks and Calculations</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>CIDR Block</th>
+                    <th>Subnet Mask</th>
+                    <th>Available IPs</th>
+                    <th>Usable IPs*</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>/16</strong></td>
+                    <td>255.255.0.0</td>
+                    <td>65,536</td>
+                    <td>65,531</td>
+                    <td>Large VPC</td>
+                </tr>
+                <tr>
+                    <td><strong>/20</strong></td>
+                    <td>255.255.240.0</td>
+                    <td>4,096</td>
+                    <td>4,091</td>
+                    <td>Medium subnet</td>
+                </tr>
+                <tr>
+                    <td><strong>/24</strong></td>
+                    <td>255.255.255.0</td>
+                    <td>256</td>
+                    <td>251</td>
+                    <td>Small subnet</td>
+                </tr>
+                <tr>
+                    <td><strong>/28</strong></td>
+                    <td>255.255.255.240</td>
+                    <td>16</td>
+                    <td>11</td>
+                    <td>Very small subnet</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="font-size: 0.9rem; color: #666;">* AWS reserves 5 IP addresses in each subnet</p>
+
+        <h3>CIDR Calculation Formula</h3>
+        <div class="cidr-calculator">
+            <h4>Step-by-Step Calculation</h4>
+            <div class="cidr-block">
+1. Total IPs = 2^(32 - prefix length)<br>
+2. Usable IPs = Total IPs - 5 (AWS reserved)<br><br>
+
+Example: 10.0.1.0/24<br>
+- Total IPs = 2^(32-24) = 2^8 = 256<br>
+- Usable IPs = 256 - 5 = 251<br><br>
+
+AWS Reserved IPs in 10.0.1.0/24:<br>
+- 10.0.1.0: Network address<br>
+- 10.0.1.1: VPC router<br>
+- 10.0.1.2: DNS server<br>
+- 10.0.1.3: Future use<br>
+- 10.0.1.255: Broadcast address
+            </div>
+        </div>
+
+        <h3>Private IP Address Ranges (RFC 1918)</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>IP Range</th>
+                    <th>CIDR Notation</th>
+                    <th>Total IPs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Class A</strong></td>
+                    <td>10.0.0.0 - 10.255.255.255</td>
+                    <td>10.0.0.0/8</td>
+                    <td>16,777,216</td>
+                </tr>
+                <tr>
+                    <td><strong>Class B</strong></td>
+                    <td>172.16.0.0 - 172.31.255.255</td>
+                    <td>172.16.0.0/12</td>
+                    <td>1,048,576</td>
+                </tr>
+                <tr>
+                    <td><strong>Class C</strong></td>
+                    <td>192.168.0.0 - 192.168.255.255</td>
+                    <td>192.168.0.0/16</td>
+                    <td>65,536</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>VPC CIDR Best Practices</h3>
+        <ul>
+            <li><strong>Plan for Growth:</strong> Choose larger CIDR blocks than immediately needed</li>
+            <li><strong>Avoid Overlaps:</strong> Ensure CIDR blocks don't overlap with on-premises networks</li>
+            <li><strong>Use Private Ranges:</strong> Always use RFC 1918 private IP ranges</li>
+            <li><strong>Document Allocation:</strong> Maintain clear documentation of IP allocation</li>
+            <li><strong>Consider Peering:</strong> Plan for VPC peering and avoid overlapping ranges</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Pro Tip:</strong> Use online CIDR calculators to verify your calculations and visualize subnet divisions. Always plan your IP addressing scheme before creating your VPC.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 5: Subnets and Availability Zones -->
+<div class="slide">
+    <div class="content">
+        <h2>Subnets and Availability Zones</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Subnets</strong> are segments of a VPC's IP address range where you can launch AWS resources. Each subnet must reside entirely within one Availability Zone and cannot span zones.</p>
+        </div>
+
+        <h3>Subnet Types</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Public Subnet</h4>
+                <p>Has a route to an Internet Gateway, resources can have public IP addresses</p>
+            </div>
+            <div class="feature-card">
+                <h4>Private Subnet</h4>
+                <p>No direct route to Internet Gateway, resources use NAT for outbound internet access</p>
+            </div>
+            <div class="feature-card">
+                <h4>VPN-only Subnet</h4>
+                <p>Has route to Virtual Private Gateway, no route to Internet Gateway</p>
+            </div>
+            <div class="feature-card">
+                <h4>Isolated Subnet</h4>
+                <p>No routes to internet or VPN, completely isolated</p>
+            </div>
+        </div>
+
+        <h3>Subnet Planning Example</h3>
+        <div class="cidr-calculator">
+            <h4>VPC: 10.0.0.0/16 (65,536 IPs)</h4>
+            <div class="cidr-block">
+Subnet Division Strategy:<br><br>
+
+Public Subnets (Web Tier):<br>
+- 10.0.1.0/24 (AZ-1a) - 251 usable IPs<br>
+- 10.0.2.0/24 (AZ-1b) - 251 usable IPs<br>
+- 10.0.3.0/24 (AZ-1c) - 251 usable IPs<br><br>
+
+Private Subnets (App Tier):<br>
+- 10.0.11.0/24 (AZ-1a) - 251 usable IPs<br>
+- 10.0.12.0/24 (AZ-1b) - 251 usable IPs<br>
+- 10.0.13.0/24 (AZ-1c) - 251 usable IPs<br><br>
+
+Database Subnets (DB Tier):<br>
+- 10.0.21.0/24 (AZ-1a) - 251 usable IPs<br>
+- 10.0.22.0/24 (AZ-1b) - 251 usable IPs<br>
+- 10.0.23.0/24 (AZ-1c) - 251 usable IPs
+            </div>
+        </div>
+
+        <h3>Availability Zone Considerations</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Single AZ</th>
+                    <th>Multiple AZs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>High Availability</strong></td>
+                    <td>Single point of failure</td>
+                    <td>Fault tolerant</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>Lower (single NAT Gateway)</td>
+                    <td>Higher (multiple NAT Gateways)</td>
+                </tr>
+                <tr>
+                    <td><strong>Complexity</strong></td>
+                    <td>Simpler architecture</td>
+                    <td>More complex routing</td>
+                </tr>
+                <tr>
+                    <td><strong>Use Case</strong></td>
+                    <td>Development/Testing</td>
+                    <td>Production workloads</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Subnet Sizing Guidelines</h3>
+        <ul>
+            <li><strong>/24 Subnets:</strong> Good for most use cases (251 usable IPs)</li>
+            <li><strong>/20 Subnets:</strong> For large deployments (4,091 usable IPs)</li>
+            <li><strong>/28 Subnets:</strong> For small, specific use cases (11 usable IPs)</li>
+            <li><strong>Auto Scaling:</strong> Consider future scaling needs</li>
+            <li><strong>Reserved Capacity:</strong> Leave room for growth and new services</li>
+        </ul>
+
+        <h3>Multi-Tier Architecture Example</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 15px; font-size: 1.2rem; color: #232F3E;">3-Tier Web Application</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #10b981;">Public Subnet (Web Tier)</div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #f59e0b;">Private Subnet (App Tier)</div>
+            </div>
+            <div>
+                <div class="component-box" style="background: #ef4444;">Private Subnet (DB Tier)</div>
+            </div>
+        </div>
+
+        <h3>Subnet Best Practices</h3>
+        <ul>
+            <li><strong>Distribute Across AZs:</strong> Use multiple AZs for high availability</li>
+            <li><strong>Consistent Naming:</strong> Use clear, consistent naming conventions</li>
+            <li><strong>Right-Size Subnets:</strong> Balance between too small and too large</li>
+            <li><strong>Plan for Growth:</strong> Leave room for additional subnets</li>
+            <li><strong>Security Zones:</strong> Group similar resources in same subnet</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Architecture Tip:</strong> Design your subnet strategy around your application tiers and security requirements. Each tier should have subnets in multiple AZs for high availability.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 6: Route Tables and Routing -->
+<div class="slide">
+    <div class="content">
+        <h2>Route Tables and Routing</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Route Tables</strong> contain a set of rules (routes) that determine where network traffic is directed. Each subnet must be associated with a route table.</p>
+        </div>
+
+        <h3>Route Table Basics</h3>
+        <ul>
+            <li><strong>Main Route Table:</strong> Default route table created with VPC</li>
+            <li><strong>Custom Route Tables:</strong> Additional route tables you create</li>
+            <li><strong>Subnet Association:</strong> Each subnet associated with exactly one route table</li>
+            <li><strong>Route Priority:</strong> Most specific route (longest prefix) takes precedence</li>
+        </ul>
+
+        <h3>Route Components</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Destination</strong></td>
+                    <td>CIDR block for traffic destination</td>
+                    <td>0.0.0.0/0 (all traffic)</td>
+                </tr>
+                <tr>
+                    <td><strong>Target</strong></td>
+                    <td>Where to send the traffic</td>
+                    <td>igw-12345678</td>
+                </tr>
+                <tr>
+                    <td><strong>Status</strong></td>
+                    <td>Route availability</td>
+                    <td>Active, Blackhole</td>
+                </tr>
+                <tr>
+                    <td><strong>Propagated</strong></td>
+                    <td>Route source</td>
+                    <td>Yes (VGW), No (manual)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Common Route Targets</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Internet Gateway (IGW)</h4>
+                <p>Routes traffic to/from the internet</p>
+            </div>
+            <div class="feature-card">
+                <h4>NAT Gateway/Instance</h4>
+                <p>Routes outbound internet traffic from private subnets</p>
+            </div>
+            <div class="feature-card">
+                <h4>VPC Peering</h4>
+                <p>Routes traffic to peered VPC</p>
+            </div>
+            <div class="feature-card">
+                <h4>Virtual Private Gateway</h4>
+                <p>Routes traffic to on-premises network</p>
+            </div>
+        </div>
+
+        <h3>Route Table Examples</h3>
+        <div class="cidr-block">
+Public Subnet Route Table:<br>
+Destination     Target          Status<br>
+10.0.0.0/16     local          Active<br>
+0.0.0.0/0       igw-12345678   Active<br><br>
+
+Private Subnet Route Table:<br>
+Destination     Target          Status<br>
+10.0.0.0/16     local          Active<br>
+0.0.0.0/0       nat-12345678   Active<br><br>
+
+VPN Subnet Route Table:<br>
+Destination     Target          Status<br>
+10.0.0.0/16     local          Active<br>
+192.168.0.0/16  vgw-12345678   Active
+        </div>
+
+        <h3>Routing Best Practices</h3>
+        <ul>
+            <li><strong>Explicit Routes:</strong> Create custom route tables instead of modifying main table</li>
+            <li><strong>Least Privilege:</strong> Only route traffic that needs to be routed</li>
+            <li><strong>Documentation:</strong> Name and tag route tables clearly</li>
+            <li><strong>Monitoring:</strong> Monitor route table changes and usage</li>
+            <li><strong>Backup Routes:</strong> Consider redundant paths for critical traffic</li>
+        </ul>
+
+        <div class="warning-box">
+            <p><strong>Important:</strong> The local route (VPC CIDR) cannot be deleted or modified. It always has the highest priority for traffic within the VPC.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 7: Internet Gateway and NAT -->
+<div class="slide">
+    <div class="content">
+        <h2>Internet Gateway and NAT</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Internet Gateways</strong> and <strong>NAT Gateways</strong> provide different types of internet connectivity for your VPC resources, enabling both inbound and outbound internet access as needed.</p>
+        </div>
+
+        <h3>Internet Gateway (IGW)</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Purpose</h4>
+                <p>Provides bidirectional internet access for public subnet resources</p>
+            </div>
+            <div class="feature-card">
+                <h4>Scaling</h4>
+                <p>Horizontally scaled, redundant, and highly available</p>
+            </div>
+            <div class="feature-card">
+                <h4>Cost</h4>
+                <p>No additional charges for using Internet Gateway</p>
+            </div>
+            <div class="feature-card">
+                <h4>Limitations</h4>
+                <p>One IGW per VPC, cannot be detached if resources depend on it</p>
+            </div>
+        </div>
+
+        <h3>NAT Gateway vs NAT Instance</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>NAT Gateway</th>
+                    <th>NAT Instance</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Availability</strong></td>
+                    <td>Highly available within AZ</td>
+                    <td>Single point of failure</td>
+                </tr>
+                <tr>
+                    <td><strong>Bandwidth</strong></td>
+                    <td>Up to 45 Gbps</td>
+                    <td>Depends on instance type</td>
+                </tr>
+                <tr>
+                    <td><strong>Maintenance</strong></td>
+                    <td>Managed by AWS</td>
+                    <td>Managed by you</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost</strong></td>
+                    <td>Higher (per hour + data)</td>
+                    <td>Lower (instance cost only)</td>
+                </tr>
+                <tr>
+                    <td><strong>Security Groups</strong></td>
+                    <td>Cannot associate</td>
+                    <td>Can associate</td>
+                </tr>
+                <tr>
+                    <td><strong>Bastion Host</strong></td>
+                    <td>Cannot use</td>
+                    <td>Can use as bastion</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>NAT Gateway Deployment Patterns</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 15px; font-size: 1.2rem; color: #232F3E;">High Availability NAT Setup</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #10b981;">AZ-1a: NAT Gateway</div>
+                <div class="component-box" style="background: #10b981;">AZ-1b: NAT Gateway</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1rem; color: #232F3E;">Each serves private subnets in same AZ</div>
+            <div>
+                <div class="component-box" style="background: #f59e0b;">Private Subnet 1a</div>
+                <div class="component-box" style="background: #f59e0b;">Private Subnet 1b</div>
+            </div>
+        </div>
+
+        <h3>Internet Connectivity Requirements</h3>
+        <div class="cidr-block">
+For Public Subnet (Bidirectional Internet Access):<br>
+1. Internet Gateway attached to VPC<br>
+2. Route to IGW (0.0.0.0/0 → igw-xxxxx)<br>
+3. Public IP address or Elastic IP<br>
+4. Security Group allows traffic<br>
+5. Network ACL allows traffic<br><br>
+
+For Private Subnet (Outbound Only):<br>
+1. NAT Gateway in public subnet<br>
+2. Route to NAT Gateway (0.0.0.0/0 → nat-xxxxx)<br>
+3. NAT Gateway has route to IGW<br>
+4. Security Group allows outbound traffic<br>
+5. Network ACL allows traffic
+        </div>
+
+        <h3>Cost Optimization Strategies</h3>
+        <ul>
+            <li><strong>Single NAT Gateway:</strong> Use one NAT Gateway for development environments</li>
+            <li><strong>NAT Instance:</strong> Consider for low-traffic, cost-sensitive workloads</li>
+            <li><strong>VPC Endpoints:</strong> Use for AWS service traffic to avoid NAT costs</li>
+            <li><strong>Data Transfer:</strong> Monitor and optimize data transfer costs</li>
+            <li><strong>Regional Considerations:</strong> NAT Gateway pricing varies by region</li>
+        </ul>
+
+        <h3>Troubleshooting Internet Connectivity</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>No Internet Access</h4>
+                <p>Check route table, IGW attachment, security groups, NACLs</p>
+            </div>
+            <div class="feature-card">
+                <h4>Intermittent Connectivity</h4>
+                <p>Check NAT Gateway health, bandwidth limits, DNS resolution</p>
+            </div>
+            <div class="feature-card">
+                <h4>High Costs</h4>
+                <p>Monitor data transfer, consider VPC endpoints, optimize routing</p>
+            </div>
+            <div class="feature-card">
+                <h4>Performance Issues</h4>
+                <p>Check bandwidth limits, consider multiple NAT Gateways</p>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Best Practice:</strong> Deploy NAT Gateways in multiple AZs for high availability, but consider the cost implications. Use VPC endpoints for AWS service traffic to reduce NAT Gateway usage.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 8: Security Groups and NACLs -->
+<div class="slide">
+    <div class="content">
+        <h2>Security Groups and NACLs</h2>
+        
+        <div class="highlight-box">
+            <p>AWS provides two layers of security for VPC: <strong>Security Groups</strong> (instance-level firewalls) and <strong>Network ACLs</strong> (subnet-level firewalls). Understanding both is crucial for proper network security.</p>
+        </div>
+
+        <h3>Security Groups vs Network ACLs</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Security Groups</th>
+                    <th>Network ACLs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Level</strong></td>
+                    <td>Instance level</td>
+                    <td>Subnet level</td>
+                </tr>
+                <tr>
+                    <td><strong>Rules</strong></td>
+                    <td>Allow rules only</td>
+                    <td>Allow and Deny rules</td>
+                </tr>
+                <tr>
+                    <td><strong>State</strong></td>
+                    <td>Stateful</td>
+                    <td>Stateless</td>
+                </tr>
+                <tr>
+                    <td><strong>Rule Evaluation</strong></td>
+                    <td>All rules evaluated</td>
+                    <td>Rules processed in order</td>
+                </tr>
+                <tr>
+                    <td><strong>Default Behavior</strong></td>
+                    <td>Deny all inbound, allow all outbound</td>
+                    <td>Allow all inbound and outbound</td>
+                </tr>
+                <tr>
+                    <td><strong>Association</strong></td>
+                    <td>Applied to ENI/instance</td>
+                    <td>Applied to subnet</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Security Group Rules</h3>
+        <div class="cidr-block">
+Example Security Group Rules:<br><br>
+
+Web Server Security Group (Inbound):<br>
+Type        Protocol    Port    Source<br>
+HTTP        TCP         80      0.0.0.0/0<br>
+HTTPS       TCP         443     0.0.0.0/0<br>
+SSH         TCP         22      10.0.0.0/16<br><br>
+
+Database Security Group (Inbound):<br>
+Type        Protocol    Port    Source<br>
+MySQL       TCP         3306    sg-web-servers<br>
+Custom      TCP         5432    sg-app-servers<br><br>
+
+All Outbound: 0.0.0.0/0 (default)
+        </div>
+
+        <h3>Network ACL Rules</h3>
+        <div class="cidr-block">
+Example Network ACL Rules:<br><br>
+
+Inbound Rules:<br>
+Rule#   Type        Protocol    Port    Source          Allow/Deny<br>
+100     HTTP        TCP         80      0.0.0.0/0       ALLOW<br>
+110     HTTPS       TCP         443     0.0.0.0/0       ALLOW<br>
+120     SSH         TCP         22      10.0.0.0/16     ALLOW<br>
+130     Custom      TCP         1024-65535  0.0.0.0/0   ALLOW<br>
+*       ALL         ALL         ALL     0.0.0.0/0       DENY<br><br>
+
+Outbound Rules:<br>
+Rule#   Type        Protocol    Port    Destination     Allow/Deny<br>
+100     HTTP        TCP         80      0.0.0.0/0       ALLOW<br>
+110     HTTPS       TCP         443     0.0.0.0/0       ALLOW<br>
+120     Custom      TCP         1024-65535  0.0.0.0/0   ALLOW<br>
+*       ALL         ALL         ALL     0.0.0.0/0       DENY
+        </div>
+
+        <h3>Security Best Practices</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Least Privilege</h4>
+                <p>Only allow necessary traffic, use specific ports and sources</p>
+            </div>
+            <div class="feature-card">
+                <h4>Defense in Depth</h4>
+                <p>Use both Security Groups and NACLs for layered security</p>
+            </div>
+            <div class="feature-card">
+                <h4>Regular Audits</h4>
+                <p>Regularly review and clean up unused security groups</p>
+            </div>
+            <div class="feature-card">
+                <h4>Descriptive Names</h4>
+                <p>Use clear, descriptive names and descriptions</p>
+            </div>
+        </div>
+
+        <h3>Common Security Patterns</h3>
+        <ul>
+            <li><strong>Web Tier:</strong> Allow HTTP/HTTPS from internet, SSH from bastion</li>
+            <li><strong>App Tier:</strong> Allow traffic only from web tier security group</li>
+            <li><strong>Database Tier:</strong> Allow database ports only from app tier</li>
+            <li><strong>Bastion Host:</strong> Allow SSH from specific IP ranges only</li>
+            <li><strong>Load Balancer:</strong> Allow HTTP/HTTPS from internet, health checks</li>
+        </ul>
+
+        <h3>Troubleshooting Security Issues</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Connection Timeout</h4>
+                <p>Usually Security Group issue - check inbound rules</p>
+            </div>
+            <div class="feature-card">
+                <h4>Connection Refused</h4>
+                <p>Usually application issue - service not running</p>
+            </div>
+            <div class="feature-card">
+                <h4>Intermittent Issues</h4>
+                <p>Check NACL rules and rule order</p>
+            </div>
+            <div class="feature-card">
+                <h4>Can't Reach Internet</h4>
+                <p>Check outbound rules and routing</p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <p><strong>Security Reminder:</strong> Security Groups are stateful (return traffic automatically allowed), but NACLs are stateless (must explicitly allow return traffic). Always consider both layers when designing security.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 9: VPC Connectivity Options -->
+<div class="slide">
+    <div class="content">
+        <h2>VPC Connectivity Options</h2>
+        
+        <div class="highlight-box">
+            <p>AWS provides multiple options for connecting VPCs to each other, to on-premises networks, and to AWS services privately. Choose the right connectivity option based on your requirements.</p>
+        </div>
+
+        <h3>VPC Peering</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>What it is</h4>
+                <p>Direct network connection between two VPCs using private IP addresses</p>
+            </div>
+            <div class="feature-card">
+                <h4>Scope</h4>
+                <p>Same region, cross-region, cross-account connections supported</p>
+            </div>
+            <div class="feature-card">
+                <h4>Routing</h4>
+                <p>Not transitive - must create direct peering for each connection</p>
+            </div>
+            <div class="feature-card">
+                <h4>Cost</h4>
+                <p>Data transfer charges apply for cross-AZ and cross-region traffic</p>
+            </div>
+        </div>
+
+        <h3>VPN Connections</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Use Case</th>
+                    <th>Bandwidth</th>
+                    <th>Redundancy</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Site-to-Site VPN</strong></td>
+                    <td>Connect on-premises to VPC</td>
+                    <td>Up to 1.25 Gbps per tunnel</td>
+                    <td>Two tunnels per connection</td>
+                </tr>
+                <tr>
+                    <td><strong>Client VPN</strong></td>
+                    <td>Remote user access to VPC</td>
+                    <td>Varies by endpoint</td>
+                    <td>Multiple AZ deployment</td>
+                </tr>
+                <tr>
+                    <td><strong>Transit Gateway</strong></td>
+                    <td>Hub for multiple connections</td>
+                    <td>Up to 50 Gbps</td>
+                    <td>Built-in redundancy</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>AWS Direct Connect</h3>
+        <ul>
+            <li><strong>Dedicated Connection:</strong> Private connection from on-premises to AWS</li>
+            <li><strong>Bandwidth Options:</strong> 1 Gbps to 100 Gbps dedicated connections</li>
+            <li><strong>Virtual Interfaces:</strong> Multiple VLANs over single physical connection</li>
+            <li><strong>Consistent Performance:</strong> Predictable bandwidth and latency</li>
+            <li><strong>Cost Benefits:</strong> Reduced data transfer costs for high volume</li>
+        </ul>
+
+        <h3>VPC Endpoints</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Gateway Endpoints</h4>
+                <p>S3 and DynamoDB access without internet gateway</p>
+            </div>
+            <div class="feature-card">
+                <h4>Interface Endpoints</h4>
+                <p>Private access to AWS services via ENI with private IP</p>
+            </div>
+            <div class="feature-card">
+                <h4>Gateway Load Balancer Endpoints</h4>
+                <p>Access third-party appliances in service provider VPC</p>
+            </div>
+            <div class="feature-card">
+                <h4>Benefits</h4>
+                <p>Improved security, reduced NAT costs, better performance</p>
+            </div>
+        </div>
+
+        <h3>Connectivity Decision Matrix</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Requirement</th>
+                    <th>Recommended Solution</th>
+                    <th>Alternative</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>VPC to VPC (same region)</strong></td>
+                    <td>VPC Peering</td>
+                    <td>Transit Gateway</td>
+                </tr>
+                <tr>
+                    <td><strong>Multiple VPC connections</strong></td>
+                    <td>Transit Gateway</td>
+                    <td>Multiple VPC Peering</td>
+                </tr>
+                <tr>
+                    <td><strong>On-premises to AWS</strong></td>
+                    <td>Direct Connect</td>
+                    <td>Site-to-Site VPN</td>
+                </tr>
+                <tr>
+                    <td><strong>Remote user access</strong></td>
+                    <td>Client VPN</td>
+                    <td>Bastion Host</td>
+                </tr>
+                <tr>
+                    <td><strong>AWS service access</strong></td>
+                    <td>VPC Endpoints</td>
+                    <td>NAT Gateway</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Hybrid Cloud Architecture Example</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #10b981;">On-Premises</div>
+                <div class="component-box" style="background: #0ea5e9;">Direct Connect</div>
+                <div class="component-box" style="background: #FF9900;">AWS VPC</div>
+            </div>
+            <div style="margin: 10px 0; font-size: 1rem; color: #232F3E;">Connected via Virtual Private Gateway</div>
+            <div>
+                <div class="component-box" style="background: #f59e0b;">Private Subnets</div>
+                <div class="component-box" style="background: #ef4444;">Database Subnets</div>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Connectivity Best Practice:</strong> Design your connectivity strategy based on bandwidth requirements, latency sensitivity, security needs, and cost considerations. Use VPC endpoints to reduce NAT Gateway costs for AWS service traffic.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 10: VPC Best Practices -->
+<div class="slide">
+    <div class="content">
+        <h2>VPC Best Practices</h2>
+        
+        <div class="highlight-box">
+            <p>Following VPC best practices ensures optimal security, performance, cost-effectiveness, and maintainability of your AWS network infrastructure.</p>
+        </div>
+
+        <h3>Network Design Principles</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Plan for Scale</h4>
+                <p>Design with future growth in mind, use appropriate CIDR blocks</p>
+            </div>
+            <div class="feature-card">
+                <h4>Multi-AZ Design</h4>
+                <p>Distribute resources across multiple AZs for high availability</p>
+            </div>
+            <div class="feature-card">
+                <h4>Security Layers</h4>
+                <p>Implement defense in depth with multiple security controls</p>
+            </div>
+            <div class="feature-card">
+                <h4>Cost Optimization</h4>
+                <p>Use VPC endpoints, optimize data transfer, right-size resources</p>
+            </div>
+        </div>
+
+        <h3>IP Address Planning</h3>
+        <ul>
+            <li><strong>Use RFC 1918 Ranges:</strong> Always use private IP address ranges</li>
+            <li><strong>Avoid Overlaps:</strong> Ensure no overlap with on-premises or other VPCs</li>
+            <li><strong>Plan for Growth:</strong> Choose larger CIDR blocks than immediately needed</li>
+            <li><strong>Document Allocation:</strong> Maintain IP address management documentation</li>
+            <li><strong>Reserve Space:</strong> Leave room for future services and expansion</li>
+        </ul>
+
+        <h3>Security Best Practices</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Layer</th>
+                    <th>Best Practice</th>
+                    <th>Implementation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Network</strong></td>
+                    <td>Least privilege access</td>
+                    <td>Restrictive security groups and NACLs</td>
+                </tr>
+                <tr>
+                    <td><strong>Subnet</strong></td>
+                    <td>Proper tier separation</td>
+                    <td>Public, private, and database subnets</td>
+                </tr>
+                <tr>
+                    <td><strong>Instance</strong></td>
+                    <td>No direct internet access</td>
+                    <td>Use bastion hosts or Session Manager</td>
+                </tr>
+                <tr>
+                    <td><strong>Monitoring</strong></td>
+                    <td>Enable logging</td>
+                    <td>VPC Flow Logs, CloudTrail</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>High Availability Design</h3>
+        <div class="cidr-calculator">
+            <h4>Multi-AZ Architecture Pattern</h4>
+            <div class="cidr-block">
+Region: us-east-1<br>
+VPC: 10.0.0.0/16<br><br>
+
+Availability Zone 1a:<br>
+- Public Subnet: 10.0.1.0/24<br>
+- Private Subnet: 10.0.11.0/24<br>
+- Database Subnet: 10.0.21.0/24<br><br>
+
+Availability Zone 1b:<br>
+- Public Subnet: 10.0.2.0/24<br>
+- Private Subnet: 10.0.12.0/24<br>
+- Database Subnet: 10.0.22.0/24<br><br>
+
+Availability Zone 1c:<br>
+- Public Subnet: 10.0.3.0/24<br>
+- Private Subnet: 10.0.13.0/24<br>
+- Database Subnet: 10.0.23.0/24
+            </div>
+        </div>
+
+        <h3>Cost Optimization Strategies</h3>
+        <ul>
+            <li><strong>VPC Endpoints:</strong> Use for AWS service access to avoid NAT costs</li>
+            <li><strong>NAT Gateway Optimization:</strong> Single NAT for dev, multiple for prod</li>
+            <li><strong>Data Transfer:</strong> Minimize cross-AZ and cross-region transfers</li>
+            <li><strong>Reserved Capacity:</strong> Use Reserved Instances for predictable workloads</li>
+            <li><strong>Right Sizing:</strong> Monitor and optimize instance sizes</li>
+        </ul>
+
+        <h3>Monitoring and Logging</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>VPC Flow Logs</h4>
+                <p>Monitor network traffic patterns and security</p>
+            </div>
+            <div class="feature-card">
+                <h4>CloudWatch Metrics</h4>
+                <p>Monitor NAT Gateway, VPN, and Direct Connect metrics</p>
+            </div>
+            <div class="feature-card">
+                <h4>AWS Config</h4>
+                <p>Track configuration changes and compliance</p>
+            </div>
+            <div class="feature-card">
+                <h4>CloudTrail</h4>
+                <p>Log API calls and changes to VPC resources</p>
+            </div>
+        </div>
+
+        <h3>Naming and Tagging Strategy</h3>
+        <div class="cidr-block">
+Naming Convention Examples:<br><br>
+
+VPC: prod-vpc-us-east-1<br>
+Subnets: prod-public-1a, prod-private-1a, prod-db-1a<br>
+Security Groups: prod-web-sg, prod-app-sg, prod-db-sg<br>
+Route Tables: prod-public-rt, prod-private-rt<br><br>
+
+Required Tags:<br>
+- Environment: prod/dev/test<br>
+- Project: project-name<br>
+- Owner: team-name<br>
+- CostCenter: cost-center-code
+        </div>
+
+        <h3>Common Anti-Patterns to Avoid</h3>
+        <div class="danger-box">
+            <p><strong>Avoid These Mistakes:</strong></p>
+            <ul>
+                <li>Using default VPC for production workloads</li>
+                <li>Creating overly large or small CIDR blocks</li>
+                <li>Not planning for multi-AZ deployment</li>
+                <li>Overly permissive security group rules</li>
+                <li>Not using VPC endpoints for AWS services</li>
+                <li>Ignoring data transfer costs</li>
+                <li>Poor naming and tagging practices</li>
+            </ul>
+        </div>
+
+        <div class="success-box">
+            <p><strong>Golden Rule:</strong> Design your VPC with security, scalability, and cost-effectiveness in mind from the beginning. It's much easier to plan properly upfront than to refactor later.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 11: Lab - Creating a VPC with Public and Private Subnets -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Creating a VPC with Public and Private Subnets</h2>
+        
+        <div class="lab-section">
+            <h3>Hands-on Lab: Build a Multi-Tier VPC Architecture</h3>
+            <p>Create a production-ready VPC with public and private subnets across multiple AZs, including internet connectivity and security configuration.</p>
+        </div>
+
+        <h3>Lab Objectives</h3>
+        <ul>
+            <li>Create a VPC with appropriate CIDR block</li>
+            <li>Set up public and private subnets in multiple AZs</li>
+            <li>Configure Internet Gateway and NAT Gateway</li>
+            <li>Create and configure route tables</li>
+            <li>Set up security groups for different tiers</li>
+        </ul>
+
+        <h3>Architecture Overview</h3>
+        <div class="architecture-diagram">
+            <div style="margin-bottom: 15px; font-size: 1.2rem; color: #232F3E;">Lab Architecture: 3-Tier Web Application</div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #FF9900;">VPC: 10.0.0.0/16</div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <div class="component-box" style="background: #10b981;">Public Subnets (Web Tier)</div>
+                <div class="component-box" style="background: #f59e0b;">Private Subnets (App Tier)</div>
+            </div>
+            <div>
+                <div class="component-box" style="background: #ef4444;">Database Subnets (DB Tier)</div>
+            </div>
+        </div>
+
+        <h3>Step 1: Create VPC</h3>
+        <ol class="step-list">
+            <li><strong>Navigate to VPC:</strong> Go to VPC service in AWS Console</li>
+            <li><strong>Create VPC:</strong> Click "Create VPC"</li>
+            <li><strong>VPC Settings:</strong> Name: "MyLab-VPC", CIDR: 10.0.0.0/16</li>
+            <li><strong>Tenancy:</strong> Default tenancy</li>
+            <li><strong>Tags:</strong> Add Environment: Lab, Project: VPC-Training</li>
+        </ol>
+
+        <h3>Step 2: Create Subnets</h3>
+        <div class="cidr-block">
+Subnet Plan:<br><br>
+
+Public Subnets (Web Tier):<br>
+- MyLab-Public-1A: 10.0.1.0/24 (us-east-1a)<br>
+- MyLab-Public-1B: 10.0.2.0/24 (us-east-1b)<br><br>
+
+Private Subnets (App Tier):<br>
+- MyLab-Private-1A: 10.0.11.0/24 (us-east-1a)<br>
+- MyLab-Private-1B: 10.0.12.0/24 (us-east-1b)<br><br>
+
+Database Subnets (DB Tier):<br>
+- MyLab-DB-1A: 10.0.21.0/24 (us-east-1a)<br>
+- MyLab-DB-1B: 10.0.22.0/24 (us-east-1b)
+        </div>
+
+        <h3>Step 3: Create Internet Gateway</h3>
+        <ol class="step-list">
+            <li><strong>Create IGW:</strong> Name: "MyLab-IGW"</li>
+            <li><strong>Attach to VPC:</strong> Select MyLab-VPC</li>
+            <li><strong>Verify:</strong> Check attachment status is "Attached"</li>
+        </ol>
+
+        <h3>Step 4: Create NAT Gateway</h3>
+        <div class="code-block">
+# Create NAT Gateway in each public subnet for HA
+1. Navigate to NAT Gateways
+2. Create NAT Gateway:
+   - Name: MyLab-NAT-1A
+   - Subnet: MyLab-Public-1A
+   - Connectivity: Public
+   - Allocate Elastic IP
+3. Repeat for MyLab-Public-1B (MyLab-NAT-1B)
+        </div>
+
+        <h3>Step 5: Configure Route Tables</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Route Table</th>
+                    <th>Associated Subnets</th>
+                    <th>Routes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>MyLab-Public-RT</strong></td>
+                    <td>Public subnets</td>
+                    <td>10.0.0.0/16 → local<br>0.0.0.0/0 → IGW</td>
+                </tr>
+                <tr>
+                    <td><strong>MyLab-Private-RT-1A</strong></td>
+                    <td>Private subnet 1A</td>
+                    <td>10.0.0.0/16 → local<br>0.0.0.0/0 → NAT-1A</td>
+                </tr>
+                <tr>
+                    <td><strong>MyLab-Private-RT-1B</strong></td>
+                    <td>Private subnet 1B</td>
+                    <td>10.0.0.0/16 → local<br>0.0.0.0/0 → NAT-1B</td>
+                </tr>
+                <tr>
+                    <td><strong>MyLab-DB-RT</strong></td>
+                    <td>Database subnets</td>
+                    <td>10.0.0.0/16 → local</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Step 6: Create Security Groups</h3>
+        <div class="code-block">
+# Web Tier Security Group
+Name: MyLab-Web-SG
+Inbound Rules:
+- HTTP (80) from 0.0.0.0/0
+- HTTPS (443) from 0.0.0.0/0
+- SSH (22) from MyLab-Bastion-SG
+
+# App Tier Security Group  
+Name: MyLab-App-SG
+Inbound Rules:
+- Custom TCP (8080) from MyLab-Web-SG
+- SSH (22) from MyLab-Bastion-SG
+
+# Database Tier Security Group
+Name: MyLab-DB-SG
+Inbound Rules:
+- MySQL (3306) from MyLab-App-SG
+- SSH (22) from MyLab-Bastion-SG
+
+# Bastion Host Security Group
+Name: MyLab-Bastion-SG
+Inbound Rules:
+- SSH (22) from YOUR-IP/32
+        </div>
+
+        <div class="success-box">
+            <p><strong>Lab Complete:</strong> You've successfully created a production-ready VPC architecture with proper security, routing, and high availability across multiple AZs!</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 12: VPC Troubleshooting -->
+<div class="slide">
+    <div class="content">
+        <h2>VPC Troubleshooting</h2>
+        
+        <div class="highlight-box">
+            <p>Understanding common VPC issues and their solutions is crucial for maintaining reliable network connectivity and security in your AWS environment.</p>
+        </div>
+
+        <h3>Common Connectivity Issues</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Cannot Access Internet</h4>
+                <p>Check IGW attachment, route tables, security groups, and public IP assignment</p>
+            </div>
+            <div class="feature-card">
+                <h4>Cannot Access from Internet</h4>
+                <p>Verify public IP, security group inbound rules, and NACL settings</p>
+            </div>
+            <div class="feature-card">
+                <h4>Private Subnet No Outbound</h4>
+                <p>Check NAT Gateway status, route table configuration, and security groups</p>
+            </div>
+            <div class="feature-card">
+                <h4>VPC Peering Issues</h4>
+                <p>Verify peering connection status, route tables, and DNS resolution</p>
+            </div>
+        </div>
+
+        <h3>Systematic Troubleshooting Approach</h3>
+        <ol class="step-list">
+            <li><strong>Check Route Tables:</strong> Verify routes exist for traffic destination</li>
+            <li><strong>Verify Security Groups:</strong> Ensure inbound/outbound rules allow traffic</li>
+            <li><strong>Check NACLs:</strong> Confirm subnet-level rules permit traffic</li>
+            <li><strong>Validate Gateways:</strong> Check IGW/NAT Gateway status and configuration</li>
+            <li><strong>Test Connectivity:</strong> Use ping, telnet, or traceroute for diagnosis</li>
+            <li><strong>Review Logs:</strong> Check VPC Flow Logs for traffic patterns</li>
+        </ol>
+
+        <h3>Troubleshooting Tools</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Tool</th>
+                    <th>Purpose</th>
+                    <th>Use Case</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>VPC Flow Logs</strong></td>
+                    <td>Network traffic analysis</td>
+                    <td>Security analysis, troubleshooting</td>
+                </tr>
+                <tr>
+                    <td><strong>Reachability Analyzer</strong></td>
+                    <td>Path analysis between resources</td>
+                    <td>Connectivity troubleshooting</td>
+                </tr>
+                <tr>
+                    <td><strong>CloudWatch Metrics</strong></td>
+                    <td>Performance monitoring</td>
+                    <td>NAT Gateway, VPN monitoring</td>
+                </tr>
+                <tr>
+                    <td><strong>AWS Config</strong></td>
+                    <td>Configuration compliance</td>
+                    <td>Security group auditing</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Common Error Messages and Solutions</h3>
+        <div class="cidr-block">
+Error: "Connection timed out"<br>
+Solution: Check security group inbound rules<br><br>
+
+Error: "Connection refused"<br>
+Solution: Check if service is running on target port<br><br>
+
+Error: "Network unreachable"<br>
+Solution: Check route table configuration<br><br>
+
+Error: "No route to host"<br>
+Solution: Verify IGW/NAT Gateway and routing<br><br>
+
+Error: "DNS resolution failed"<br>
+Solution: Check DNS settings and VPC DNS options
+        </div>
+
+        <h3>Performance Troubleshooting</h3>
+        <ul>
+            <li><strong>High Latency:</strong> Check cross-AZ traffic, optimize placement groups</li>
+            <li><strong>Low Throughput:</strong> Verify instance types, enhanced networking</li>
+            <li><strong>Packet Loss:</strong> Check security group limits, instance performance</li>
+            <li><strong>DNS Issues:</strong> Verify VPC DNS resolution and hostnames settings</li>
+        </ul>
+
+        <h3>Security Troubleshooting</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Unexpected Traffic</h4>
+                <p>Review VPC Flow Logs, check security group rules</p>
+            </div>
+            <div class="feature-card">
+                <h4>Access Denied</h4>
+                <p>Verify IAM permissions, resource-based policies</p>
+            </div>
+            <div class="feature-card">
+                <h4>Data Exfiltration</h4>
+                <p>Monitor outbound traffic, implement DLP controls</p>
+            </div>
+            <div class="feature-card">
+                <h4>Compliance Issues</h4>
+                <p>Use AWS Config rules, regular security audits</p>
+            </div>
+        </div>
+
+        <h3>Monitoring and Alerting</h3>
+        <div class="code-block">
+# Key metrics to monitor:
+- NAT Gateway bandwidth utilization
+- VPN connection state
+- Security group rule changes
+- Unusual traffic patterns
+- Failed connection attempts
+
+# Set up CloudWatch alarms for:
+- High data transfer costs
+- NAT Gateway errors
+- VPN tunnel state changes
+- Unusual network activity
+        </div>
+
+        <div class="warning-box">
+            <p><strong>Troubleshooting Tip:</strong> Always start with the most basic checks (route tables, security groups) before moving to more complex diagnostics. Document your troubleshooting steps for future reference.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+<!-- Slide 13: Summary and Next Steps -->
+<div class="slide">
+    <div class="content">
+        <h2>Summary and Next Steps</h2>
+        
+        <h3>Key Concepts Mastered</h3>
+        <div class="highlight-box">
+            <ul>
+                <li>Understanding of VPC fundamentals and core components</li>
+                <li>CIDR notation and IP address calculation skills</li>
+                <li>Subnet design and multi-AZ architecture patterns</li>
+                <li>Route table configuration and traffic routing</li>
+                <li>Internet connectivity with IGW and NAT Gateways</li>
+                <li>Security implementation with Security Groups and NACLs</li>
+                <li>VPC connectivity options and hybrid architectures</li>
+                <li>Best practices for design, security, and cost optimization</li>
+                <li>Hands-on experience building production-ready VPC</li>
+                <li>Troubleshooting common VPC connectivity issues</li>
+            </ul>
+        </div>
+
+        <h3>Practical Skills Gained</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Network Design</h4>
+                <p>Plan and implement scalable VPC architectures</p>
+            </div>
+            <div class="feature-card">
+                <h4>CIDR Calculations</h4>
+                <p>Calculate IP ranges and subnet sizes accurately</p>
+            </div>
+            <div class="feature-card">
+                <h4>Security Configuration</h4>
+                <p>Implement layered security with proper access controls</p>
+            </div>
+            <div class="feature-card">
+                <h4>Connectivity Solutions</h4>
+                <p>Choose and implement appropriate connectivity options</p>
+            </div>
+        </div>
+
+        <h3>Lab Accomplishments</h3>
+        <ul>
+            <li><strong>VPC Creation:</strong> Built complete VPC with proper CIDR planning</li>
+            <li><strong>Multi-AZ Design:</strong> Implemented high availability across AZs</li>
+            <li><strong>Internet Connectivity:</strong> Configured IGW and NAT Gateways</li>
+            <li><strong>Security Implementation:</strong> Created layered security with SGs and NACLs</li>
+            <li><strong>Route Configuration:</strong> Set up proper routing for all tiers</li>
+        </ul>
+
+        <h3>Associate-Level Exam Topics Covered</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Domain</th>
+                    <th>Topics Covered</th>
+                    <th>Exam Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Design Resilient Architectures</strong></td>
+                    <td>Multi-AZ design, connectivity options</td>
+                    <td>26%</td>
+                </tr>
+                <tr>
+                    <td><strong>Design High-Performing Architectures</strong></td>
+                    <td>Network optimization, placement strategies</td>
+                    <td>24%</td>
+                </tr>
+                <tr>
+                    <td><strong>Design Secure Applications</strong></td>
+                    <td>Security Groups, NACLs, network isolation</td>
+                    <td>30%</td>
+                </tr>
+                <tr>
+                    <td><strong>Design Cost-Optimized Architectures</strong></td>
+                    <td>NAT optimization, VPC endpoints</td>
+                    <td>20%</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>VPC Design Checklist</h3>
+        <ol class="step-list">
+            <li><strong>CIDR Planning:</strong> Choose appropriate IP ranges, avoid overlaps</li>
+            <li><strong>Multi-AZ Design:</strong> Distribute subnets across multiple AZs</li>
+            <li><strong>Security Layers:</strong> Implement Security Groups and NACLs</li>
+            <li><strong>Internet Access:</strong> Configure IGW and NAT Gateways appropriately</li>
+            <li><strong>Routing:</strong> Set up proper route tables for each subnet type</li>
+            <li><strong>Monitoring:</strong> Enable VPC Flow Logs and CloudWatch monitoring</li>
+            <li><strong>Documentation:</strong> Maintain clear network documentation</li>
+        </ol>
+
+        <h3>Advanced Topics for Further Learning</h3>
+        <ul>
+            <li><strong>AWS Transit Gateway:</strong> Centralized connectivity hub for multiple VPCs</li>
+            <li><strong>AWS PrivateLink:</strong> Private connectivity to AWS services and SaaS</li>
+            <li><strong>AWS Direct Connect:</strong> Dedicated network connections to AWS</li>
+            <li><strong>AWS Client VPN:</strong> Managed client-based VPN service</li>
+            <li><strong>Network Load Balancer:</strong> High-performance load balancing</li>
+            <li><strong>AWS Global Accelerator:</strong> Improve global application performance</li>
+        </ul>
+
+        <h3>Real-World Implementation Tips</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Start Simple</h4>
+                <p>Begin with basic VPC, add complexity gradually</p>
+            </div>
+            <div class="feature-card">
+                <h4>Plan for Scale</h4>
+                <p>Design with future growth and requirements in mind</p>
+            </div>
+            <div class="feature-card">
+                <h4>Security First</h4>
+                <p>Implement security controls from the beginning</p>
+            </div>
+            <div class="feature-card">
+                <h4>Monitor Costs</h4>
+                <p>Track data transfer and NAT Gateway costs</p>
+            </div>
+        </div>
+
+        <h3>Recommended Next Steps</h3>
+        <ol class="step-list">
+            <li><strong>Practice:</strong> Build different VPC architectures in your AWS account</li>
+            <li><strong>Certification:</strong> Apply knowledge to AWS Solutions Architect Associate exam</li>
+            <li><strong>Advanced Learning:</strong> Explore Transit Gateway and PrivateLink</li>
+            <li><strong>Real Projects:</strong> Implement VPC designs for actual workloads</li>
+            <li><strong>Stay Updated:</strong> Follow AWS networking service updates and best practices</li>
+        </ol>
+
+        <div class="success-box">
+            <p><strong>Congratulations!</strong> You've mastered AWS VPC fundamentals and are well-prepared to design and implement secure, scalable network architectures in AWS. Continue practicing with real-world scenarios and exploring advanced networking services.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>AWS Corporate Trainer</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS EC2 Introduction & Demo - PDF Version</title>
+    <style>
+        /* PDF-optimized styles */
+        @page {
+            size: A4;
+            margin: 1in;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+            font-size: 12pt;
+        }
+
+        .page {
+            page-break-after: always;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .page:last-child {
+            page-break-after: avoid;
+        }
+
+        .title-page {
+            text-align: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #232f3e 0%, #131a22 100%);
+            color: white;
+            margin: -20px;
+            padding: 100px 20px;
+        }
+
+        .title-page h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            color: #ff9900;
+        }
+
+        .title-page h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .title-page .aws-logo {
+            font-size: 4em;
+            margin: 30px 0;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            color: #232f3e;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #ff9900;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #232f3e;
+            margin-bottom: 20px;
+            margin-top: 25px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: #ff9900;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-bottom: 15px;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-left: 4px solid #ff9900;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 4px solid #ff9900;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #232f3e;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .two-column {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        .demo-box {
+            border: 2px solid #ff9900;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #fff8f0;
+            page-break-inside: avoid;
+        }
+
+        .web-preview {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            page-break-inside: avoid;
+        }
+
+        .web-preview h1 {
+            color: #232f3e;
+            text-align: center;
+            border-bottom: 2px solid #ff9900;
+            font-size: 1.5em;
+        }
+
+        .web-preview p {
+            color: #666;
+            margin: 15px 0;
+        }
+
+        .step-number {
+            background: #ff9900;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+
+        .page-number {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 10pt;
+            color: #666;
+        }
+
+        .toc {
+            page-break-after: always;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #232f3e;
+        }
+
+        .toc a:hover {
+            color: #ff9900;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .page {
+                page-break-after: always;
+            }
+            
+            .page:last-child {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Title Page -->
+    <div class="page title-page">
+        <div class="aws-logo">☁️</div>
+        <h1>AWS EC2 Introduction</h1>
+        <h2>Creating Your First Web Server</h2>
+        <p style="font-size: 1.2em; margin-top: 30px;">A comprehensive guide to Amazon Elastic Compute Cloud</p>
+        <div style="margin-top: 50px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+            <p><strong>What you'll learn:</strong></p>
+            <p>• AWS fundamentals • EC2 basics • Hands-on deployment • Best practices</p>
+        </div>
+    </div>
+
+    <!-- Table of Contents -->
+    <div class="page toc">
+        <h1>Table of Contents</h1>
+        <ul>
+            <li><a href="#what-is-aws">1. What is AWS?</a></li>
+            <li><a href="#ec2-intro">2. Amazon EC2 Introduction</a></li>
+            <li><a href="#key-concepts">3. EC2 Key Concepts</a></li>
+            <li><a href="#demo-overview">4. Hands-On Demo Overview</a></li>
+            <li><a href="#user-data">5. Method 1: User Data Automation</a></li>
+            <li><a href="#user-data-result">6. User Data Web Page Result</a></li>
+            <li><a href="#manual-setup">7. Method 2: Manual Setup</a></li>
+            <li><a href="#manual-result">8. Manual Setup Web Page Result</a></li>
+            <li><a href="#comparison">9. User Data vs Manual Comparison</a></li>
+            <li><a href="#aws-cli">10. AWS CLI Commands</a></li>
+            <li><a href="#security">11. Security Best Practices</a></li>
+            <li><a href="#cost">12. Cost Optimization</a></li>
+            <li><a href="#troubleshooting">13. Troubleshooting</a></li>
+            <li><a href="#next-steps">14. Next Steps & Resources</a></li>
+        </ul>
+    </div>
+
+    <!-- Page 1: What is AWS -->
+    <div class="page" id="what-is-aws">
+        <h1>What is AWS?</h1>
+        <div style="text-align: center; font-size: 3em; margin: 20px 0;">🚀</div>
+        
+        <p><strong>Amazon Web Services (AWS)</strong> is a comprehensive cloud computing platform provided by Amazon, offering over 200 fully featured services from data centers globally.</p>
+
+        <h2>Key Benefits of AWS</h2>
+        <ul>
+            <li><strong>Scalability:</strong> Scale resources up or down based on demand automatically</li>
+            <li><strong>Cost-Effective:</strong> Pay only for what you use with no upfront costs</li>
+            <li><strong>Global Reach:</strong> Data centers in 31+ regions worldwide</li>
+            <li><strong>Security:</strong> Enterprise-grade security features and compliance</li>
+            <li><strong>Reliability:</strong> 99.99% uptime SLA with redundant infrastructure</li>
+        </ul>
+
+        <h2>Popular AWS Services</h2>
+        <div class="two-column">
+            <div class="column">
+                <ul>
+                    <li><strong>EC2:</strong> Virtual servers in the cloud</li>
+                    <li><strong>S3:</strong> Object storage service</li>
+                    <li><strong>RDS:</strong> Managed database service</li>
+                </ul>
+            </div>
+            <div class="column">
+                <ul>
+                    <li><strong>Lambda:</strong> Serverless computing</li>
+                    <li><strong>VPC:</strong> Virtual private cloud networking</li>
+                    <li><strong>CloudFront:</strong> Content delivery network</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <p><strong>Why Choose AWS?</strong> AWS powers millions of businesses worldwide, from startups to Fortune 500 companies, providing the infrastructure needed to scale and grow efficiently.</p>
+        </div>
+    </div>
+
+    <!-- Page 2: EC2 Introduction -->
+    <div class="page" id="ec2-intro">
+        <h1>Amazon EC2 - Elastic Compute Cloud</h1>
+        
+        <h2>What is EC2?</h2>
+        <p>Amazon Elastic Compute Cloud (EC2) provides scalable computing capacity in the Amazon Web Services (AWS) cloud. It eliminates the need to invest in hardware upfront, allowing you to develop and deploy applications faster.</p>
+
+        <div class="two-column">
+            <div class="column">
+                <h3>Key Features</h3>
+                <ul>
+                    <li>Virtual servers in the cloud</li>
+                    <li>Complete control over the operating system</li>
+                    <li>Flexible instance types for different workloads</li>
+                    <li>Pay-per-use pricing model</li>
+                    <li>Integration with other AWS services</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>Common Use Cases</h3>
+                <ul>
+                    <li>Web applications and websites</li>
+                    <li>Development and testing environments</li>
+                    <li>Big data processing and analytics</li>
+                    <li>Machine learning workloads</li>
+                    <li>Enterprise applications</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>EC2 Instance Types</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Instance Type</th>
+                <th>vCPUs</th>
+                <th>Memory (GB)</th>
+                <th>Use Case</th>
+            </tr>
+            <tr>
+                <td>t2.micro</td>
+                <td>1</td>
+                <td>1</td>
+                <td>Free tier, light workloads</td>
+            </tr>
+            <tr>
+                <td>t3.small</td>
+                <td>2</td>
+                <td>2</td>
+                <td>General purpose, small applications</td>
+            </tr>
+            <tr>
+                <td>m5.large</td>
+                <td>2</td>
+                <td>8</td>
+                <td>Balanced compute, memory, networking</td>
+            </tr>
+            <tr>
+                <td>c5.xlarge</td>
+                <td>4</td>
+                <td>8</td>
+                <td>Compute optimized applications</td>
+            </tr>
+        </table>
+    </div>
+    <!-- Page 3: Key Concepts -->
+    <div class="page" id="key-concepts">
+        <h1>EC2 Key Concepts</h1>
+        
+        <h2>Essential Components</h2>
+        
+        <h3>Amazon Machine Images (AMI)</h3>
+        <p>Pre-configured templates for your instances that contain the operating system, application server, and applications needed to launch your instance.</p>
+        <ul>
+            <li><strong>Amazon Linux 2:</strong> AWS-optimized Linux distribution</li>
+            <li><strong>Ubuntu:</strong> Popular open-source Linux distribution</li>
+            <li><strong>Windows Server:</strong> Microsoft Windows-based instances</li>
+            <li><strong>Custom AMIs:</strong> Your own configured images</li>
+        </ul>
+
+        <h3>Security Groups</h3>
+        <p>Virtual firewalls that control inbound and outbound traffic to your instances.</p>
+        <div class="demo-box">
+            <p><strong>Common Security Group Rules:</strong></p>
+            <ul>
+                <li><strong>HTTP (Port 80):</strong> Allow web traffic from anywhere (0.0.0.0/0)</li>
+                <li><strong>HTTPS (Port 443):</strong> Allow secure web traffic</li>
+                <li><strong>SSH (Port 22):</strong> Allow secure shell access for Linux</li>
+                <li><strong>RDP (Port 3389):</strong> Allow remote desktop for Windows</li>
+            </ul>
+        </div>
+
+        <h3>Key Pairs</h3>
+        <p>Secure login credentials consisting of a public and private key pair used for authentication.</p>
+        <ul>
+            <li><strong>Public Key:</strong> Stored on the EC2 instance</li>
+            <li><strong>Private Key:</strong> Downloaded and stored securely by you</li>
+            <li><strong>Usage:</strong> Required for SSH access to Linux instances</li>
+        </ul>
+
+        <div class="highlight">
+            <p><strong>Security Note:</strong> Never share your private key files. Store them securely and set proper file permissions (chmod 400).</p>
+        </div>
+    </div>
+
+    <!-- Page 4: Demo Overview -->
+    <div class="page" id="demo-overview">
+        <h1>Hands-On Demo Overview</h1>
+        
+        <p>We'll demonstrate two different approaches to deploy a web server on EC2, each with its own advantages and use cases.</p>
+
+        <div class="two-column">
+            <div class="column">
+                <div class="demo-box">
+                    <h3>🤖 Method 1: User Data Automation</h3>
+                    <p><strong>Automated Setup</strong></p>
+                    <ul>
+                        <li>Script runs automatically at startup</li>
+                        <li>Fully automated deployment</li>
+                        <li>Consistent and repeatable</li>
+                        <li>Infrastructure as Code approach</li>
+                        <li>Ideal for production environments</li>
+                    </ul>
+                    <div class="highlight">
+                        <p><strong>Best for:</strong> Production deployments, scaling, consistency</p>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="demo-box">
+                    <h3>👨‍💻 Method 2: Manual Setup</h3>
+                    <p><strong>Step-by-step Configuration</strong></p>
+                    <ul>
+                        <li>Connect to instance via SSH</li>
+                        <li>Manual installation and configuration</li>
+                        <li>Better for learning and understanding</li>
+                        <li>Easy troubleshooting and debugging</li>
+                        <li>Full control over each step</li>
+                    </ul>
+                    <div class="highlight">
+                        <p><strong>Best for:</strong> Learning, development, troubleshooting</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>What We'll Create</h2>
+        <p>Both methods will result in:</p>
+        <ul>
+            <li>A running EC2 instance with Amazon Linux 2</li>
+            <li>Apache HTTP Server (httpd) installed and configured</li>
+            <li>A custom web page with HTML, CSS styling</li>
+            <li>Proper security group configuration</li>
+            <li>Accessible via public IP address</li>
+        </ul>
+
+        <h2>Prerequisites</h2>
+        <ul>
+            <li>AWS Account with appropriate IAM permissions</li>
+            <li>AWS CLI configured (optional but recommended)</li>
+            <li>Basic understanding of Linux commands</li>
+            <li>SSH client (built-in on Mac/Linux, PuTTY on Windows)</li>
+        </ul>
+    </div>
+
+    <!-- Page 5: User Data Method -->
+    <div class="page" id="user-data">
+        <h1>Method 1: User Data Automation</h1>
+        
+        <h2>What is User Data?</h2>
+        <p>User Data is a feature that allows you to pass data to your instance when it launches. This data can be used to perform common automated configuration tasks and run scripts after the instance starts.</p>
+
+        <h2>User Data Script</h2>
+        <div class="code-block">
+            <pre>#!/bin/bash
+# Update the system packages
+yum update -y
+
+# Install Apache HTTP Server
+yum install -y httpd
+
+# Start Apache service
+systemctl start httpd
+
+# Enable Apache to start automatically on boot
+systemctl enable httpd
+
+# Create a simple HTML web page
+cat > /var/www/html/index.html << 'EOF'
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My First AWS Web Server&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        .container { background: white; padding: 30px; 
+                    border-radius: 10px; text-align: center; }
+        h1 { color: #232f3e; }
+        p { color: #666; font-size: 18px; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;h1&gt;Welcome to My AWS Web Server!&lt;/h1&gt;
+        &lt;p&gt;This server was created automatically using User Data.&lt;/p&gt;
+        &lt;p&gt;Deployment completed successfully!&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+EOF
+
+# Set proper ownership and permissions
+chown apache:apache /var/www/html/index.html
+chmod 644 /var/www/html/index.html</pre>
+        </div>
+
+        <h2>Key Benefits</h2>
+        <ul>
+            <li><strong>Automation:</strong> No manual intervention required</li>
+            <li><strong>Consistency:</strong> Same setup every time</li>
+            <li><strong>Speed:</strong> Faster deployment process</li>
+            <li><strong>Scalability:</strong> Easy to replicate across multiple instances</li>
+        </ul>
+    </div>
+    <!-- Page 6: User Data Result -->
+    <div class="page" id="user-data-result">
+        <h1>User Data Web Page Result</h1>
+        
+        <h2>Automated Web Page Preview</h2>
+        <p>This is what your web page will look like when accessed through the browser after the User Data script completes:</p>
+        
+        <div class="web-preview">
+            <h1>Welcome to My AWS Web Server!</h1>
+            <div style="text-align: center; font-size: 2em; margin: 20px 0;">🚀</div>
+            <p>Congratulations! You have successfully deployed a web server on Amazon EC2 using User Data automation. This page was created automatically when the instance started, demonstrating the power of infrastructure as code and automated deployments in the cloud.</p>
+            <div style="background: #e8f4f8; padding: 15px; border-left: 4px solid #ff9900; margin: 20px 0;">
+                <strong>Instance Details:</strong><br>
+                • Created with User Data script<br>
+                • Running Apache HTTP Server<br>
+                • Hosted on Amazon Linux 2<br>
+                • Deployed in AWS EC2<br>
+                • Automated setup completed successfully
+            </div>
+            <p>This automated approach ensures consistent deployments and reduces the potential for human error. Every time you launch an instance with this User Data script, you'll get the exact same configuration!</p>
+        </div>
+
+        <h2>Verification Steps</h2>
+        <ol>
+            <li><span class="step-number">1</span>Wait for instance to reach "running" state</li>
+            <li><span class="step-number">2</span>Copy the public IP address from EC2 console</li>
+            <li><span class="step-number">3</span>Open browser and navigate to http://[public-ip]</li>
+            <li><span class="step-number">4</span>Verify the web page loads successfully</li>
+        </ol>
+
+        <div class="highlight">
+            <p><strong>Troubleshooting:</strong> If the page doesn't load, check that your security group allows HTTP traffic on port 80 from 0.0.0.0/0</p>
+        </div>
+    </div>
+
+    <!-- Page 7: Manual Setup -->
+    <div class="page" id="manual-setup">
+        <h1>Method 2: Manual Setup</h1>
+        
+        <h2>Step-by-Step Process</h2>
+        <p>This method involves connecting to your EC2 instance via SSH and manually configuring the web server.</p>
+
+        <h3>Step 1: Connect to Your Instance</h3>
+        <div class="code-block">
+            <pre># Connect via SSH (replace with your key and IP)
+ssh -i "your-key.pem" ec2-user@your-instance-public-ip
+
+# Example:
+ssh -i "my-key.pem" ec2-user@54.123.45.67</pre>
+        </div>
+
+        <h3>Step 2: Update System and Install Apache</h3>
+        <div class="code-block">
+            <pre># Update the system packages
+sudo yum update -y
+
+# Install Apache HTTP Server
+sudo yum install -y httpd
+
+# Verify installation
+httpd -version</pre>
+        </div>
+
+        <h3>Step 3: Start and Enable Apache</h3>
+        <div class="code-block">
+            <pre># Start Apache service
+sudo systemctl start httpd
+
+# Enable Apache to start on boot
+sudo systemctl enable httpd
+
+# Check Apache status
+sudo systemctl status httpd</pre>
+        </div>
+
+        <h3>Step 4: Create Web Page</h3>
+        <div class="code-block">
+            <pre># Create the HTML file
+sudo tee /var/www/html/index.html > /dev/null << 'EOF'
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;My Manual Web Server&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: Arial, sans-serif; margin: 50px; }
+        h1 { color: #232f3e; text-align: center; 
+             border-bottom: 3px solid #ff9900; }
+        .badge { background: #ff9900; color: white; 
+                padding: 5px 15px; border-radius: 20px; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Manually Configured Web Server!&lt;/h1&gt;
+    &lt;div class="badge"&gt;Manually Configured&lt;/div&gt;
+    &lt;p&gt;This server was set up step by step manually.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+EOF
+
+# Set proper permissions
+sudo chown apache:apache /var/www/html/index.html
+sudo chmod 644 /var/www/html/index.html</pre>
+        </div>
+    </div>
+
+    <!-- Page 8: Manual Result -->
+    <div class="page" id="manual-result">
+        <h1>Manual Setup Web Page Result</h1>
+        
+        <h2>Manually Created Web Page Preview</h2>
+        <p>This is the result of your manual configuration:</p>
+        
+        <div class="web-preview">
+            <h1 style="border-bottom: 3px solid #ff9900; padding-bottom: 10px;">Welcome to My Manually Configured Web Server!</h1>
+            <div style="background: #ff9900; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; display: inline-block; margin: 10px 0;">
+                Manually Configured
+            </div>
+            <p>This web server was set up manually after launching the EC2 instance. This approach gives you complete control over the installation process and allows you to customize each step according to your specific requirements.</p>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                <strong>Setup Process:</strong>
+                <ol style="margin: 10px 0; padding-left: 20px;">
+                    <li>Launched basic EC2 instance</li>
+                    <li>Connected via SSH</li>
+                    <li>Updated system packages</li>
+                    <li>Manually installed Apache HTTP Server</li>
+                    <li>Started and enabled Apache service</li>
+                    <li>Created this custom web page</li>
+                    <li>Configured proper file permissions</li>
+                </ol>
+            </div>
+            <p>Both automated (User Data) and manual approaches have their advantages. The manual approach is excellent for learning, troubleshooting, and situations where you need fine-grained control over the setup process.</p>
+        </div>
+
+        <h2>Benefits of Manual Setup</h2>
+        <ul>
+            <li><strong>Learning:</strong> Better understanding of each step</li>
+            <li><strong>Debugging:</strong> Easier troubleshooting and problem-solving</li>
+            <li><strong>Control:</strong> Full control over the installation process</li>
+            <li><strong>Customization:</strong> Ability to customize on-the-fly</li>
+            <li><strong>Flexibility:</strong> Can adapt to specific requirements</li>
+        </ul>
+    </div>
+
+    <!-- Page 9: Comparison -->
+    <div class="page" id="comparison">
+        <h1>User Data vs Manual Setup Comparison</h1>
+        
+        <table class="comparison-table">
+            <tr>
+                <th>Aspect</th>
+                <th>User Data</th>
+                <th>Manual Setup</th>
+            </tr>
+            <tr>
+                <td><strong>Automation</strong></td>
+                <td>✅ Fully automated</td>
+                <td>❌ Manual intervention required</td>
+            </tr>
+            <tr>
+                <td><strong>Consistency</strong></td>
+                <td>✅ Same setup every time</td>
+                <td>⚠️ Potential for human error</td>
+            </tr>
+            <tr>
+                <td><strong>Speed</strong></td>
+                <td>✅ Fast deployment</td>
+                <td>❌ Slower, step-by-step process</td>
+            </tr>
+            <tr>
+                <td><strong>Debugging</strong></td>
+                <td>❌ Harder to troubleshoot</td>
+                <td>✅ Easy to debug each step</td>
+            </tr>
+            <tr>
+                <td><strong>Learning Value</strong></td>
+                <td>❌ Less hands-on learning</td>
+                <td>✅ Better for understanding</td>
+            </tr>
+            <tr>
+                <td><strong>Flexibility</strong></td>
+                <td>⚠️ Limited to script capabilities</td>
+                <td>✅ Full control over process</td>
+            </tr>
+            <tr>
+                <td><strong>Scalability</strong></td>
+                <td>✅ Easy to replicate</td>
+                <td>❌ Time-consuming for multiple instances</td>
+            </tr>
+            <tr>
+                <td><strong>Production Use</strong></td>
+                <td>✅ Ideal for production</td>
+                <td>❌ Not suitable for production scale</td>
+            </tr>
+        </table>
+
+        <h2>When to Use Each Method</h2>
+        <div class="two-column">
+            <div class="column">
+                <div class="demo-box">
+                    <h3>Use User Data When:</h3>
+                    <ul>
+                        <li>Deploying to production</li>
+                        <li>Need consistent environments</li>
+                        <li>Scaling multiple instances</li>
+                        <li>Implementing CI/CD pipelines</li>
+                        <li>Want Infrastructure as Code</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="column">
+                <div class="demo-box">
+                    <h3>Use Manual Setup When:</h3>
+                    <ul>
+                        <li>Learning AWS and Linux</li>
+                        <li>Troubleshooting issues</li>
+                        <li>Prototyping and testing</li>
+                        <li>Need custom configurations</li>
+                        <li>One-time deployments</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Page 10: AWS CLI -->
+    <div class="page" id="aws-cli">
+        <h1>AWS CLI Commands</h1>
+        
+        <h2>Essential EC2 Commands</h2>
+        
+        <h3>Security Group Setup</h3>
+        <div class="code-block">
+            <pre># Create security group
+aws ec2 create-security-group \
+    --group-name web-server-sg \
+    --description "Security group for web server demo" \
+    --region us-east-1
+
+# Allow HTTP traffic (port 80)
+aws ec2 authorize-security-group-ingress \
+    --group-name web-server-sg \
+    --protocol tcp --port 80 --cidr 0.0.0.0/0 \
+    --region us-east-1
+
+# Allow SSH traffic (port 22)
+aws ec2 authorize-security-group-ingress \
+    --group-name web-server-sg \
+    --protocol tcp --port 22 --cidr 0.0.0.0/0 \
+    --region us-east-1</pre>
+        </div>
+
+        <h3>Instance Management</h3>
+        <div class="code-block">
+            <pre># Launch instance with user data
+aws ec2 run-instances \
+    --image-id ami-0abcdef1234567890 \
+    --count 1 \
+    --instance-type t2.micro \
+    --key-name your-key-pair \
+    --security-groups web-server-sg \
+    --user-data file://userdata.sh \
+    --region us-east-1
+
+# List running instances
+aws ec2 describe-instances \
+    --query 'Reservations[*].Instances[*].[InstanceId,State.Name,PublicIpAddress]' \
+    --output table --region us-east-1
+
+# Stop instance
+aws ec2 stop-instances --instance-ids i-1234567890abcdef0
+
+# Start instance
+aws ec2 start-instances --instance-ids i-1234567890abcdef0
+
+# Terminate instance
+aws ec2 terminate-instances --instance-ids i-1234567890abcdef0</pre>
+        </div>
+
+        <h3>Useful Queries</h3>
+        <div class="code-block">
+            <pre># Get instance public IP
+aws ec2 describe-instances \
+    --instance-ids i-1234567890abcdef0 \
+    --query 'Reservations[0].Instances[0].PublicIpAddress' \
+    --output text
+
+# List available AMIs (Amazon Linux 2)
+aws ec2 describe-images --owners amazon \
+    --filters 'Name=name,Values=amzn2-ami-hvm-*' \
+    --query 'Images[*].[ImageId,Name]' --output table
+
+# List key pairs
+aws ec2 describe-key-pairs --region us-east-1</pre>
+        </div>
+    </div>
+
+    <!-- Page 11: Security -->
+    <div class="page" id="security">
+        <h1>Security Best Practices</h1>
+        
+        <h2>Security Groups Configuration</h2>
+        <div class="two-column">
+            <div class="column">
+                <h3>🔒 Inbound Rules</h3>
+                <ul>
+                    <li><strong>Principle of Least Privilege:</strong> Only open necessary ports</li>
+                    <li><strong>Specific Sources:</strong> Use specific IP ranges instead of 0.0.0.0/0 when possible</li>
+                    <li><strong>Regular Reviews:</strong> Periodically audit security group rules</li>
+                    <li><strong>Documentation:</strong> Document the purpose of each rule</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>🔑 Key Management</h3>
+                <ul>
+                    <li><strong>Secure Storage:</strong> Store private keys securely</li>
+                    <li><strong>File Permissions:</strong> Set chmod 400 on key files</li>
+                    <li><strong>Key Rotation:</strong> Rotate keys regularly</li>
+                    <li><strong>No Sharing:</strong> Never share private keys</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Common Security Group Rules</h2>
+        <table class="comparison-table">
+            <tr>
+                <th>Service</th>
+                <th>Port</th>
+                <th>Protocol</th>
+                <th>Source</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td>HTTP</td>
+                <td>80</td>
+                <td>TCP</td>
+                <td>0.0.0.0/0</td>
+                <td>Web traffic</td>
+            </tr>
+            <tr>
+                <td>HTTPS</td>
+                <td>443</td>
+                <td>TCP</td>
+                <td>0.0.0.0/0</td>
+                <td>Secure web traffic</td>
+            </tr>
+            <tr>
+                <td>SSH</td>
+                <td>22</td>
+                <td>TCP</td>
+                <td>Your IP/32</td>
+                <td>Remote access</td>
+            </tr>
+            <tr>
+                <td>RDP</td>
+                <td>3389</td>
+                <td>TCP</td>
+                <td>Your IP/32</td>
+                <td>Windows remote desktop</td>
+            </tr>
+        </table>
+
+        <div class="highlight">
+            <p><strong>Security Reminder:</strong> AWS follows a shared responsibility model. AWS secures the infrastructure, while you're responsible for securing your applications and data.</p>
+        </div>
+
+        <h2>Additional Security Measures</h2>
+        <ul>
+            <li><strong>IAM Roles:</strong> Use IAM roles instead of hardcoded credentials</li>
+            <li><strong>VPC:</strong> Deploy instances in private subnets when possible</li>
+            <li><strong>Monitoring:</strong> Enable CloudTrail and CloudWatch logging</li>
+            <li><strong>Updates:</strong> Keep operating system and applications updated</li>
+            <li><strong>Backup:</strong> Regular backups using EBS snapshots</li>
+        </ul>
+    </div>
+
+    <!-- Page 12: Cost Optimization -->
+    <div class="page" id="cost">
+        <h1>Cost Optimization</h1>
+        
+        <h2>AWS Free Tier Benefits</h2>
+        <div class="demo-box">
+            <h3>💰 What's Included (12 months)</h3>
+            <ul>
+                <li><strong>750 hours</strong> of t2.micro EC2 instances per month</li>
+                <li><strong>30 GB</strong> of Amazon EBS General Purpose (SSD) storage</li>
+                <li><strong>15 GB</strong> of bandwidth out aggregated across all AWS services</li>
+                <li><strong>1 GB</strong> of Regional Data Transfer out</li>
+            </ul>
+        </div>
+
+        <h2>Cost-Saving Strategies</h2>
+        <div class="two-column">
+            <div class="column">
+                <h3>Instance Management</h3>
+                <ul>
+                    <li><strong>Right-sizing:</strong> Choose appropriate instance types</li>
+                    <li><strong>Scheduling:</strong> Stop instances when not needed</li>
+                    <li><strong>Reserved Instances:</strong> For predictable workloads</li>
+                    <li><strong>Spot Instances:</strong> For fault-tolerant applications</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>Resource Cleanup</h3>
+                <ul>
+                    <li><strong>Unused Resources:</strong> Delete unused EBS volumes</li>
+                    <li><strong>Elastic IPs:</strong> Release unattached Elastic IPs</li>
+                    <li><strong>Snapshots:</strong> Delete old, unnecessary snapshots</li>
+                    <li><strong>Load Balancers:</strong> Remove unused load balancers</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Cost Monitoring Commands</h2>
+        <div class="code-block">
+            <pre># List all running instances with costs
+aws ec2 describe-instances \
+    --query 'Reservations[*].Instances[*].[InstanceId,InstanceType,State.Name]' \
+    --output table
+
+# List EBS volumes
+aws ec2 describe-volumes \
+    --query 'Volumes[*].[VolumeId,Size,State,VolumeType]' \
+    --output table
+
+# List unattached Elastic IPs
+aws ec2 describe-addresses \
+    --query 'Addresses[?AssociationId==null].[PublicIp,AllocationId]' \
+    --output table</pre>
+        </div>
+
+        <div class="highlight">
+            <p><strong>Cost Tip:</strong> Use the AWS Pricing Calculator (https://calculator.aws) to estimate costs before deploying resources.</p>
+        </div>
+
+        <h2>Billing Alerts</h2>
+        <p>Set up billing alerts to monitor your AWS spending:</p>
+        <ol>
+            <li>Enable billing alerts in your AWS account preferences</li>
+            <li>Create CloudWatch alarms for billing thresholds</li>
+            <li>Set up SNS notifications for cost alerts</li>
+            <li>Review AWS Cost Explorer regularly</li>
+        </ol>
+    </div>
+
+    <!-- Page 13: Troubleshooting -->
+    <div class="page" id="troubleshooting">
+        <h1>Common Issues & Troubleshooting</h1>
+        
+        <table class="comparison-table">
+            <tr>
+                <th>Issue</th>
+                <th>Possible Cause</th>
+                <th>Solution</th>
+            </tr>
+            <tr>
+                <td>Can't access web page</td>
+                <td>Security group not configured</td>
+                <td>Allow HTTP (port 80) in security group from 0.0.0.0/0</td>
+            </tr>
+            <tr>
+                <td>SSH connection failed</td>
+                <td>Wrong key permissions</td>
+                <td>Run: chmod 400 your-key.pem</td>
+            </tr>
+            <tr>
+                <td>User Data script failed</td>
+                <td>Script syntax errors</td>
+                <td>Check /var/log/cloud-init-output.log</td>
+            </tr>
+            <tr>
+                <td>Apache not starting</td>
+                <td>Service configuration issue</td>
+                <td>Run: sudo systemctl status httpd</td>
+            </tr>
+            <tr>
+                <td>Instance not launching</td>
+                <td>Insufficient capacity</td>
+                <td>Try different availability zone or instance type</td>
+            </tr>
+            <tr>
+                <td>Permission denied</td>
+                <td>Wrong username for SSH</td>
+                <td>Use 'ec2-user' for Amazon Linux, 'ubuntu' for Ubuntu</td>
+            </tr>
+        </table>
+
+        <h2>Debugging Commands</h2>
+        <div class="code-block">
+            <pre># Check User Data execution logs
+sudo cat /var/log/cloud-init-output.log
+
+# Check Apache status
+sudo systemctl status httpd
+
+# Check Apache error logs
+sudo tail -f /var/log/httpd/error_log
+
+# Check network connectivity
+curl -I http://localhost
+
+# Check open ports
+sudo netstat -tlnp
+
+# Check disk space
+df -h
+
+# Check system logs
+sudo tail -f /var/log/messages</pre>
+        </div>
+
+        <h2>Common SSH Issues</h2>
+        <div class="demo-box">
+            <h3>SSH Connection Problems</h3>
+            <ul>
+                <li><strong>Wrong key file:</strong> Ensure you're using the correct .pem file</li>
+                <li><strong>Key permissions:</strong> Key file must have 400 permissions</li>
+                <li><strong>Wrong username:</strong> Use 'ec2-user' for Amazon Linux</li>
+                <li><strong>Security group:</strong> Ensure port 22 is open</li>
+                <li><strong>Public IP:</strong> Use the current public IP address</li>
+            </ul>
+        </div>
+
+        <h2>Web Server Issues</h2>
+        <div class="demo-box">
+            <h3>Apache HTTP Server Problems</h3>
+            <ul>
+                <li><strong>Service not running:</strong> sudo systemctl start httpd</li>
+                <li><strong>Port not accessible:</strong> Check security group rules</li>
+                <li><strong>File permissions:</strong> Ensure proper ownership (apache:apache)</li>
+                <li><strong>Configuration errors:</strong> Check /var/log/httpd/error_log</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Page 14: Next Steps -->
+    <div class="page" id="next-steps">
+        <h1>Next Steps & Resources</h1>
+        
+        <h2>Advanced AWS Topics to Explore</h2>
+        <div class="two-column">
+            <div class="column">
+                <h3>🚀 Scaling & High Availability</h3>
+                <ul>
+                    <li><strong>Auto Scaling Groups:</strong> Automatically scale instances</li>
+                    <li><strong>Elastic Load Balancers:</strong> Distribute traffic</li>
+                    <li><strong>Multi-AZ Deployments:</strong> High availability</li>
+                    <li><strong>CloudFormation:</strong> Infrastructure as Code</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>🔧 DevOps & Automation</h3>
+                <ul>
+                    <li><strong>AWS CodePipeline:</strong> CI/CD pipelines</li>
+                    <li><strong>Docker on EC2:</strong> Containerized applications</li>
+                    <li><strong>AWS Systems Manager:</strong> Instance management</li>
+                    <li><strong>Terraform:</strong> Multi-cloud infrastructure</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Additional AWS Services</h2>
+        <div class="two-column">
+            <div class="column">
+                <h3>Storage & Database</h3>
+                <ul>
+                    <li><strong>Amazon S3:</strong> Object storage for static assets</li>
+                    <li><strong>Amazon RDS:</strong> Managed relational databases</li>
+                    <li><strong>Amazon EFS:</strong> Elastic file system</li>
+                    <li><strong>DynamoDB:</strong> NoSQL database service</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3>Networking & Security</h3>
+                <ul>
+                    <li><strong>Amazon VPC:</strong> Virtual private cloud</li>
+                    <li><strong>AWS Certificate Manager:</strong> SSL/TLS certificates</li>
+                    <li><strong>Amazon Route 53:</strong> DNS management</li>
+                    <li><strong>AWS WAF:</strong> Web application firewall</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Learning Resources</h2>
+        <div class="demo-box">
+            <h3>📚 Official AWS Resources</h3>
+            <ul>
+                <li><strong>AWS Documentation:</strong> https://docs.aws.amazon.com/</li>
+                <li><strong>AWS Training:</strong> https://aws.amazon.com/training/</li>
+                <li><strong>AWS Free Tier:</strong> https://aws.amazon.com/free/</li>
+                <li><strong>AWS Pricing Calculator:</strong> https://calculator.aws/</li>
+                <li><strong>AWS Well-Architected:</strong> https://aws.amazon.com/architecture/well-architected/</li>
+            </ul>
+        </div>
+
+        <h2>Certification Path</h2>
+        <p>Consider pursuing AWS certifications to validate your skills:</p>
+        <ol>
+            <li><strong>AWS Cloud Practitioner:</strong> Foundational understanding</li>
+            <li><strong>AWS Solutions Architect Associate:</strong> Design distributed systems</li>
+            <li><strong>AWS SysOps Administrator:</strong> Operations and deployment</li>
+            <li><strong>AWS Developer Associate:</strong> Application development</li>
+        </ol>
+
+        <div class="highlight">
+            <h3>🎉 Congratulations!</h3>
+            <p>You've successfully learned how to deploy web servers on AWS EC2 using both automated User Data scripts and manual configuration. You now have the foundation to build more complex cloud applications and infrastructure!</p>
+        </div>
+
+        <h2>Practice Exercises</h2>
+        <ul>
+            <li>Deploy a web server with a custom domain name using Route 53</li>
+            <li>Set up HTTPS using AWS Certificate Manager</li>
+            <li>Create an Auto Scaling Group with multiple instances</li>
+            <li>Implement a CI/CD pipeline for automatic deployments</li>
+            <li>Set up monitoring and alerting with CloudWatch</li>
+        </ul>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cpu-hog
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: cpu-hog
+  template:
+    metadata:
+      labels:
+        app: cpu-hog
+    spec:
+      tolerations:
+        - operator: "Exists"
+      containers:
+        - name: hog
+          image: alexeiled/stress-ng:latest
+          args: ["--cpu", "8", "--timeout", "0"] # 4 workers, run until pod is deleted
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "4"
+              memory: "256Mi"
+

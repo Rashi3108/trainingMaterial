@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harness Platform Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .slide:last-child {
+            page-break-after: auto;
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .slide-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide .slide-title {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .slide-subtitle {
+            font-size: 1.5rem;
+            color: #e5e7eb;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f8fafc;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .lab-section {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .lab-section h3 {
+            color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 20px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0ea5e9;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .slide {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title Slide -->
+<div class="slide title-slide">
+    <div class="content">
+        <h1 class="slide-title">Harness Platform</h1>
+        <p class="slide-subtitle">Comprehensive Overview of Modern CI/CD and Platform Engineering</p>
+    </div>
+    <div class="slide-footer" style="color: #e5e7eb;">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 2: Introduction to Harness -->
+<div class="slide">
+    <div class="content">
+        <h2>Introduction to Harness</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Harness</strong> is a comprehensive Software Delivery Platform that provides end-to-end automation for building, testing, deploying, and managing applications across the entire software development lifecycle.</p>
+        </div>
+
+        <h3>Key Characteristics</h3>
+        <ul>
+            <li><strong>Cloud-Native Platform:</strong> Built for modern, distributed applications and infrastructure</li>
+            <li><strong>AI-Powered:</strong> Leverages machine learning for intelligent automation and decision-making</li>
+            <li><strong>Enterprise-Grade:</strong> Designed for large-scale organizations with complex deployment requirements</li>
+            <li><strong>Developer-Centric:</strong> Focuses on improving developer experience and productivity</li>
+        </ul>
+
+        <h3>Platform Philosophy</h3>
+        <p>Harness aims to eliminate the complexity and manual effort traditionally associated with software delivery by providing:</p>
+        <ul>
+            <li>Automated pipelines with intelligent rollback capabilities</li>
+            <li>Real-time monitoring and verification</li>
+            <li>Risk-based deployment strategies</li>
+            <li>Comprehensive observability and governance</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 3: What is Harness? -->
+<div class="slide">
+    <div class="content">
+        <h2>What is Harness?</h2>
+        
+        <p>Harness is a unified platform that transforms how organizations approach software delivery, providing a complete suite of tools for modern DevOps practices.</p>
+
+        <h3>Core Value Proposition</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Automation First</h4>
+                <p>Eliminates manual processes through intelligent automation across the entire delivery pipeline.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Risk Reduction</h4>
+                <p>Advanced verification and rollback mechanisms ensure safe and reliable deployments.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Scalability</h4>
+                <p>Handles deployments from small applications to enterprise-scale systems with thousands of services.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Observability</h4>
+                <p>Comprehensive insights into deployment performance, system health, and business metrics.</p>
+            </div>
+        </div>
+
+        <h3>Target Use Cases</h3>
+        <ul>
+            <li>Organizations transitioning to cloud-native architectures</li>
+            <li>Teams requiring advanced deployment strategies (Blue-Green, Canary, Rolling)</li>
+            <li>Companies seeking to reduce deployment failures and mean time to recovery</li>
+            <li>Enterprises needing governance, compliance, and audit capabilities</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 4: Role in Continuous Delivery -->
+<div class="slide">
+    <div class="content">
+        <h2>Harness Role in Continuous Delivery</h2>
+        
+        <h3>Continuous Delivery Transformation</h3>
+        <p>Harness revolutionizes traditional CD practices by introducing intelligence and automation at every stage of the delivery process.</p>
+
+        <div class="highlight-box">
+            <h4>Traditional CD Challenges Addressed:</h4>
+            <ul>
+                <li>Manual deployment processes prone to human error</li>
+                <li>Lack of automated verification and testing</li>
+                <li>Inconsistent deployment practices across teams</li>
+                <li>Limited visibility into deployment health and performance</li>
+                <li>Slow rollback and recovery procedures</li>
+            </ul>
+        </div>
+
+        <h3>Harness CD Capabilities</h3>
+        <ul>
+            <li><strong>Intelligent Pipelines:</strong> AI-powered pipeline creation and optimization</li>
+            <li><strong>Automated Verification:</strong> Continuous monitoring during deployments with automatic rollback</li>
+            <li><strong>Progressive Delivery:</strong> Advanced deployment patterns with traffic splitting and gradual rollouts</li>
+            <li><strong>Infrastructure Abstraction:</strong> Deploy to any cloud, Kubernetes, or traditional infrastructure</li>
+            <li><strong>Governance and Compliance:</strong> Built-in approval workflows, audit trails, and policy enforcement</li>
+        </ul>
+
+        <h3>CD Pipeline Enhancement</h3>
+        <p>Harness enhances traditional CI/CD pipelines by providing:</p>
+        <ul>
+            <li>Real-time health verification during deployments</li>
+            <li>Automatic anomaly detection and response</li>
+            <li>Integration with monitoring and observability tools</li>
+            <li>Self-healing deployment capabilities</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 5: Harness vs. Jenkins -->
+<div class="slide">
+    <div class="content">
+        <h2>Harness vs. Jenkins Comparison</h2>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Harness</th>
+                    <th>Jenkins</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Platform Type</strong></td>
+                    <td>Cloud-native SaaS/On-premise</td>
+                    <td>Self-hosted, server-based</td>
+                </tr>
+                <tr>
+                    <td><strong>Setup & Maintenance</strong></td>
+                    <td>Minimal setup, managed infrastructure</td>
+                    <td>Requires installation, configuration, and ongoing maintenance</td>
+                </tr>
+                <tr>
+                    <td><strong>Pipeline Creation</strong></td>
+                    <td>Visual pipeline builder with AI assistance</td>
+                    <td>Code-based (Jenkinsfile) or UI configuration</td>
+                </tr>
+                <tr>
+                    <td><strong>Deployment Verification</strong></td>
+                    <td>Built-in automated verification and rollback</td>
+                    <td>Requires custom scripting and external tools</td>
+                </tr>
+                <tr>
+                    <td><strong>Scalability</strong></td>
+                    <td>Auto-scaling with managed infrastructure</td>
+                    <td>Manual scaling with master-slave architecture</td>
+                </tr>
+                <tr>
+                    <td><strong>Security</strong></td>
+                    <td>Enterprise-grade security, built-in secrets management</td>
+                    <td>Requires additional configuration and plugins</td>
+                </tr>
+                <tr>
+                    <td><strong>Monitoring</strong></td>
+                    <td>Integrated monitoring and analytics</td>
+                    <td>Requires external monitoring solutions</td>
+                </tr>
+                <tr>
+                    <td><strong>Cost Model</strong></td>
+                    <td>Subscription-based pricing</td>
+                    <td>Open source (infrastructure and maintenance costs)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>When to Choose Harness</h3>
+        <ul>
+            <li>Organizations prioritizing speed and reduced operational overhead</li>
+            <li>Teams requiring advanced deployment strategies and automated verification</li>
+            <li>Companies needing enterprise-grade governance and compliance features</li>
+            <li>Organizations with limited DevOps engineering resources for tool maintenance</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 6: Modules Overview -->
+<div class="slide">
+    <div class="content">
+        <h2>Harness Modules Overview</h2>
+        
+        <p>Harness provides a comprehensive suite of modules addressing different aspects of the software delivery lifecycle.</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Continuous Integration</h4>
+                <p>Build and test automation with intelligent caching, parallel execution, and comprehensive reporting.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Continuous Delivery</h4>
+                <p>Advanced deployment orchestration with automated verification, rollback, and progressive delivery patterns.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Feature Flags</h4>
+                <p>Runtime feature control enabling safe feature releases and A/B testing capabilities.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Chaos Engineering</h4>
+                <p>Proactive resilience testing through controlled failure injection and system validation.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Cloud Cost Management</h4>
+                <p>Comprehensive cost visibility, optimization recommendations, and automated cost governance.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Security Testing Orchestration</h4>
+                <p>Automated security scanning integration throughout the development and deployment pipeline.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Service Reliability Management</h4>
+                <p>SLO management, error budgets, and automated incident response capabilities.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Internal Developer Portal</h4>
+                <p>Centralized developer experience with service catalogs, documentation, and self-service capabilities.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 7: Continuous Delivery Module -->
+<div class="slide">
+    <div class="content">
+        <h2>Continuous Delivery Module Deep Dive</h2>
+        
+        <h3>Core Capabilities</h3>
+        <div class="highlight-box">
+            <p>The Continuous Delivery module is the flagship offering of Harness, providing sophisticated deployment orchestration with built-in intelligence and safety mechanisms.</p>
+        </div>
+
+        <h3>Key Features</h3>
+        <ul>
+            <li><strong>Pipeline Orchestration:</strong> Visual pipeline designer with complex workflow support</li>
+            <li><strong>Deployment Strategies:</strong> Blue-Green, Canary, Rolling, and custom deployment patterns</li>
+            <li><strong>Automated Verification:</strong> Real-time health monitoring during deployments</li>
+            <li><strong>Rollback Automation:</strong> Intelligent rollback triggers based on performance metrics</li>
+            <li><strong>Infrastructure Provisioning:</strong> Terraform, CloudFormation, and Kubernetes integration</li>
+            <li><strong>GitOps Support:</strong> Git-based configuration management and synchronization</li>
+        </ul>
+
+        <h3>Deployment Verification Process</h3>
+        <ol>
+            <li><strong>Pre-deployment:</strong> Infrastructure and dependency validation</li>
+            <li><strong>Deployment:</strong> Progressive rollout with traffic management</li>
+            <li><strong>Verification:</strong> Automated health checks, performance monitoring, and business metric validation</li>
+            <li><strong>Decision:</strong> AI-powered analysis determines deployment success or triggers rollback</li>
+            <li><strong>Post-deployment:</strong> Continuous monitoring and optimization recommendations</li>
+        </ol>
+
+        <h3>Integration Ecosystem</h3>
+        <p>Seamless integration with monitoring tools (Datadog, New Relic, AppDynamics), cloud platforms (AWS, Azure, GCP), and container orchestration systems (Kubernetes, ECS, AKS).</p>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 8: Feature Flags Module -->
+<div class="slide">
+    <div class="content">
+        <h2>Feature Flags Module</h2>
+        
+        <h3>Feature Flag Fundamentals</h3>
+        <p>Feature flags enable teams to decouple code deployment from feature releases, providing runtime control over application behavior without additional deployments.</p>
+
+        <h3>Core Capabilities</h3>
+        <ul>
+            <li><strong>Flag Management:</strong> Centralized flag configuration with real-time updates</li>
+            <li><strong>Targeting:</strong> Advanced user segmentation and percentage-based rollouts</li>
+            <li><strong>A/B Testing:</strong> Experimentation framework with statistical analysis</li>
+            <li><strong>Safety Controls:</strong> Flag dependencies, prerequisites, and automated kill switches</li>
+            <li><strong>Observability:</strong> Flag usage analytics and performance impact measurement</li>
+        </ul>
+
+        <h3>Use Cases</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Progressive Rollouts</h4>
+                <p>Gradual feature introduction to minimize risk and gather user feedback.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Emergency Controls</h4>
+                <p>Instant feature disabling capability for rapid incident response.</p>
+            </div>
+            <div class="feature-card">
+                <h4>User Experience Testing</h4>
+                <p>A/B testing and multivariate experimentation for optimization.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Operational Toggles</h4>
+                <p>Runtime configuration changes for performance optimization and system tuning.</p>
+            </div>
+        </div>
+
+        <h3>Integration Benefits</h3>
+        <p>Seamlessly integrates with the Continuous Delivery module to enable feature-flag-driven deployments, reducing deployment risk while maintaining development velocity.</p>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 9: Chaos Engineering Module -->
+<div class="slide">
+    <div class="content">
+        <h2>Chaos Engineering Module</h2>
+        
+        <h3>Chaos Engineering Principles</h3>
+        <div class="highlight-box">
+            <p>Chaos Engineering is the practice of intentionally injecting failures into systems to identify weaknesses and improve overall resilience before issues occur in production.</p>
+        </div>
+
+        <h3>Harness Chaos Engineering Features</h3>
+        <ul>
+            <li><strong>Experiment Library:</strong> Pre-built chaos experiments for common failure scenarios</li>
+            <li><strong>Hypothesis Testing:</strong> Define success criteria and automatically validate system behavior</li>
+            <li><strong>Progressive Chaos:</strong> Gradual increase in experiment complexity and scope</li>
+            <li><strong>Blast Radius Control:</strong> Precise targeting and containment of chaos experiments</li>
+            <li><strong>Observability Integration:</strong> Real-time monitoring during experiments with automatic abort mechanisms</li>
+            <li><strong>Compliance and Governance:</strong> Audit trails, approval workflows, and scheduling controls</li>
+        </ul>
+
+        <h3>Experiment Types</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Infrastructure Chaos</h4>
+                <p>CPU stress, memory exhaustion, disk I/O saturation, and network partitioning.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Application Chaos</h4>
+                <p>Service failures, latency injection, and dependency unavailability scenarios.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Platform Chaos</h4>
+                <p>Kubernetes pod failures, container crashes, and node unavailability testing.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Cloud Provider Chaos</h4>
+                <p>Regional outages, service degradation, and multi-zone failure simulation.</p>
+            </div>
+        </div>
+
+        <h3>Business Value</h3>
+        <p>Proactive identification of system weaknesses, improved incident response capabilities, increased confidence in system resilience, and reduced mean time to recovery (MTTR).</p>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 10: Lab Environment Setup -->
+<div class="slide">
+    <div class="content">
+        <h2>Laboratory Exercise: Environment Setup</h2>
+        
+        <div class="lab-section">
+            <h3>Harness Platform Access Options</h3>
+            
+            <h4>Option 1: Harness SaaS Platform</h4>
+            <ol class="step-list">
+                <li>Navigate to <code>https://app.harness.io</code> in your web browser</li>
+                <li>Click "Start Free" to create a new account or "Sign In" if you have existing credentials</li>
+                <li>Complete the registration process with your professional email address</li>
+                <li>Verify your email address through the confirmation link</li>
+                <li>Complete the initial setup wizard including organization and project configuration</li>
+            </ol>
+
+            <h4>Option 2: Harness Community Edition (Self-Hosted)</h4>
+            <div class="code-block">
+# Prerequisites: Docker and Docker Compose installed<br>
+# Download Harness Community Edition<br>
+wget https://github.com/harness/harness-cd-community/releases/latest/download/harness-cd-community.tar.gz<br><br>
+
+# Extract and setup<br>
+tar -xzf harness-cd-community.tar.gz<br>
+cd harness-cd-community<br><br>
+
+# Start Harness services<br>
+docker-compose up -d
+            </div>
+
+            <h3>System Requirements</h3>
+            <ul>
+                <li><strong>Browser:</strong> Chrome 90+, Firefox 88+, Safari 14+, Edge 90+</li>
+                <li><strong>Network:</strong> Stable internet connection for SaaS platform</li>
+                <li><strong>Local Setup (Community Edition):</strong> 8GB RAM minimum, 16GB recommended</li>
+                <li><strong>Storage:</strong> 50GB available disk space for local installations</li>
+            </ul>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 11: Hands-on Navigation -->
+<div class="slide">
+    <div class="content">
+        <h2>Hands-on: Navigate Harness UI</h2>
+        
+        <div class="lab-section">
+            <h3>UI Navigation Exercise</h3>
+            
+            <ol class="step-list">
+                <li><strong>Dashboard Overview:</strong> Familiarize yourself with the main dashboard, noting key metrics, recent activities, and quick access panels</li>
+                
+                <li><strong>Navigation Menu:</strong> Explore the left navigation menu structure:
+                    <ul>
+                        <li>Projects and Organizations</li>
+                        <li>Pipelines and Services</li>
+                        <li>Infrastructure and Environments</li>
+                        <li>Feature Flags and Chaos Engineering</li>
+                        <li>Settings and Administration</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Account Settings:</strong> Access account settings to understand user management, authentication options, and billing information</li>
+                
+                <li><strong>Help and Documentation:</strong> Locate and explore the built-in help system, documentation links, and support resources</li>
+                
+                <li><strong>Search Functionality:</strong> Test the global search feature to find projects, pipelines, and services efficiently</li>
+                
+                <li><strong>Notification Center:</strong> Check the notification panel for system updates, deployment status, and important alerts</li>
+            </ol>
+
+            <h3>Key UI Components</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Command Palette</h4>
+                    <p>Quick access to all platform functions using Ctrl+K (Cmd+K on Mac)</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Breadcrumb Navigation</h4>
+                    <p>Hierarchical navigation showing current location within the platform</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Context Switching</h4>
+                    <p>Easy switching between different accounts, organizations, and projects</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 12: Create Basic Project -->
+<div class="slide">
+    <div class="content">
+        <h2>Hands-on: Create Basic Project</h2>
+        
+        <div class="lab-section">
+            <h3>Project Creation Workflow</h3>
+            
+            <ol class="step-list">
+                <li><strong>Access Project Creation:</strong> Click on "Projects" in the main navigation, then select "New Project" button</li>
+                
+                <li><strong>Project Configuration:</strong>
+                    <ul>
+                        <li>Name: "Development-Workflow-Demo"</li>
+                        <li>Identifier: Auto-generated or custom</li>
+                        <li>Description: "Demonstration project for learning Harness platform capabilities"</li>
+                        <li>Color/Tags: Optional customization for organization</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Module Selection:</strong> Choose the modules you want to enable for this project:
+                    <ul>
+                        <li>Continuous Integration</li>
+                        <li>Continuous Delivery</li>
+                        <li>Feature Flags</li>
+                        <li>Chaos Engineering (if available)</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Organization Assignment:</strong> Assign the project to the appropriate organization (default or custom)</li>
+                
+                <li><strong>Collaboration Setup:</strong> Configure initial team members and their roles:
+                    <ul>
+                        <li>Project Admin: Full project management capabilities</li>
+                        <li>Pipeline Operator: Execute and manage pipelines</li>
+                        <li>Viewer: Read-only access to project resources</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Project Validation:</strong> Review project settings and confirm creation</li>
+            </ol>
+
+            <h3>Post-Creation Verification</h3>
+            <ul>
+                <li>Verify project appears in the projects list</li>
+                <li>Access the project dashboard and explore available options</li>
+                <li>Check that selected modules are properly enabled</li>
+                <li>Test navigation between project sections</li>
+            </ul>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 13: Sample Pipeline Creation -->
+<div class="slide">
+    <div class="content">
+        <h2>Sample Pipeline: Spring Boot Hello World</h2>
+        
+        <div class="lab-section">
+            <h3>Pipeline Overview</h3>
+            <p>We'll create a complete CI/CD pipeline for a Spring Boot "Hello World" application demonstrating the full Harness workflow from code to deployment.</p>
+            
+            <h3>Application Structure</h3>
+            <div class="code-block">
+spring-boot-hello/<br>
+├── src/main/java/com/example/demo/<br>
+│   └── HelloWorldController.java<br>
+├── src/main/resources/<br>
+│   └── application.properties<br>
+├── Dockerfile<br>
+├── k8s-manifest.yaml<br>
+└── pom.xml
+            </div>
+
+            <h3>Sample Spring Boot Controller</h3>
+            <div class="code-block">
+@RestController<br>
+public class HelloWorldController {<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;@GetMapping("/hello")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public ResponseEntity&lt;String&gt; hello() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.ok("Hello World from Harness!");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;@GetMapping("/health")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public ResponseEntity&lt;String&gt; health() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.ok("Application is healthy");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 14: Pipeline Configuration -->
+<div class="slide">
+    <div class="content">
+        <h2>Pipeline Configuration Steps</h2>
+        
+        <div class="lab-section">
+            <h3>Step 1: Create Pipeline Infrastructure</h3>
+            <ol class="step-list">
+                <li><strong>Source Code Repository:</strong> Connect to GitHub/GitLab repository containing the Spring Boot application</li>
+                <li><strong>Build Infrastructure:</strong> Configure Harness CI with Java 17 and Maven build environment</li>
+                <li><strong>Container Registry:</strong> Set up Docker Hub or AWS ECR for storing application images</li>
+                <li><strong>Target Environment:</strong> Configure Kubernetes cluster (local minikube or cloud-based)</li>
+            </ol>
+
+            <h3>Step 2: CI Pipeline Configuration</h3>
+            <div class="code-block">
+# Build Stage Commands<br>
+mvn clean compile<br>
+mvn test<br>
+mvn package -DskipTests<br><br>
+
+# Docker Build<br>
+docker build -t spring-boot-hello:${HARNESS_BUILD_ID} .<br>
+docker push your-registry/spring-boot-hello:${HARNESS_BUILD_ID}
+            </div>
+
+            <h3>Step 3: Dockerfile Configuration</h3>
+            <div class="code-block">
+FROM openjdk:17-jre-slim<br>
+WORKDIR /app<br>
+COPY target/spring-boot-hello-1.0.jar app.jar<br>
+EXPOSE 8080<br>
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \<br>
+&nbsp;&nbsp;CMD curl -f http://localhost:8080/health || exit 1<br>
+ENTRYPOINT ["java", "-jar", "app.jar"]
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 15: Deployment Configuration -->
+<div class="slide">
+    <div class="content">
+        <h2>Deployment Configuration</h2>
+        
+        <div class="lab-section">
+            <h3>Kubernetes Manifest</h3>
+            <div class="code-block">
+apiVersion: apps/v1<br>
+kind: Deployment<br>
+metadata:<br>
+&nbsp;&nbsp;name: spring-boot-hello<br>
+spec:<br>
+&nbsp;&nbsp;replicas: 3<br>
+&nbsp;&nbsp;selector:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;matchLabels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: spring-boot-hello<br>
+&nbsp;&nbsp;template:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;metadata:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app: spring-boot-hello<br>
+&nbsp;&nbsp;&nbsp;&nbsp;spec:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: app<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: &lt;+artifact.image&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- containerPort: 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;livenessProbe:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;httpGet:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path: /health<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;port: 8080<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialDelaySeconds: 30<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;periodSeconds: 10
+            </div>
+
+            <h3>CD Pipeline Stages</h3>
+            <ol class="step-list">
+                <li><strong>Artifact Source:</strong> Pull the Docker image built in CI stage</li>
+                <li><strong>Environment Setup:</strong> Deploy to Development environment first</li>
+                <li><strong>Health Verification:</strong> Automated health checks using /health endpoint</li>
+                <li><strong>Canary Deployment:</strong> 25% traffic to new version, monitor for 5 minutes</li>
+                <li><strong>Production Rollout:</strong> Full deployment after successful verification</li>
+            </ol>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 16: Pipeline Testing and Verification -->
+<div class="slide">
+    <div class="content">
+        <h2>Pipeline Testing and Verification</h2>
+        
+        <div class="lab-section">
+            <h3>Verification Configuration</h3>
+            
+            <h4>Health Check Verification</h4>
+            <div class="code-block">
+# Harness Health Check Configuration<br>
+Verification Type: HTTP<br>
+URL: http://&lt;service-url&gt;/health<br>
+Method: GET<br>
+Expected Response Code: 200<br>
+Expected Response Body: "Application is healthy"<br>
+Timeout: 30 seconds<br>
+Retry Attempts: 3
+            </div>
+
+            <h4>Performance Verification (Optional)</h4>
+            <div class="code-block">
+# Load Testing with Harness<br>
+curl -X GET "http://&lt;service-url&gt;/hello" \<br>
+&nbsp;&nbsp;-H "accept: application/json" \<br>
+&nbsp;&nbsp;--connect-timeout 5 \<br>
+&nbsp;&nbsp;--max-time 10
+            </div>
+
+            <h3>Pipeline Execution Flow</h3>
+            <ol class="step-list">
+                <li><strong>Trigger:</strong> Git push to main branch triggers the pipeline automatically</li>
+                <li><strong>Build:</strong> Maven build, test execution, and Docker image creation</li>
+                <li><strong>Security Scan:</strong> Container vulnerability scanning (optional)</li>
+                <li><strong>Deploy to Dev:</strong> Automatic deployment to development environment</li>
+                <li><strong>Verification:</strong> Automated health checks and basic functionality tests</li>
+                <li><strong>Approval Gate:</strong> Manual approval for production deployment</li>
+                <li><strong>Production Deploy:</strong> Canary deployment with traffic splitting</li>
+                <li><strong>Monitor:</strong> Real-time monitoring and automatic rollback if issues detected</li>
+            </ol>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 17: Hands-on Pipeline Creation -->
+<div class="slide">
+    <div class="content">
+        <h2>Hands-on: Create the Spring Boot Pipeline</h2>
+        
+        <div class="lab-section">
+            <h3>Practical Exercise</h3>
+            
+            <ol class="step-list">
+                <li><strong>Repository Setup:</strong>
+                    <ul>
+                        <li>Fork the sample Spring Boot repository: <code>https://github.com/harness-community/spring-boot-hello-world</code></li>
+                        <li>Clone to your local environment for code review</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Create CI Pipeline:</strong>
+                    <ul>
+                        <li>Navigate to Pipelines → Create New Pipeline</li>
+                        <li>Select "Build" pipeline type</li>
+                        <li>Configure Git connector to your forked repository</li>
+                        <li>Add Build stage with Maven and Docker steps</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Configure Build Steps:</strong>
+                    <ul>
+                        <li>Add "Run Tests" step with Maven test command</li>
+                        <li>Add "Build JAR" step with Maven package command</li>
+                        <li>Add "Build and Push Docker Image" step</li>
+                        <li>Configure Docker registry credentials</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Create CD Pipeline:</strong>
+                    <ul>
+                        <li>Create new Deploy pipeline</li>
+                        <li>Define Service with Docker artifact source</li>
+                        <li>Configure target Kubernetes environment</li>
+                        <li>Add deployment strategy (Rolling or Canary)</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Test Pipeline Execution:</strong>
+                    <ul>
+                        <li>Execute the pipeline manually</li>
+                        <li>Monitor build and deployment logs</li>
+                        <li>Verify application accessibility via /hello endpoint</li>
+                        <li>Test rollback functionality by introducing a failure</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 18: Summary and Next Steps -->
+<div class="slide">
+    <div class="content">
+        <h2>Session Summary and Next Steps</h2>
+        
+        <h3>Key Concepts Covered</h3>
+        <div class="highlight-box">
+            <ul>
+                <li>Harness as a comprehensive software delivery platform</li>
+                <li>Role and advantages in modern continuous delivery practices</li>
+                <li>Comparative analysis with traditional tools like Jenkins</li>
+                <li>Overview of integrated modules for complete DevOps lifecycle</li>
+                <li>Practical experience with platform navigation and project setup</li>
+            </ul>
+        </div>
+
+        <h3>Practical Skills Acquired</h3>
+        <ul>
+            <li>Platform navigation and user interface familiarity</li>
+            <li>Understanding of project structure and organization</li>
+            <li>Module selection and configuration basics</li>
+            <li>Access to development environment for continued learning</li>
+        </ul>
+
+        <h3>Recommended Next Steps</h3>
+        <ol>
+            <li><strong>Pipeline Creation:</strong> Build your first CI/CD pipeline using the project created</li>
+            <li><strong>Service Configuration:</strong> Define services and deployment environments</li>
+            <li><strong>Integration Setup:</strong> Connect to version control systems and cloud providers</li>
+            <li><strong>Advanced Features:</strong> Explore feature flags, chaos engineering, and advanced deployment strategies</li>
+            <li><strong>Best Practices:</strong> Study enterprise patterns and governance implementation</li>
+        </ol>
+
+        <h3>Additional Resources</h3>
+        <ul>
+            <li>Harness University: Comprehensive learning paths and certifications</li>
+            <li>Documentation: Complete technical reference and tutorials</li>
+            <li>Community Forums: Peer support and knowledge sharing</li>
+            <li>API Reference: Integration and automation capabilities</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+terrfaorm init //to initialise the terrfaorm and download all the required providers
+terraform plan  // to see what all resources will be created, if everything looks okay proceed with terraform apply
+terraform apply // to create the resources
+terraform destroy // to destroy the resources
+
+aws eks --region us-east-1 update-kubeconfig --name public-eks

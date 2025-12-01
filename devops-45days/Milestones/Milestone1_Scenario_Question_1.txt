@@ -1,0 +1,137 @@
+Batch 4 - Milestone 1
+SCENARIO-BASED QUESTION 1: CI/CD Pipeline Failure & Automated Recovery
+================================================================================
+
+SCENARIO DESCRIPTION:
+You are a DevOps engineer at TechStart Inc., a growing startup that deploys their web application multiple times per day using Jenkins CI/CD pipeline. The company follows the DevOps principle of "automate everything" and has been successfully deploying to production without issues.
+
+However, this morning the development team reported that their last 3 deployments have failed, and they're unable to identify the root cause. The Jenkins pipeline shows the following pattern:
+
+- Build Stage: ✅ SUCCESS
+- Test Stage: ❌ FAILED  
+- Deploy Stage: ⏸️ SKIPPED
+
+Upon investigation, you discover:
+1. The automated tests are failing because the test database is running out of disk space
+2. Log files in /var/log/app/ are consuming 15GB of space (normal is 2GB)
+3. The test environment hasn't been cleaned up in weeks
+4. Manual cleanup takes 2 hours each time this happens
+5. This is the 4th time this month the same issue has occurred
+
+BUSINESS IMPACT:
+- Development team cannot deploy new features
+- Customer-reported bugs cannot be fixed quickly
+- The company's promise of "fast deployment cycles" is being compromised
+- Manual intervention is required every few days
+
+================================================================================
+
+YOUR TASKS:
+
+PART A: IMMEDIATE PROBLEM SOLVING (25 points)
+1. Identify the root cause of the CI/CD pipeline failure
+2. List the immediate steps you would take to restore the pipeline
+3. Explain how this situation violates DevOps principles
+
+PART B: SHELL SCRIPTING SOLUTION (35 points)
+Create a shell script called "cleanup_test_env.sh" that:
+1. Checks if the /var/log/app directory exists
+2. Lists all .log files in the directory and shows their sizes
+3. Finds log files larger than 100MB
+4. Deletes log files older than 7 days
+5. Displays a summary of what was cleaned up
+6. Creates a simple log entry of the cleanup activity
+
+PART C: CI/CD INTEGRATION (25 points)
+1. Explain how you would integrate this script into the Jenkins pipeline
+2. Suggest simple monitoring to prevent this issue in the future
+3. Describe how this solution follows Infrastructure as Code principles
+
+PART D: DEVOPS CULTURE APPLICATION (15 points)
+1. How does this scenario demonstrate the importance of "automation over manual processes"?
+2. What DevOps cultural changes would you recommend to prevent similar issues?
+3. How would you measure the success of your solution?
+
+================================================================================
+
+SOLUTION TEMPLATE:
+
+PART A: IMMEDIATE PROBLEM SOLVING
+Root Cause Analysis:
+[Your analysis here]
+
+Immediate Steps:
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+DevOps Principle Violations:
+[Your explanation here]
+
+PART B: SIMPLE SHELL SCRIPT SOLUTION
+```bash
+#!/bin/bash
+# cleanup_test_env.sh - Simple test environment cleanup script
+
+# [Your complete script here]
+```
+
+PART C: CI/CD INTEGRATION
+Jenkins Integration:
+[Your integration plan here]
+
+Simple Monitoring:
+[Your monitoring approach here]
+
+IaC Principles Application:
+[Your explanation here]
+
+PART D: DEVOPS CULTURE APPLICATION
+Automation Importance:
+[Your explanation here]
+
+Cultural Changes:
+[Your recommendations here]
+
+Success Measurement:
+[Your measurement approach here]
+
+================================================================================
+
+EXPECTED SCRIPT OUTPUT:
+
+=== Test Environment Cleanup Started ===
+Date: Mon Jan 15 10:30:00 2024
+
+✓ Found log directory
+✓ Found 8 log files
+✓ Large files (>100MB): app.log (150MB), debug.log (200MB)
+✓ Deleted 3 old files (older than 7 days)
+✓ Freed up 45MB of disk space
+
+=== Cleanup Complete ===
+
+
+================================================================================
+
+HELPFUL COMMANDS FOR YOUR SCRIPT:
+
+File Operations:
+- `ls -lh /var/log/app/*.log` - List log files with sizes
+- `find /var/log/app -name "*.log" -mtime +7` - Find files older than 7 days
+- `du -sh /var/log/app` - Show directory size
+- `date` - Current timestamp
+
+Basic Logic:
+- `if [ -f "filename" ]; then` - Check if file exists
+- `if [ -d "dirname" ]; then` - Check if directory exists
+- `for file in *.log; do` - Loop through log files
+
+Size Checking:
+- `stat -c%s filename` - Get file size in bytes
+- `ls -l filename | awk '{print $5}'` - Extract file size
+
+================================================================================
+
+SUBMISSION FORMAT: Text file with clearly labeled sections
+COLLABORATION: Individual work only

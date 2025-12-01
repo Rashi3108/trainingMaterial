@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Linux & Installation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .slide {
+            background: white;
+            margin: 20px 0;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 500px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-left: 5px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #2980b9;
+            font-size: 1.5em;
+            margin-top: 25px;
+        }
+        ul {
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background: #f39c12;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+        .architecture-diagram {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .layer {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            margin: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .kernel { background: #e74c3c; }
+        .shell { background: #f39c12; }
+        .userspace { background: #27ae60; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Title Slide -->
+        <div class="slide">
+            <h1>Introduction to Linux & Installation</h1>
+            <div style="text-align: center; margin-top: 50px;">
+                <h2 style="border: none; color: #3498db;">Topics Covered</h2>
+                <ul style="list-style: none; font-size: 1.3em;">
+                    <li>✓ Why Linux for DevOps & Cloud</li>
+                    <li>✓ History, Open-source model, Distributions</li>
+                    <li>✓ Architecture: Kernel, Shell, User space</li>
+                    <li>✓ VirtualBox/VMWare & Ubuntu Installation</li>
+                    <li>✓ Basic terminal usage</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- What is Linux -->
+        <div class="slide">
+            <h2>What is Linux?</h2>
+            <h3>🖥️ Operating System Basics</h3>
+            <ul>
+                <li><strong>Operating System (OS)</strong> - Software that manages computer hardware and software resources</li>
+                <li><strong>Examples</strong> - Windows, macOS, Linux, Android, iOS</li>
+                <li><strong>Linux</strong> - Free, open-source Unix-like operating system</li>
+            </ul>
+
+            <h3>🔄 How OS Works</h3>
+            <ul>
+                <li><span class="highlight">Hardware Management</span> - Controls CPU, memory, storage, network</li>
+                <li><span class="highlight">Process Management</span> - Runs multiple programs simultaneously</li>
+                <li><span class="highlight">File System</span> - Organizes and stores data</li>
+                <li><span class="highlight">User Interface</span> - GUI (graphical) or CLI (command-line)</li>
+            </ul>
+
+            <h3>🆚 Linux vs Windows/macOS</h3>
+            <ul>
+                <li><strong>Cost</strong> - Linux: Free | Windows/macOS: Paid licenses</li>
+                <li><strong>Customization</strong> - Linux: Highly customizable | Others: Limited</li>
+                <li><strong>Security</strong> - Linux: More secure by design | Others: More targeted by malware</li>
+                <li><strong>Learning Curve</strong> - Linux: Steeper initially | Others: More user-friendly</li>
+            </ul>
+        </div>
+
+        <!-- Understanding Open Source -->
+        <div class="slide">
+            <h2>Understanding Open Source</h2>
+            <h3>🔓 What is Open Source?</h3>
+            <ul>
+                <li><strong>Source Code</strong> - The human-readable instructions that make software work</li>
+                <li><strong>Open Source</strong> - Source code is freely available to view, modify, and distribute</li>
+                <li><strong>Proprietary</strong> - Source code is hidden and owned by a company</li>
+            </ul>
+
+            <h3>🏗️ How Open Source Works</h3>
+            <ul>
+                <li><span class="highlight">Community Development</span> - Thousands of developers worldwide contribute</li>
+                <li><span class="highlight">Peer Review</span> - Code is reviewed by many experts</li>
+                <li><span class="highlight">Rapid Bug Fixes</span> - Issues are found and fixed quickly</li>
+                <li><span class="highlight">No Vendor Lock-in</span> - You're not dependent on one company</li>
+            </ul>
+
+            <h3>💡 Real-world Examples</h3>
+            <ul>
+                <li><strong>Web Browsers</strong> - Firefox, Chromium (base of Chrome)</li>
+                <li><strong>Programming</strong> - Python, JavaScript, Git</li>
+                <li><strong>Databases</strong> - MySQL, PostgreSQL, MongoDB</li>
+                <li><strong>Cloud</strong> - Docker, Kubernetes, Apache, Nginx</li>
+            </ul>
+        </div>
+
+        <!-- Why Linux for DevOps & Cloud -->
+        <div class="slide">
+            <h2>Why Linux for DevOps & Cloud?</h2>
+            <h3>🚀 DevOps Advantages</h3>
+            <ul>
+                <li><span class="highlight">Automation-friendly</span> - Powerful scripting capabilities</li>
+                <li><span class="highlight">Container-native</span> - Docker, Kubernetes run natively</li>
+                <li><span class="highlight">CI/CD Integration</span> - Jenkins, GitLab CI, GitHub Actions</li>
+                <li><span class="highlight">Configuration Management</span> - Ansible, Puppet, Chef support</li>
+            </ul>
+            
+            <h3>☁️ Cloud Benefits</h3>
+            <ul>
+                <li><span class="highlight">Cost-effective</span> - No licensing fees</li>
+                <li><span class="highlight">Scalability</span> - Lightweight, efficient resource usage</li>
+                <li><span class="highlight">Security</span> - Granular permissions, regular updates</li>
+                <li><span class="highlight">Cloud-native</span> - AWS, Azure, GCP primarily Linux-based</li>
+            </ul>
+        </div>
+
+        <!-- History & Open Source -->
+        <div class="slide">
+            <h2>History & Open-source Model</h2>
+            <h3>📅 Timeline</h3>
+            <ul>
+                <li><strong>1991</strong> - Linus Torvalds creates Linux kernel</li>
+                <li><strong>1992</strong> - Linux becomes GPL licensed</li>
+                <li><strong>1993</strong> - First distributions emerge (Slackware, Debian)</li>
+                <li><strong>2000s</strong> - Enterprise adoption (Red Hat, SUSE)</li>
+                <li><strong>2010s</strong> - Cloud & container revolution</li>
+            </ul>
+
+            <h3>🔓 Open-source Model</h3>
+            <ul>
+                <li><span class="highlight">Free to use</span> - No licensing costs</li>
+                <li><span class="highlight">Source code available</span> - Transparency & customization</li>
+                <li><span class="highlight">Community-driven</span> - Global collaboration</li>
+                <li><span class="highlight">Rapid innovation</span> - Continuous improvements</li>
+            </ul>
+        </div>
+
+        <!-- Distributions -->
+        <div class="slide">
+            <h2>Linux Distributions</h2>
+            <h3>🏢 Enterprise</h3>
+            <ul>
+                <li><strong>Red Hat Enterprise Linux (RHEL)</strong> - Enterprise support</li>
+                <li><strong>SUSE Linux Enterprise</strong> - European enterprise focus</li>
+                <li><strong>Ubuntu LTS</strong> - Long-term support versions</li>
+            </ul>
+
+            <h3>🖥️ Desktop/Development</h3>
+            <ul>
+                <li><strong>Ubuntu</strong> - User-friendly, great for beginners</li>
+                <li><strong>Fedora</strong> - Cutting-edge features</li>
+                <li><strong>Linux Mint</strong> - Windows-like experience</li>
+            </ul>
+
+            <h3>⚡ Lightweight/Specialized</h3>
+            <ul>
+                <li><strong>Alpine Linux</strong> - Container-optimized</li>
+                <li><strong>CentOS/Rocky Linux</strong> - RHEL-compatible</li>
+                <li><strong>Arch Linux</strong> - Minimalist, rolling release</li>
+            </ul>
+        </div>
+
+        <!-- Understanding the Kernel -->
+        <div class="slide">
+            <h2>Understanding the Kernel</h2>
+            <h3>🧠 What is a Kernel?</h3>
+            <ul>
+                <li><strong>Core of OS</strong> - The most important part of the operating system</li>
+                <li><strong>Bridge</strong> - Connects software applications to hardware</li>
+                <li><strong>Always Running</strong> - Loaded into memory when computer starts</li>
+            </ul>
+
+            <h3>⚙️ Kernel Responsibilities</h3>
+            <ul>
+                <li><span class="highlight">Memory Management</span> - Allocates RAM to programs</li>
+                <li><span class="highlight">Process Scheduling</span> - Decides which program runs when</li>
+                <li><span class="highlight">Device Drivers</span> - Communicates with hardware (keyboard, mouse, etc.)</li>
+                <li><span class="highlight">File System</span> - Manages how data is stored and retrieved</li>
+                <li><span class="highlight">Network Stack</span> - Handles internet and network connections</li>
+            </ul>
+
+            <h3>🔧 Types of Kernels</h3>
+            <ul>
+                <li><strong>Monolithic</strong> - Linux (everything in one piece, faster)</li>
+                <li><strong>Microkernel</strong> - Minimal core, services separate</li>
+                <li><strong>Hybrid</strong> - Windows, macOS (combination approach)</li>
+            </ul>
+        </div>
+
+        <!-- File System Basics -->
+        <div class="slide">
+            <h2>Linux File System Basics</h2>
+            <h3>📁 Everything is a File</h3>
+            <ul>
+                <li><strong>Philosophy</strong> - In Linux, everything is treated as a file</li>
+                <li><strong>Regular Files</strong> - Documents, images, videos</li>
+                <li><strong>Directories</strong> - Folders that contain other files</li>
+                <li><strong>Device Files</strong> - Hardware devices (hard disk, USB)</li>
+            </ul>
+
+            <h3>🌳 Directory Structure</h3>
+            <div class="code">
+/           # Root directory (top level)<br>
+├── home    # User home directories<br>
+├── etc     # Configuration files<br>
+├── var     # Variable data (logs, databases)<br>
+├── usr     # User programs and libraries<br>
+├── bin     # Essential system programs<br>
+├── tmp     # Temporary files<br>
+└── dev     # Device files</div>
+
+            <h3>🔐 File Permissions</h3>
+            <ul>
+                <li><strong>Read (r)</strong> - Can view file content</li>
+                <li><strong>Write (w)</strong> - Can modify file</li>
+                <li><strong>Execute (x)</strong> - Can run file as program</li>
+                <li><strong>Users</strong> - Owner, Group, Others</li>
+            </ul>
+        </div>
+
+        <!-- Architecture -->
+        <div class="slide">
+            <h2>Linux Architecture</h2>
+            <div class="architecture-diagram">
+                <div class="layer userspace">User Space (Applications, GUI, User Programs)</div>
+                <div class="layer shell">Shell (Bash, Zsh, Fish) - Command Interface</div>
+                <div class="layer kernel">Kernel (Core OS, Hardware Management)</div>
+                <div class="layer" style="background: #95a5a6;">Hardware (CPU, Memory, Storage, Network)</div>
+            </div>
+
+            <h3>🔧 Components Explained</h3>
+            <ul>
+                <li><strong>Kernel</strong> - Core OS, manages hardware resources</li>
+                <li><strong>Shell</strong> - Command-line interface, script execution</li>
+                <li><strong>User Space</strong> - Applications, services, user programs</li>
+                <li><strong>System Calls</strong> - Interface between user space and kernel</li>
+            </ul>
+        </div>
+
+        <!-- Git Bash for Windows Users -->
+        <div class="slide">
+            <h2>Git Bash - Linux Commands on Windows</h2>
+            <h3>🪟 For Windows Users</h3>
+            <ul>
+                <li><strong>Problem</strong> - Most participants have Windows, not Linux</li>
+                <li><strong>Solution</strong> - Git Bash provides Linux-like terminal on Windows</li>
+                <li><strong>Bonus</strong> - Also installs Git version control system</li>
+            </ul>
+
+            <h3>📥 Installing Git Bash</h3>
+            <ol>
+                <li>Go to <strong>git-scm.com</strong></li>
+                <li>Download Git for Windows</li>
+                <li>Run installer with default settings</li>
+                <li>Right-click anywhere → "Git Bash Here"</li>
+            </ol>
+
+            <h3>✅ What Works in Git Bash</h3>
+            <ul>
+                <li><span class="highlight">File Operations</span> - ls, cd, pwd, mkdir, cp, mv</li>
+                <li><span class="highlight">Text Processing</span> - cat, grep, head, tail</li>
+                <li><span class="highlight">Basic Commands</span> - whoami, which, echo</li>
+                <li><span class="highlight">Git Commands</span> - git clone, git status, git commit</li>
+            </ul>
+
+            <h3>⚠️ Limitations</h3>
+            <ul>
+                <li><strong>System Commands</strong> - Some Linux system commands won't work</li>
+                <li><strong>Package Management</strong> - No apt, yum, or package managers</li>
+                <li><strong>Services</strong> - Can't manage Linux services</li>
+                <li><strong>File Permissions</strong> - Windows file system differences</li>
+            </ul>
+        </div>
+
+        <!-- Practice Options Comparison -->
+        <div class="slide">
+            <h2>Practice Options for Beginners</h2>
+            <h3>🎯 Choose Your Path</h3>
+            
+            <h3>1. 🪟 Git Bash (Easiest Start)</h3>
+            <ul>
+                <li><strong>Pros</strong> - Quick setup, no VM needed, familiar Windows environment</li>
+                <li><strong>Cons</strong> - Limited Linux features, not real Linux experience</li>
+                <li><strong>Best for</strong> - Learning basic commands, file operations</li>
+            </ul>
+
+            <h3>2. 🖥️ Virtual Machine (Recommended)</h3>
+            <ul>
+                <li><strong>Pros</strong> - Full Linux experience, safe environment, can break and reset</li>
+                <li><strong>Cons</strong> - Requires more setup, uses system resources</li>
+                <li><strong>Best for</strong> - Complete Linux learning, system administration</li>
+            </ul>
+
+            <h3>3. ☁️ Online Linux Terminals</h3>
+            <ul>
+                <li><strong>Options</strong> - repl.it, codeanywhere.com, katacoda.com</li>
+                <li><strong>Pros</strong> - No installation, real Linux, accessible anywhere</li>
+                <li><strong>Cons</strong> - Internet required, limited time/features</li>
+                <li><strong>Best for</strong> - Quick practice, testing commands</li>
+            </ul>
+        </div>
+
+        <!-- Installation -->
+        <div class="slide">
+            <h2>VirtualBox/VMWare & Ubuntu Installation</h2>
+            <h3>🖥️ Virtualization Setup</h3>
+            <ul>
+                <li><strong>VirtualBox</strong> - Free, cross-platform</li>
+                <li><strong>VMWare Workstation</strong> - Professional features</li>
+                <li><strong>System Requirements</strong> - 4GB RAM, 25GB storage minimum</li>
+            </ul>
+
+            <h3>💿 Ubuntu Installation Steps</h3>
+            <ol>
+                <li>Download Ubuntu ISO from ubuntu.com</li>
+                <li>Create new VM (2GB RAM, 25GB disk)</li>
+                <li>Boot from ISO, select "Install Ubuntu"</li>
+                <li>Choose language, keyboard layout</li>
+                <li>Select installation type (erase disk for VM)</li>
+                <li>Create user account and password</li>
+                <li>Complete installation and reboot</li>
+            </ol>
+        </div>
+
+        <!-- Command Line Basics -->
+        <div class="slide">
+            <h2>Command Line Basics</h2>
+            <h3>💻 Why Learn Command Line?</h3>
+            <ul>
+                <li><strong>Efficiency</strong> - Faster than clicking through menus</li>
+                <li><strong>Automation</strong> - Can write scripts to repeat tasks</li>
+                <li><strong>Remote Access</strong> - Manage servers over internet</li>
+                <li><strong>Precision</strong> - Exact control over what happens</li>
+            </ul>
+
+            <h3>📝 Command Structure</h3>
+            <div class="code">
+command [options] [arguments]<br><br>
+
+Examples:<br>
+ls -l /home          # command: ls, option: -l, argument: /home<br>
+cp file1.txt file2.txt   # command: cp, arguments: file1.txt file2.txt<br>
+mkdir -p folder/subfolder  # command: mkdir, option: -p, argument: folder/subfolder</div>
+
+            <h3>🔤 Understanding Paths</h3>
+            <ul>
+                <li><strong>Absolute Path</strong> - Starts from root: <code>/home/user/documents</code></li>
+                <li><strong>Relative Path</strong> - From current location: <code>documents/file.txt</code></li>
+                <li><strong>Home Directory</strong> - <code>~</code> represents your home folder</li>
+                <li><strong>Current Directory</strong> - <code>.</code> represents where you are now</li>
+                <li><strong>Parent Directory</strong> - <code>..</code> represents one level up</li>
+            </ul>
+        </div>
+
+        <!-- Basic Terminal Usage -->
+        <div class="slide">
+            <h2>Basic Terminal Usage</h2>
+            <h3>📁 File & Directory Operations</h3>
+            <div class="code">
+ls          # List files and directories<br>
+cd /path    # Change directory<br>
+pwd         # Print working directory<br>
+mkdir dir   # Create directory<br>
+rmdir dir   # Remove empty directory<br>
+cp file1 file2    # Copy file<br>
+mv file1 file2    # Move/rename file<br>
+rm file     # Remove file</div>
+
+            <h3>📄 File Content Operations</h3>
+            <div class="code">
+cat file    # Display file content<br>
+less file   # View file page by page<br>
+head file   # Show first 10 lines<br>
+tail file   # Show last 10 lines<br>
+grep "text" file  # Search for text in file</div>
+
+            <h3>🔧 System Information</h3>
+            <div class="code">
+whoami      # Current username<br>
+uname -a    # System information<br>
+df -h       # Disk usage<br>
+free -h     # Memory usage<br>
+ps aux      # Running processes</div>
+        </div>
+
+        <!-- Practical Exercises -->
+        <div class="slide">
+            <h2>Hands-on Practice</h2>
+            <p style="background: #3498db; color: white; padding: 10px; border-radius: 5px; text-align: center;">
+                <strong>💡 These exercises work in Git Bash, VM, or online terminals!</strong>
+            </p>
+            
+            <h3>🎯 Exercise 1: Navigation</h3>
+            <div class="code">
+# Try these commands step by step:<br>
+pwd                    # See where you are<br>
+ls                     # List files in current directory<br>
+cd /                   # Go to root directory (C:\ in Git Bash)<br>
+ls                     # See what's in root<br>
+cd ~                   # Go back to home directory<br>
+pwd                    # Confirm you're home</div>
+
+            <h3>🎯 Exercise 2: File Operations</h3>
+            <div class="code">
+# Create and manage files:<br>
+mkdir practice         # Create a directory<br>
+cd practice           # Enter the directory<br>
+touch myfile.txt      # Create an empty file<br>
+echo "Hello Linux" > myfile.txt  # Add content to file<br>
+cat myfile.txt        # Display file content<br>
+cp myfile.txt backup.txt  # Copy the file<br>
+ls -l                 # List files with details</div>
+
+            <h3>🎯 Exercise 3: Getting Help</h3>
+            <div class="code">
+man ls                # Read manual for 'ls' command (may not work in Git Bash)<br>
+ls --help            # Quick help for 'ls' (works everywhere)<br>
+which ls             # Find where 'ls' program is located</div>
+        </div>
+
+        <!-- Common Beginner Mistakes -->
+        <div class="slide">
+            <h2>Common Beginner Mistakes & Tips</h2>
+            <h3>❌ Common Mistakes</h3>
+            <ul>
+                <li><strong>Case Sensitivity</strong> - <code>File.txt</code> and <code>file.txt</code> are different</li>
+                <li><strong>Spaces in Names</strong> - Use quotes: <code>"my file.txt"</code> or escape: <code>my\ file.txt</code></li>
+                <li><strong>Wrong Directory</strong> - Always check where you are with <code>pwd</code></li>
+                <li><strong>Permissions</strong> - Can't modify files you don't own</li>
+            </ul>
+
+            <h3>💡 Helpful Tips</h3>
+            <ul>
+                <li><span class="highlight">Tab Completion</span> - Press Tab to auto-complete commands/files</li>
+                <li><span class="highlight">Command History</span> - Use ↑ arrow to see previous commands</li>
+                <li><span class="highlight">Ctrl+C</span> - Stop a running command</li>
+                <li><span class="highlight">Clear Screen</span> - Type <code>clear</code> or press Ctrl+L</li>
+            </ul>
+
+            <h3>🆘 When Things Go Wrong</h3>
+            <ul>
+                <li><strong>Command Not Found</strong> - Check spelling, use <code>which command</code></li>
+                <li><strong>Permission Denied</strong> - Use <code>sudo</code> for admin tasks</li>
+                <li><strong>File Not Found</strong> - Check path with <code>ls</code> and <code>pwd</code></li>
+            </ul>
+        </div>
+
+        <!-- Summary -->
+        <div class="slide">
+            <h2>Summary</h2>
+            <h3>🎯 Key Takeaways</h3>
+            <ul>
+                <li>Linux is <span class="highlight">essential</span> for DevOps and Cloud computing</li>
+                <li><span class="highlight">Open-source</span> model provides flexibility and cost savings</li>
+                <li>Multiple <span class="highlight">distributions</span> cater to different needs</li>
+                <li><span class="highlight">Layered architecture</span> separates concerns effectively</li>
+                <li><span class="highlight">Terminal skills</span> are fundamental for Linux mastery</li>
+            </ul>
+
+            <h3>🚀 Next Steps</h3>
+            <ul>
+                <li>Practice terminal commands daily</li>
+                <li>Explore different Linux distributions</li>
+                <li>Learn shell scripting (Bash)</li>
+                <li>Understand file permissions and users</li>
+                <li>Study system administration basics</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s1s1   460Gi    10Gi   306Gi     4%    426k  3.2G    0%   /
+devfs            237Ki   237Ki     0Bi   100%     820     0  100%   /dev
+/dev/disk3s6     460Gi   2.0Gi   306Gi     1%       2  3.2G    0%   /System/Volumes/VM
+/dev/disk3s2     460Gi   6.6Gi   306Gi     3%    1.2k  3.2G    0%   /System/Volumes/Preboot
+/dev/disk3s4     460Gi   2.6Mi   306Gi     1%      55  3.2G    0%   /System/Volumes/Update
+/dev/disk1s2     500Mi   6.0Mi   481Mi     2%       1  4.9M    0%   /System/Volumes/xarts
+/dev/disk1s1     500Mi   5.8Mi   481Mi     2%      29  4.9M    0%   /System/Volumes/iSCPreboot
+/dev/disk1s3     500Mi   2.6Mi   481Mi     1%     108  4.9M    0%   /System/Volumes/Hardware
+/dev/disk3s5     460Gi   134Gi   306Gi    31%    1.9M  3.2G    0%   /System/Volumes/Data
+map auto_home      0Bi     0Bi     0Bi   100%       0     0     -   /System/Volumes/Data/home
+/dev/disk4s1     444Mi   442Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q
+/dev/disk5s1     445Mi   444Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 1
+/dev/disk6s1     445Mi   444Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 2
+/dev/disk8s1     1.1Gi   694Mi   391Mi    64%    5.2k  4.0M    0%   /Volumes/Kiro
+/dev/disk9s1     448Mi   447Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 3
+/dev/disk10s1    464Mi   463Mi   1.2Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 4
+/dev/disk11s1    464Mi   463Mi   1.2Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 5
+/dev/disk12s1    460Mi   459Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 6
+/dev/disk13s1    456Mi   455Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 7
+/dev/disk14s1    456Mi   455Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 8
+/dev/disk15s1    456Mi   455Mi   1.2Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 9
+/dev/disk16s1    456Mi   455Mi   1.2Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 10
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s1s1   460Gi    10Gi   306Gi     4%    426k  3.2G    0%   /
+devfs            237Ki   237Ki     0Bi   100%     820     0  100%   /dev
+/dev/disk3s6     460Gi   2.0Gi   306Gi     1%       2  3.2G    0%   /System/Volumes/VM
+/dev/disk3s2     460Gi   6.6Gi   306Gi     3%    1.2k  3.2G    0%   /System/Volumes/Preboot
+/dev/disk3s4     460Gi   2.6Mi   306Gi     1%      55  3.2G    0%   /System/Volumes/Update
+/dev/disk1s2     500Mi   6.0Mi   481Mi     2%       1  4.9M    0%   /System/Volumes/xarts
+/dev/disk1s1     500Mi   5.8Mi   481Mi     2%      29  4.9M    0%   /System/Volumes/iSCPreboot
+/dev/disk1s3     500Mi   2.6Mi   481Mi     1%     108  4.9M    0%   /System/Volumes/Hardware
+/dev/disk3s5     460Gi   134Gi   306Gi    31%    1.9M  3.2G    0%   /System/Volumes/Data
+map auto_home      0Bi     0Bi     0Bi   100%       0     0     -   /System/Volumes/Data/home
+/dev/disk4s1     444Mi   442Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q
+/dev/disk5s1     445Mi   444Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 1
+/dev/disk6s1     445Mi   444Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 2
+/dev/disk8s1     1.1Gi   694Mi   391Mi    64%    5.2k  4.0M    0%   /Volumes/Kiro
+/dev/disk9s1     448Mi   447Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 3
+/dev/disk10s1    464Mi   463Mi   1.2Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 4
+/dev/disk11s1    464Mi   463Mi   1.2Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 5
+/dev/disk12s1    460Mi   459Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 6
+/dev/disk13s1    456Mi   455Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 7
+/dev/disk14s1    456Mi   455Mi   1.3Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 8
+/dev/disk15s1    456Mi   455Mi   1.2Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 9
+/dev/disk16s1    456Mi   455Mi   1.2Mi   100%     104  4.3G    0%   /Volumes/Amazon Q 10

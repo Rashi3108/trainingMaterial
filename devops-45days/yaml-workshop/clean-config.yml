@@ -1,0 +1,45 @@
+# clean-config.yml - All linting issues fixed
+---
+app_name: MyApp
+version: 1.0.0
+
+# Server configuration
+server:
+  host: 0.0.0.0
+  port: 8080
+  timeout: 30
+
+database:
+  type: postgresql
+  host: localhost
+  port: 5432
+  credentials:
+    username: admin
+    password: secret123
+
+# Features list with consistent formatting
+features:
+  - user_auth
+  - email_notifications
+  - analytics
+  - reporting
+
+# Properly formatted long description
+description: >
+  This is a properly formatted long description that follows
+  YAML best practices for readability and maintainability.
+  It uses the folded scalar style for better line management.
+
+# Consistent boolean values
+debug_mode: true
+production_ready: true
+maintenance: false
+
+logging:
+  level: INFO
+  file: /var/log/app.log
+
+# Properly quoted strings
+message: "Don't use mixed quotes"
+path: "C:\\Windows\\System32"
+regex: "[a-zA-Z0-9]+"

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Manual AWS Web Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #e8f4f8;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #232f3e;
+            text-align: center;
+            border-bottom: 3px solid #ff9900;
+            padding-bottom: 10px;
+        }
+        p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 18px;
+        }
+        .manual-badge {
+            background-color: #ff9900;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        .steps-list {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .steps-list ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .steps-list li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to My Manually Configured Web Server!</h1>
+        <div class="manual-badge">Manually Configured</div>
+        <p>
+            This web server was set up manually after launching the EC2 instance. 
+            This approach gives you complete control over the installation process 
+            and allows you to customize each step according to your specific requirements.
+        </p>
+        <div class="steps-list">
+            <strong>Setup Process:</strong>
+            <ol>
+                <li>Launched basic EC2 instance</li>
+                <li>Connected via SSH</li>
+                <li>Updated system packages</li>
+                <li>Manually installed Apache HTTP Server</li>
+                <li>Started and enabled Apache service</li>
+                <li>Created this custom web page</li>
+                <li>Configured proper file permissions</li>
+            </ol>
+        </div>
+        <p>
+            Both automated (User Data) and manual approaches have their advantages. 
+            The manual approach is excellent for learning, troubleshooting, and 
+            situations where you need fine-grained control over the setup process.
+        </p>
+        <p>
+            <strong>Benefits of Manual Setup:</strong><br>
+            • Better understanding of each step<br>
+            • Easier debugging and troubleshooting<br>
+            • Full control over the installation process<br>
+            • Ability to customize on-the-fly<br>
+            • Great for learning and development
+        </p>
+    </div>
+</body>
+</html>

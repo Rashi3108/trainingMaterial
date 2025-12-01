@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot Hello World - Complete Professional Guide</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1in;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+            font-size: 12pt;
+        }
+
+        .page {
+            page-break-after: always;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .page:last-child {
+            page-break-after: avoid;
+        }
+
+        .title-page {
+            text-align: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #6db33f 0%, #4a7c59 100%);
+            color: white;
+            margin: -20px;
+            padding: 100px 20px;
+        }
+
+        .title-page h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .title-page h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .spring-logo {
+            font-size: 4em;
+            margin: 30px 0;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            color: #6db33f;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #4a7c59;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: #4a7c59;
+            margin-bottom: 20px;
+            margin-top: 25px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: #6db33f;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-bottom: 15px;
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            border: 1px solid #4a5568;
+            border-left: 4px solid #6db33f;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .highlight {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-left: 4px solid #6db33f;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            page-break-inside: avoid;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #6db33f;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .two-column {
+            display: flex;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        .demo-box {
+            border: 2px solid #6db33f;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            background: #f0f9ff;
+            page-break-inside: avoid;
+        }
+
+        .step-number {
+            background: #6db33f;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+
+        .toc {
+            page-break-after: always;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+
+        .toc a {
+            text-decoration: none;
+            color: #6db33f;
+        }
+
+        .toc a:hover {
+            color: #4a7c59;
+        }
+
+        .output-box {
+            background: #1a202c;
+            color: #68d391;
+            border: 1px solid #2d3748;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        .folder-structure {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            page-break-inside: avoid;
+        }
+
+        .endpoint-box {
+            background: #edf2f7;
+            border: 1px solid #cbd5e0;
+            border-left: 4px solid #6db33f;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+
+        .architecture-diagram {
+            background: #f7fafc;
+            border: 2px solid #6db33f;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            page-break-inside: avoid;
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .page {
+                page-break-after: always;
+            }
+            
+            .page:last-child {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>

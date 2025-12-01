@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot Hello World</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="logo">
+                <h1>🚀 Spring Boot</h1>
+                <span class="version">v3.2.0</span>
+            </div>
+            <nav class="nav">
+                <a href="/" class="nav-link active">Home</a>
+                <a href="/api/hello" class="nav-link" target="_blank">API</a>
+                <a href="/health" class="nav-link" target="_blank">Health</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="hero-section">
+                <div class="greeting-card">
+                    <div class="greeting-icon">👋</div>
+                    <h2 class="greeting-text" th:text="${greeting}">Hello, World!</h2>
+                    <p class="greeting-subtitle">Welcome to your Spring Boot application</p>
+                    <div class="timestamp">
+                        <span class="timestamp-label">Current Time:</span>
+                        <span class="timestamp-value" th:text="${currentTime}">2024-01-01 12:00:00</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Form -->
+                <div class="form-section">
+                    <h3>Personalize Your Greeting</h3>
+                    <form action="/" method="get" class="greeting-form">
+                        <div class="input-group">
+                            <label for="name">Enter your name:</label>
+                            <input type="text" id="name" name="name" th:value="${name}" placeholder="Your name here..." required>
+                            <button type="submit" class="btn-primary">Update Greeting</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Features Section -->
+                <div class="features-section">
+                    <h3>Application Features</h3>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🌐</div>
+                            <h4>Web Interface</h4>
+                            <p>Professional HTML interface with Thymeleaf templating</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔌</div>
+                            <h4>REST API</h4>
+                            <p>JSON API endpoints for programmatic access</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💚</div>
+                            <h4>Health Check</h4>
+                            <p>Built-in health monitoring endpoint</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔄</div>
+                            <h4>Auto Reload</h4>
+                            <p>Development tools for automatic reloading</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Examples -->
+                <div class="api-section">
+                    <h3>API Endpoints</h3>
+                    <div class="api-examples">
+                        <div class="api-example">
+                            <span class="method get">GET</span>
+                            <code>/api/hello?name=YourName</code>
+                            <span class="description">Get JSON greeting</span>
+                        </div>
+                        <div class="api-example">
+                            <span class="method get">GET</span>
+                            <code>/health</code>
+                            <span class="description">Application health status</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Spring Boot Hello World Application</p>
+            <p>Built with ❤️ using Spring Boot, Maven, and Thymeleaf</p>
+        </footer>
+    </div>
+
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+History - 28th Oct
+
+    1  whoami
+    2  clear
+    3  sudo apt update -y
+    4  sudo apt install nginx -y
+    5  sudo systemctl start nginx
+    6  sudo systemctl enable nginx
+    7  sudo systemctl status nginx
+    8  history
+
+History - 30th Oct
+
+ 1013  aws configure
+ 1014  aws configure
+ 1015  aws sts get-caller-identity
+ 1016  aws s3 ls
+ 1017  echo "Hello AWS CLI S3 Labaws s3 ls" > sample.txt
+ 1018  cat sample.txt
+ 1019  aws s3 cp sample.txt s3://aws-batch2-rashi-00001
+ 1020  aws s3 ls s3://aws-batch2-rashi-00001
+ 1021  aws s3 rm s3://aws-batch2-rashi-00001/sample.txt
+ 1022  aws s3 ls s3://aws-batch2-rashi-00001
+ 1023  aws s3 mb s3://rashi-ooooooooo1
+ 1024  aws s3 ls
+ 1025  aws s3 rb s3://rashi-ooooooooo1
+ 1026  aws s3 ls
+ 1027  aws s3 --help
+ 1028  aws s3 -- help
+
+User Data
+
+#!/bin/bash
+apt update -y
+apt upgrade -y
+apt install -y nginx
+
+# Enable and start Nginx service
+systemctl enable nginx
+systemctl start nginx
+
+echo "<h1>Welcome to your Nginx Server on AWS EC2!</h1>" > /var/www/html/index.html
+
+## Policy to make s3 bucket accesssible over the internet
+
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "PublicReadGetObject",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::<YOUR-BUCKET-NAME>/*"
+		}
+	]
+}

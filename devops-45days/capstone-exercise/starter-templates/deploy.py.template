@@ -1,0 +1,208 @@
+#!/usr/bin/env python3
+"""
+deploy.py.template - Main deployment script template
+Remove this template suffix and complete the implementation
+
+This script should demonstrate all Python concepts from the presentation:
+- Variables and data types
+- Input/output operations
+- Conditional statements
+- Loops
+- Functions and code reusability
+- Error handling
+- File operations
+- Command-line argument parsing
+"""
+
+import os
+import sys
+import json
+import logging
+import argparse
+from datetime import datetime
+from pathlib import Path
+
+# TODO: Add more imports as needed (yaml, subprocess, etc.)
+
+class DeploymentManager:
+    """Main deployment management class"""
+    
+    def __init__(self, config_path, dry_run=False):
+        """
+        Initialize deployment manager
+        
+        TODO: Complete this method
+        - Store configuration path
+        - Set dry_run mode
+        - Initialize logging
+        - Set up instance variables
+        """
+        pass
+    
+    def load_configuration(self):
+        """
+        Load and validate YAML configuration files
+        
+        TODO: Complete this method
+        - Load app-config.yml
+        - Load deployment-config.yml
+        - Validate configuration structure
+        - Handle file not found errors
+        - Return configuration dictionary
+        """
+        pass
+    
+    def validate_prerequisites(self):
+        """
+        Check system prerequisites before deployment
+        
+        TODO: Complete this method
+        - Check disk space
+        - Verify network connectivity
+        - Validate required tools (docker, etc.)
+        - Check permissions
+        - Return boolean result
+        """
+        pass
+    
+    def pre_deployment_checks(self):
+        """
+        Perform pre-deployment validation
+        
+        TODO: Complete this method
+        - Validate configuration files
+        - Check target environment
+        - Verify image availability
+        - Test database connectivity
+        - Return check results
+        """
+        pass
+    
+    def execute_deployment(self):
+        """
+        Execute the main deployment process
+        
+        TODO: Complete this method
+        - Implement deployment strategy
+        - Handle different deployment types
+        - Execute deployment steps
+        - Monitor deployment progress
+        - Handle errors gracefully
+        """
+        pass
+    
+    def post_deployment_checks(self):
+        """
+        Perform post-deployment validation
+        
+        TODO: Complete this method
+        - Verify application health
+        - Check service availability
+        - Validate configuration
+        - Run smoke tests
+        - Return validation results
+        """
+        pass
+    
+    def generate_report(self):
+        """
+        Generate deployment report
+        
+        TODO: Complete this method
+        - Create deployment summary
+        - Include timing information
+        - Add success/failure details
+        - Save report to file
+        - Return report data
+        """
+        pass
+    
+    def rollback_deployment(self):
+        """
+        Rollback to previous deployment
+        
+        TODO: Complete this method
+        - Identify previous version
+        - Execute rollback steps
+        - Verify rollback success
+        - Update deployment status
+        """
+        pass
+
+def setup_logging(log_level='INFO'):
+    """
+    Configure logging for the deployment script
+    
+    TODO: Complete this function
+    - Set up file and console logging
+    - Configure log format with timestamps
+    - Set appropriate log levels
+    - Create log directory if needed
+    """
+    pass
+
+def parse_arguments():
+    """
+    Parse command-line arguments
+    
+    TODO: Complete this function
+    - Add argument for config path
+    - Add dry-run option
+    - Add verbose/debug options
+    - Add deployment type options
+    - Return parsed arguments
+    """
+    parser = argparse.ArgumentParser(description='Deployment automation script')
+    
+    # TODO: Add arguments here
+    # parser.add_argument('--config', ...)
+    # parser.add_argument('--dry-run', ...)
+    # parser.add_argument('--verbose', ...)
+    
+    return parser.parse_args()
+
+def main():
+    """
+    Main function - orchestrate the deployment process
+    
+    TODO: Complete this function
+    - Parse command-line arguments
+    - Set up logging
+    - Initialize deployment manager
+    - Execute deployment workflow
+    - Handle exceptions
+    - Exit with appropriate status code
+    """
+    try:
+        # TODO: Implement main deployment workflow
+        # 1. Parse arguments
+        # 2. Setup logging
+        # 3. Initialize DeploymentManager
+        # 4. Load configuration
+        # 5. Validate prerequisites
+        # 6. Execute deployment
+        # 7. Generate report
+        
+        print("🚀 Starting deployment process...")
+        
+        # TODO: Add your implementation here
+        
+        print("✅ Deployment completed successfully!")
+        
+    except Exception as e:
+        # TODO: Add proper error handling
+        print(f"❌ Deployment failed: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
+
+# CHALLENGES:
+# 1. Implement comprehensive error handling with try-catch blocks
+# 2. Use different Python data types (lists, dictionaries, sets)
+# 3. Implement retry logic with loops
+# 4. Create reusable functions with proper documentation
+# 5. Add input validation and sanitization
+# 6. Implement logging with different levels
+# 7. Use conditional statements for different deployment strategies
+# 8. Add progress indicators and user feedback

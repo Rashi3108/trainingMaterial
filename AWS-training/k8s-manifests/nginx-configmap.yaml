@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  labels:
+    app: nginx
+data:
+  # Nginx configuration file
+  default.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+        
+        location / {
+            root /usr/share/nginx/html;
+            index index.html index.htm;
+        }
+        
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+        
+        location /api {
+            proxy_pass http://api-service:8080;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+    }
+  
+  # Environment variables
+  NGINX_WORKER_PROCESSES: "auto"
+  NGINX_WORKER_CONNECTIONS: "1024"
+  NGINX_KEEPALIVE_TIMEOUT: "65"
+  
+  # Custom HTML content
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Welcome to nginx on EKS!</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; }
+            .container { max-width: 800px; margin: 0 auto; }
+            .header { background: #232F3E; color: white; padding: 20px; border-radius: 5px; }
+            .content { padding: 20px; background: #f8f9fa; border-radius: 5px; margin-top: 20px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>🚀 Hello from Kubernetes!</h1>
+                <p>This nginx server is running on Amazon EKS</p>
+            </div>
+            <div class="content">
+                <h2>Application Details:</h2>
+                <ul>
+                    <li><strong>Container:</strong> nginx:1.21</li>
+                    <li><strong>Platform:</strong> Amazon EKS</li>
+                    <li><strong>Configuration:</strong> ConfigMap</li>
+                    <li><strong>Secrets:</strong> Kubernetes Secrets</li>
+                </ul>
+                <p><a href="/health">Health Check</a></p>
+            </div>
+        </div>
+    </body>
+    </html>
+  
+  # Additional configuration
+  mime.types: |
+    types {
+        text/html                             html htm shtml;
+        text/css                              css;
+        application/javascript                js;
+        image/gif                             gif;
+        image/jpeg                            jpeg jpg;
+        image/png                             png;
+    }

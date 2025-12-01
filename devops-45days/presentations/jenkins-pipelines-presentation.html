@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jenkins Pipelines - CI/CD Automation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide h1 {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide h2 {
+            font-size: 2.2rem;
+            color: #4a5568;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .slide h3 {
+            font-size: 1.8rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+
+        .slide ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .slide li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+        }
+
+        .slide li::before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .code-block {
+            background: #1a202c;
+            color: #68d391;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card h4 {
+            color: #2d3748;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin: 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .comparison-table tr {
+            background: white;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            color: white;
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.8rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .title-slide .meta {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .pipeline-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .pipeline-step {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            margin: 10px;
+            flex: 1;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .pipeline-arrow {
+            font-size: 2rem;
+            color: #667eea;
+            margin: 0 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #68d391 0%, #38b2ac 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fbb6ce 0%, #f687b3 100%);
+            color: #2d3748;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 30px;
+                margin-bottom: 20px;
+            }
+            
+            .slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .slide h2 {
+                font-size: 1.8rem;
+            }
+            
+            .pipeline-flow {
+                flex-direction: column;
+            }
+            
+            .pipeline-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Title Slide -->
+        <div class="slide title-slide">
+            <h1>🚀 Jenkins Pipelines</h1>
+            <div class="subtitle">CI/CD Automation & Pipeline Management</div>
+            <div class="meta">
+                <p><strong>Platform:</strong> Jenkins on AWS EC2</p>
+                <p><strong>Focus:</strong> Pipeline Jobs & Automation</p>
+                <p><strong>Target:</strong> Spring Boot Applications</p>
+            </div>
+        </div>
+
+        <!-- Jenkins Overview -->
+        <div class="slide">
+            <h1><span class="icon">🏗️</span>Jenkins Overview</h1>
+            
+            <h2>What is Jenkins?</h2>
+            <p><span class="highlight">Open-source automation server</span> for building, testing, and deploying applications</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🔄 Continuous Integration</h4>
+                    <p>Automated build and test execution</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🚀 Continuous Deployment</h4>
+                    <p>Automated application deployment</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔌 Plugin Ecosystem</h4>
+                    <p>1800+ plugins for integration</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📊 Pipeline as Code</h4>
+                    <p>Version-controlled build processes</p>
+                </div>
+            </div>
+
+            <h2>Key Benefits</h2>
+            <ul>
+                <li>Faster feedback loops</li>
+                <li>Reduced manual errors</li>
+                <li>Consistent deployments</li>
+                <li>Scalable automation</li>
+            </ul>
+        </div>
+
+        <!-- Freestyle vs Pipeline -->
+        <div class="slide">
+            <h1><span class="icon">⚖️</span>Freestyle vs Pipeline Jobs</h1>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Freestyle Jobs</th>
+                        <th>Pipeline Jobs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Configuration</strong></td>
+                        <td>GUI-based setup</td>
+                        <td>Code-based (Jenkinsfile)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Version Control</strong></td>
+                        <td>Limited versioning</td>
+                        <td>Full version control</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Complexity</strong></td>
+                        <td>Simple workflows</td>
+                        <td>Complex workflows</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reusability</strong></td>
+                        <td>Manual duplication</td>
+                        <td>Shared libraries</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visualization</strong></td>
+                        <td>Basic reporting</td>
+                        <td>Pipeline visualization</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="success-box">
+                <strong>💡 Recommendation:</strong> Use Pipeline jobs for modern CI/CD workflows
+            </div>
+        </div>
+
+        <!-- Freestyle Job Examples -->
+        <div class="slide">
+            <h1><span class="icon">🔧</span>Freestyle Job Examples</h1>
+            
+            <h2>Example 1: Simple Java Build Job</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📋 Job Configuration</h4>
+                    <p><strong>Source Code Management:</strong><br>
+                    • Git Repository URL<br>
+                    • Branch: */main<br>
+                    • Credentials: GitHub token</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔨 Build Steps</h4>
+                    <p><strong>Execute Shell:</strong><br>
+                    • mvn clean compile<br>
+                    • mvn test<br>
+                    • mvn package</p>
+                </div>
+            </div>
+
+            <h2>Example 2: Deploy to Tomcat Server</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🚀 Build Triggers</h4>
+                    <p>• Poll SCM: H/5 * * * *<br>
+                    • Build after other projects<br>
+                    • GitHub hook trigger</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📦 Post-build Actions</h4>
+                    <p>• Deploy war/ear to container<br>
+                    • Archive artifacts: *.war<br>
+                    • Email notification</p>
+                </div>
+            </div>
+
+            <h2>Example 3: Database Migration Job</h2>
+            <div class="code-block">
+# Build Steps - Execute Shell<br>
+echo "Starting database migration..."<br>
+cd /opt/app/migrations<br>
+./migrate.sh production<br>
+echo "Migration completed successfully"
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Limitations:</strong> Freestyle jobs lack version control for job configuration and complex workflow management
+            </div>
+        </div>
+
+        <!-- Declarative vs Scripted -->
+        <div class="slide">
+            <h1><span class="icon">📝</span>Declarative vs Scripted Pipelines</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📋 Declarative Pipeline</h4>
+                    <p><strong>Structured syntax</strong></p>
+                    <ul>
+                        <li>Easier to read and write</li>
+                        <li>Built-in error handling</li>
+                        <li>Automatic syntax validation</li>
+                        <li>Recommended approach</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h4>⚙️ Scripted Pipeline</h4>
+                    <p><strong>Groovy-based scripting</strong></p>
+                    <ul>
+                        <li>Maximum flexibility</li>
+                        <li>Complex logic support</li>
+                        <li>Steeper learning curve</li>
+                        <li>Advanced use cases</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Declarative Example</h2>
+            <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'mvn clean compile'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+
+            <h2>Scripted Example</h2>
+            <div class="code-block">
+node {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'mvn clean compile'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <!-- Creating Pipeline Job -->
+        <div class="slide">
+            <h1><span class="icon">🎯</span>Creating Jenkins Pipeline Job</h1>
+            
+            <h2>Step-by-Step Process</h2>
+            <ul>
+                <li>Navigate to Jenkins Dashboard</li>
+                <li>Click <span class="highlight">"New Item"</span></li>
+                <li>Enter job name</li>
+                <li>Select <span class="highlight">"Pipeline"</span></li>
+                <li>Configure pipeline source</li>
+                <li>Save and build</li>
+            </ul>
+
+            <h2>Pipeline Configuration Options</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📝 Pipeline Script</h4>
+                    <p>Write Jenkinsfile directly in UI</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📂 Pipeline from SCM</h4>
+                    <p>Load Jenkinsfile from repository</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Best Practice:</strong> Use "Pipeline from SCM" for version control
+            </div>
+        </div>
+
+        <!-- Jenkins on EC2 -->
+        <div class="slide">
+            <h1><span class="icon">☁️</span>Jenkins Server on EC2</h1>
+            
+            <h2>EC2 Requirements</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>💻 Instance Type</h4>
+                    <p>t3.medium or larger</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🗄️ Storage</h4>
+                    <p>20GB+ EBS volume</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔒 Security Group</h4>
+                    <p>Port 8080 (HTTP)</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔑 Access</h4>
+                    <p>SSH key pair</p>
+                </div>
+            </div>
+
+            <h2>Key Configuration Steps</h2>
+            <ul>
+                <li>Install Java 11/17</li>
+                <li>Install Jenkins package</li>
+                <li>Configure security groups</li>
+                <li>Setup initial admin user</li>
+                <li>Install essential plugins</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>🔐 Security:</strong> Change default admin password immediately
+            </div>
+        </div>
+
+        <!-- Maven Integration -->
+        <div class="slide">
+            <h1><span class="icon">🔧</span>Maven Integration</h1>
+            
+            <h2>Setup Requirements</h2>
+            <ul>
+                <li>Install <span class="highlight">Maven Integration Plugin</span></li>
+                <li>Configure Maven in Global Tool Configuration</li>
+                <li>Set JAVA_HOME environment</li>
+                <li>Configure Maven settings.xml</li>
+            </ul>
+
+            <h2>Maven Pipeline Integration</h2>
+            <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tools {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maven 'Maven-3.8.1'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jdk 'JDK-11'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'mvn clean compile'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Test') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'mvn test'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Package') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'mvn package'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <!-- Automating Builds -->
+        <div class="slide">
+            <h1><span class="icon">⚡</span>Automating Builds & Deployments</h1>
+            
+            <h2>Automation Triggers</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🔄 SCM Polling</h4>
+                    <p>Check repository periodically</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎣 Webhooks</h4>
+                    <p>Trigger on code push</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⏰ Scheduled Builds</h4>
+                    <p>Cron-based execution</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔗 Upstream Jobs</h4>
+                    <p>Chain job dependencies</p>
+                </div>
+            </div>
+
+            <h2>Deployment Strategies</h2>
+            <ul>
+                <li><span class="highlight">Blue-Green:</span> Zero-downtime deployments</li>
+                <li><span class="highlight">Rolling:</span> Gradual instance updates</li>
+                <li><span class="highlight">Canary:</span> Limited user exposure</li>
+                <li><span class="highlight">Recreate:</span> Stop and restart</li>
+            </ul>
+        </div>
+
+        <!-- Jenkinsfile Components -->
+        <div class="slide">
+            <h1><span class="icon">📄</span>Jenkinsfile Components</h1>
+            
+            <h2>Core Elements</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🏗️ Stages</h4>
+                    <p>Logical grouping of steps</p>
+                </div>
+                <div class="feature-card">
+                    <h4>👣 Steps</h4>
+                    <p>Individual commands/actions</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🤖 Agents</h4>
+                    <p>Where pipeline executes</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📮 Post Actions</h4>
+                    <p>Cleanup and notifications</p>
+                </div>
+            </div>
+
+            <h2>Complete Jenkinsfile Structure</h2>
+            <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;environment {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAVEN_HOME = '/usr/local/maven'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Checkout') { ... }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') { ... }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Test') { ... }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Deploy') { ... }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;post {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;always { ... }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;success { ... }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failure { ... }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <!-- CI/CD Pipeline Example -->
+        <div class="slide">
+            <h1><span class="icon">🔄</span>CI/CD Pipeline Flow</h1>
+            
+            <div class="pipeline-flow">
+                <div class="pipeline-step">📥 Checkout</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">🏗️ Build</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">🧪 Test</div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">🚀 Deploy</div>
+            </div>
+
+            <h2>Pipeline Stages Breakdown</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📥 Checkout</h4>
+                    <p>Pull source code from repository</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🏗️ Build</h4>
+                    <p>Compile and package application</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🧪 Test</h4>
+                    <p>Run unit and integration tests</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🚀 Deploy</h4>
+                    <p>Deploy to target environment</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>🎯 Goal:</strong> Automated, reliable, and repeatable deployments
+            </div>
+        </div>
+
+        <!-- GitHub Integration -->
+        <div class="slide">
+            <h1><span class="icon">🐙</span>GitHub Integration</h1>
+            
+            <h2>Webhook Configuration</h2>
+            <ul>
+                <li>Go to GitHub repository settings</li>
+                <li>Navigate to <span class="highlight">Webhooks</span></li>
+                <li>Add webhook URL: <code>http://jenkins-url:8080/github-webhook/</code></li>
+                <li>Select <span class="highlight">"Just the push event"</span></li>
+                <li>Ensure webhook is active</li>
+            </ul>
+
+            <h2>Jenkins GitHub Plugin Setup</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🔌 Install Plugin</h4>
+                    <p>GitHub Integration Plugin</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔑 Configure Credentials</h4>
+                    <p>GitHub personal access token</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⚙️ Job Configuration</h4>
+                    <p>Enable GitHub hook trigger</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔄 Auto-trigger</h4>
+                    <p>Build on code push</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>🔒 Security:</strong> Use personal access tokens, not passwords
+            </div>
+        </div>
+
+        <!-- Hands-on Spring Boot Pipeline -->
+        <div class="slide">
+            <h1><span class="icon">☕</span>Spring Boot Pipeline</h1>
+            
+            <h2>Complete Jenkinsfile Example</h2>
+            <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tools {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maven 'Maven-3.8.1'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jdk 'JDK-11'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;environment {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DOCKER_IMAGE = 'springboot-hello-world'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Checkout') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;git branch: 'main',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;url: 'https://github.com/user/springboot-hello-world.git'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Build') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'mvn clean compile'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Test') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'mvn test'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;post {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;always {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;junit 'target/surefire-reports/*.xml'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Package') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'mvn package -DskipTests'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('Deploy') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh 'java -jar target/*.jar &'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;post {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;always {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cleanWs()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;success {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Pipeline succeeded!'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failure {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo 'Pipeline failed!'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <!-- Pipeline Best Practices -->
+        <div class="slide">
+            <h1><span class="icon">🏆</span>Pipeline Best Practices</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📝 Version Control</h4>
+                    <p>Store Jenkinsfile in repository</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔒 Security</h4>
+                    <p>Use credentials management</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🧪 Testing</h4>
+                    <p>Include comprehensive tests</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📊 Monitoring</h4>
+                    <p>Add logging and notifications</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔄 Parallel Execution</h4>
+                    <p>Run independent stages in parallel</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🧹 Cleanup</h4>
+                    <p>Clean workspace after builds</p>
+                </div>
+            </div>
+
+            <h2>Key Recommendations</h2>
+            <ul>
+                <li>Keep pipelines <span class="highlight">simple and readable</span></li>
+                <li>Use <span class="highlight">shared libraries</span> for common functions</li>
+                <li>Implement <span class="highlight">proper error handling</span></li>
+                <li>Add <span class="highlight">meaningful stage names</span></li>
+                <li>Use <span class="highlight">environment-specific configurations</span></li>
+            </ul>
+
+            <div class="success-box">
+                <strong>🎯 Success:</strong> You now have the knowledge to create robust Jenkins pipelines for automated CI/CD workflows!
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

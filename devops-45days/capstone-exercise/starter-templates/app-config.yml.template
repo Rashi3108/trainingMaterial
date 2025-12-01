@@ -1,0 +1,44 @@
+# app-config.yml.template - Complete this configuration file
+# Remove this template suffix and fill in the required values
+
+---
+# Application Metadata
+application:
+  name: # TODO: Add application name
+  version: # TODO: Add version
+  environment: # TODO: Add environment (dev/staging/prod)
+  description: # TODO: Add description
+
+# Database Configuration
+database:
+  # TODO: Add database connection details
+  # Include: host, port, name, credentials, connection pool settings
+
+# API Configuration
+api:
+  # TODO: Add API endpoints and authentication
+  # Include: base_url, endpoints, auth_method, rate_limits
+
+# Feature Flags
+features:
+  # TODO: Add feature toggles
+  # Include: user_registration, email_notifications, analytics
+
+# Resource Limits
+resources:
+  # TODO: Add resource constraints
+  # Include: cpu_limit, memory_limit, disk_space
+
+# Security Settings
+security:
+  # TODO: Add security configuration
+  # Include: encryption, session_timeout, password_policy
+
+# Logging Configuration
+logging:
+  # TODO: Add logging settings
+  # Include: level, format, rotation_policy
+
+# CHALLENGE: Make this file pass yamllint validation
+# CHALLENGE: Use different YAML data types (strings, numbers, booleans, lists, dictionaries)
+# CHALLENGE: Include environment-specific overrides

@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cpu-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: demo.cpu.rules
+      rules:
+        - alert: HighNodeCPU
+          expr: (1 - avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[2m]))) * 100 > 20
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High CPU on node {{ $labels.instance }}"
+            description: "Node CPU usage > 80% for 2 minutes."
+

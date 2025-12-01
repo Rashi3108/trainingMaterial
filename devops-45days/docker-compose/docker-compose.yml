@@ -1,0 +1,32 @@
+version: '3.8' #compose file format version
+services: # container defination
+  web: #container_name
+    image: nginx
+    build:
+    ports:
+    environment:
+      - name=value
+      - name1=value1
+    volumes:
+      -djhfk
+    networks:
+      - networkName
+  db: #container2 name
+    image: nginx
+    build:
+    ports:
+    environment:
+      - name=value
+      - name1=value1
+    volumes:
+      -djhfk
+    networks:
+      - networkName
+
+volumes:
+  djhfk:
+
+networks:
+  networkName:
+
+

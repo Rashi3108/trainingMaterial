@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Monitoring: Prometheus, Grafana & Observability</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .slide:last-child {
+            page-break-after: auto;
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .slide-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #dc2626 0%, #f59e0b 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide .slide-title {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .slide-subtitle {
+            font-size: 1.5rem;
+            color: #fef3c7;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #dc2626;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #f3f4f6;
+            border-left: 5px solid #dc2626;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #dc2626;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #f3f4f6;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid #dc2626;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .lab-section {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .lab-section h3 {
+            color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 20px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0ea5e9;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.95rem;
+        }
+
+        .yaml-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .workflow-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .workflow-phase {
+            background: #dc2626;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            text-align: center;
+            min-width: 120px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #dc2626;
+            margin: 0 10px;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .architecture-diagram {
+            background: #f8fafc;
+            border: 2px solid #dc2626;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .component-box {
+            background: #dc2626;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .slide {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title Slide -->
+<div class="slide title-slide">
+    <div class="content">
+        <h1 class="slide-title">DevOps Monitoring</h1>
+        <p class="slide-subtitle">Prometheus, Grafana & Observability for Modern Applications</p>
+    </div>
+    <div class="slide-footer" style="color: #fef3c7;">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 2: Monitoring Fundamentals -->
+<div class="slide">
+    <div class="content">
+        <h2>Monitoring Fundamentals</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Monitoring</strong> is the practice of collecting, analyzing, and acting on data about your systems and applications to ensure reliability, performance, and availability.</p>
+        </div>
+
+        <h3>Why Monitoring in DevOps?</h3>
+        <ul>
+            <li><strong>Proactive Issue Detection:</strong> Identify problems before they impact users</li>
+            <li><strong>Performance Optimization:</strong> Understand system behavior and bottlenecks</li>
+            <li><strong>Capacity Planning:</strong> Make informed decisions about resource allocation</li>
+            <li><strong>Compliance & SLA:</strong> Meet service level agreements and regulatory requirements</li>
+            <li><strong>Root Cause Analysis:</strong> Quickly diagnose and resolve incidents</li>
+            <li><strong>Business Intelligence:</strong> Gain insights into user behavior and system usage</li>
+        </ul>
+
+        <h3>Three Pillars of Observability</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Metrics</h4>
+                <p>Numerical data representing system state over time (CPU, memory, request rate)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Logs</h4>
+                <p>Event details and contextual information about what happened in the system</p>
+            </div>
+            <div class="feature-card">
+                <h4>Traces</h4>
+                <p>Distributed request tracking showing the path of requests through microservices</p>
+            </div>
+        </div>
+
+        <h3>Monitoring vs. Observability</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspect</th>
+                    <th>Monitoring</th>
+                    <th>Observability</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Focus</strong></td>
+                    <td>Known problems and predefined metrics</td>
+                    <td>Understanding system behavior and unknown issues</td>
+                </tr>
+                <tr>
+                    <td><strong>Approach</strong></td>
+                    <td>Reactive - alerts when thresholds are breached</td>
+                    <td>Proactive - enables exploration and investigation</td>
+                </tr>
+                <tr>
+                    <td><strong>Data</strong></td>
+                    <td>Aggregated metrics and dashboards</td>
+                    <td>Rich context with metrics, logs, and traces</td>
+                </tr>
+                <tr>
+                    <td><strong>Questions</strong></td>
+                    <td>"Is the system working?"</td>
+                    <td>"Why is the system behaving this way?"</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Importance of Observability</h3>
+        <ul>
+            <li><strong>Complex Systems:</strong> Modern microservices architectures are too complex for traditional monitoring</li>
+            <li><strong>Unknown Unknowns:</strong> Ability to investigate issues you didn't anticipate</li>
+            <li><strong>Faster MTTR:</strong> Reduce Mean Time To Resolution with better context</li>
+            <li><strong>Developer Experience:</strong> Enable developers to understand their applications in production</li>
+            <li><strong>Business Impact:</strong> Connect technical metrics to business outcomes</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Key Insight:</strong> Observability is not just about collecting data - it's about making systems understandable and debuggable in production environments.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 3: Metrics, Logs, and Alerts -->
+<div class="slide">
+    <div class="content">
+        <h2>Metrics, Logs, and Alerts</h2>
+        
+        <h3>Metrics: Numerical Data</h3>
+        <div class="highlight-box">
+            <p><strong>Metrics</strong> are numerical measurements that represent the state of your system at a specific point in time, collected at regular intervals.</p>
+        </div>
+
+        <h4>Types of Metrics</h4>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Counter</h4>
+                <p>Always increasing values (requests served, errors occurred)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Gauge</h4>
+                <p>Values that can go up or down (CPU usage, memory consumption)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Histogram</h4>
+                <p>Distribution of values (request duration, response sizes)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Summary</h4>
+                <p>Quantiles and totals (95th percentile response time)</p>
+            </div>
+        </div>
+
+        <h3>Logs: Event Details</h3>
+        <div class="highlight-box">
+            <p><strong>Logs</strong> are timestamped records of events that occurred in your system, providing context and details about what happened.</p>
+        </div>
+
+        <h4>Log Levels and Structure</h4>
+        <div class="yaml-block">
+# Structured Log Example<br>
+{<br>
+  "timestamp": "2023-10-23T10:30:00Z",<br>
+  "level": "ERROR",<br>
+  "service": "user-service",<br>
+  "message": "Failed to authenticate user",<br>
+  "user_id": "12345",<br>
+  "error_code": "AUTH_FAILED",<br>
+  "request_id": "req-abc123"<br>
+}
+        </div>
+
+        <h3>Traces: Distributed Request Tracking</h3>
+        <div class="highlight-box">
+            <p><strong>Traces</strong> show the journey of a request through multiple services, helping understand performance bottlenecks and dependencies.</p>
+        </div>
+
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Frontend</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">API Gateway</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">User Service</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Database</div>
+        </div>
+
+        <h3>Alerts: Actionable Notifications</h3>
+        <div class="highlight-box">
+            <p><strong>Alerts</strong> notify you when something requires attention, enabling quick response to issues before they impact users.</p>
+        </div>
+
+        <h4>Alert Types</h4>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Threshold-based</strong></td>
+                    <td>Triggered when metric crosses predefined threshold</td>
+                    <td>CPU usage > 80%</td>
+                </tr>
+                <tr>
+                    <td><strong>Anomaly-based</strong></td>
+                    <td>Triggered when behavior deviates from normal patterns</td>
+                    <td>Request rate 3x higher than usual</td>
+                </tr>
+                <tr>
+                    <td><strong>Composite</strong></td>
+                    <td>Multiple conditions must be met</td>
+                    <td>High CPU AND high memory</td>
+                </tr>
+                <tr>
+                    <td><strong>Absence</strong></td>
+                    <td>Triggered when expected data is missing</td>
+                    <td>No heartbeat for 5 minutes</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Importance of Alerts</h3>
+        <ul>
+            <li><strong>Early Warning:</strong> Detect issues before they become critical</li>
+            <li><strong>Automation:</strong> Enable automated responses to common issues</li>
+            <li><strong>Escalation:</strong> Ensure the right people are notified at the right time</li>
+            <li><strong>Documentation:</strong> Create audit trail of system events</li>
+        </ul>
+
+        <div class="warning-box">
+            <p><strong>Alert Fatigue:</strong> Too many alerts can desensitize teams. Focus on actionable alerts that require human intervention.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 4: SLA, SLO, SLI Concepts -->
+<div class="slide">
+    <div class="content">
+        <h2>SLA, SLO, SLI – Concepts</h2>
+        
+        <div class="highlight-box">
+            <p>Service Level concepts provide a framework for measuring and communicating service reliability and performance expectations.</p>
+        </div>
+
+        <h3>Service Level Indicators (SLI)</h3>
+        <div class="feature-card">
+            <h4>What are SLIs?</h4>
+            <p>Quantitative measures of service behavior - the actual metrics you measure</p>
+            <ul>
+                <li><strong>Availability:</strong> Percentage of successful requests</li>
+                <li><strong>Latency:</strong> Time to process requests (95th percentile)</li>
+                <li><strong>Throughput:</strong> Requests processed per second</li>
+                <li><strong>Error Rate:</strong> Percentage of failed requests</li>
+            </ul>
+        </div>
+
+        <h3>Service Level Objectives (SLO)</h3>
+        <div class="feature-card">
+            <h4>What are SLOs?</h4>
+            <p>Target values for SLIs - internal goals for service performance</p>
+            <ul>
+                <li><strong>Availability SLO:</strong> 99.9% uptime (8.76 hours downtime/year)</li>
+                <li><strong>Latency SLO:</strong> 95% of requests < 200ms</li>
+                <li><strong>Error Rate SLO:</strong> < 0.1% error rate</li>
+            </ul>
+        </div>
+
+        <h3>Service Level Agreements (SLA)</h3>
+        <div class="feature-card">
+            <h4>What are SLAs?</h4>
+            <p>Contractual commitments to customers with consequences for not meeting them</p>
+            <ul>
+                <li><strong>Business Contract:</strong> Legal agreement with customers</li>
+                <li><strong>Penalties:</strong> Credits or refunds for SLA breaches</li>
+                <li><strong>Conservative:</strong> Usually less strict than internal SLOs</li>
+            </ul>
+        </div>
+
+        <h3>Relationship Between SLI, SLO, and SLA</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">SLI<br>(Measure)</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">SLO<br>(Target)</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">SLA<br>(Promise)</div>
+        </div>
+
+        <h3>Example: E-commerce Website</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>SLI</th>
+                    <th>SLO</th>
+                    <th>SLA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Availability</strong></td>
+                    <td>Successful requests / Total requests</td>
+                    <td>99.95% availability</td>
+                    <td>99.9% availability</td>
+                </tr>
+                <tr>
+                    <td><strong>Latency</strong></td>
+                    <td>95th percentile response time</td>
+                    <td>< 150ms for 95% of requests</td>
+                    <td>< 200ms for 95% of requests</td>
+                </tr>
+                <tr>
+                    <td><strong>Error Rate</strong></td>
+                    <td>5xx errors / Total requests</td>
+                    <td>< 0.05% error rate</td>
+                    <td>< 0.1% error rate</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Error Budget</h3>
+        <div class="highlight-box">
+            <p><strong>Error Budget</strong> = 100% - SLO. It represents how much unreliability you can tolerate while still meeting your objectives.</p>
+        </div>
+
+        <ul>
+            <li><strong>99.9% SLO = 0.1% Error Budget</strong> (43.8 minutes/month)</li>
+            <li><strong>Balance Innovation vs Reliability:</strong> Spend error budget on new features</li>
+            <li><strong>Freeze Deployments:</strong> When error budget is exhausted</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Best Practice:</strong> Start with SLIs that matter to users, set realistic SLOs based on current performance, and make SLAs more conservative than SLOs.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 5: Prometheus Architecture and Components -->
+<div class="slide">
+    <div class="content">
+        <h2>Prometheus Architecture and Components</h2>
+        
+        <h3>What is Prometheus?</h3>
+        <div class="highlight-box">
+            <p><strong>Prometheus</strong> is an open-source monitoring system that collects metrics from applications and infrastructure, stores them as time-series data, and provides powerful querying capabilities.</p>
+        </div>
+
+        <h3>Core Components</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Prometheus Server</h4>
+                <p>Core component that scrapes, stores metrics and serves queries</p>
+            </div>
+            <div class="feature-card">
+                <h4>Exporters</h4>
+                <p>Agents that expose metrics from systems (Node Exporter, MySQL Exporter)</p>
+            </div>
+            <div class="feature-card">
+                <h4>Pushgateway</h4>
+                <p>For short-lived jobs that can't be scraped directly</p>
+            </div>
+            <div class="feature-card">
+                <h4>AlertManager</h4>
+                <p>Handles alerts sent by Prometheus and routes them to receivers</p>
+            </div>
+        </div>
+
+        <h3>Prometheus Architecture on Kubernetes</h3>
+        <div class="architecture-diagram">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div class="component-box" style="background: #dc2626; font-size: 1.1rem;">Kubernetes Cluster</div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+                <div style="text-align: center;">
+                    <div class="component-box" style="background: #059669;">Prometheus Server</div>
+                    <div style="font-size: 0.9rem; margin-top: 5px;">Scrapes & Stores Metrics</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="component-box" style="background: #7c3aed;">Grafana</div>
+                    <div style="font-size: 0.9rem; margin-top: 5px;">Visualizes Data</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="component-box" style="background: #f59e0b;">AlertManager</div>
+                    <div style="font-size: 0.9rem; margin-top: 5px;">Manages Alerts</div>
+                </div>
+            </div>
+            
+            <div style="margin: 20px 0; font-size: 1rem; color: #dc2626; text-align: center;">↓ Scrapes Metrics From ↓</div>
+            
+            <div style="display: flex; justify-content: space-around;">
+                <div class="component-box" style="background: #6b7280;">Pods</div>
+                <div class="component-box" style="background: #6b7280;">Services</div>
+                <div class="component-box" style="background: #6b7280;">Nodes</div>
+                <div class="component-box" style="background: #6b7280;">Exporters</div>
+            </div>
+        </div>
+
+        <h3>How Prometheus Works (Pull Model)</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Prometheus</div>
+            <div class="arrow">→ Scrape</div>
+            <div class="workflow-phase">Target</div>
+            <div class="arrow">← Metrics</div>
+            <div class="workflow-phase">Store</div>
+        </div>
+
+        <h4>Pull Model Benefits</h4>
+        <ul>
+            <li><strong>Centralized Control:</strong> Prometheus decides what and when to scrape</li>
+            <li><strong>Service Discovery:</strong> Automatically finds new targets in Kubernetes</li>
+            <li><strong>Health Monitoring:</strong> Knows if targets are unreachable</li>
+            <li><strong>Security:</strong> Targets don't need to know about Prometheus location</li>
+        </ul>
+
+        <h3>Grafana - Visualization Layer</h3>
+        <div class="highlight-box">
+            <p><strong>Grafana</strong> connects to Prometheus as a data source and creates beautiful, interactive dashboards for monitoring data visualization.</p>
+        </div>
+
+        <h4>Key Grafana Features</h4>
+        <ul>
+            <li><strong>Dashboard Creation:</strong> Drag-and-drop interface for building dashboards</li>
+            <li><strong>Multiple Data Sources:</strong> Prometheus, InfluxDB, MySQL, etc.</li>
+            <li><strong>Alerting:</strong> Visual alerts with notification channels</li>
+            <li><strong>Templating:</strong> Dynamic dashboards with variables</li>
+            <li><strong>Sharing:</strong> Export/import dashboards as JSON</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Perfect Team:</strong> Prometheus collects and stores metrics, Grafana visualizes them, and AlertManager handles notifications - creating a complete monitoring solution.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 6: Helm Deployment on Kubernetes -->
+<div class="slide">
+    <div class="content">
+        <h2>Deploying Monitoring Stack with Helm</h2>
+        
+        <h3>Why Helm for Monitoring?</h3>
+        <div class="highlight-box">
+            <p><strong>Helm</strong> simplifies Kubernetes deployments by packaging applications into charts. The kube-prometheus-stack chart includes Prometheus, Grafana, and AlertManager pre-configured.</p>
+        </div>
+
+        <h3>kube-prometheus-stack Chart</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Complete Stack</h4>
+                <p>Prometheus, Grafana, AlertManager in one chart</p>
+            </div>
+            <div class="feature-card">
+                <h4>Pre-configured</h4>
+                <p>Ready-to-use dashboards and alerts</p>
+            </div>
+            <div class="feature-card">
+                <h4>Kubernetes Native</h4>
+                <p>ServiceMonitors, PrometheusRules CRDs included</p>
+            </div>
+            <div class="feature-card">
+                <h4>Customizable</h4>
+                <p>Override values for specific requirements</p>
+            </div>
+        </div>
+
+        <h3>Step-by-Step Deployment</h3>
+        <ol class="step-list">
+            <li><strong>Add Helm Repository</strong>
+                <div class="code-block">
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts<br>
+helm repo update
+                </div>
+            </li>
+            <li><strong>Create Namespace</strong>
+                <div class="code-block">
+kubectl create namespace monitoring
+                </div>
+            </li>
+            <li><strong>Install the Stack</strong>
+                <div class="code-block">
+helm install prometheus prometheus-community/kube-prometheus-stack \<br>
+  --namespace monitoring \<br>
+  --set grafana.adminPassword=admin123
+                </div>
+            </li>
+            <li><strong>Verify Installation</strong>
+                <div class="code-block">
+kubectl get pods -n monitoring<br>
+kubectl get svc -n monitoring
+                </div>
+            </li>
+        </ol>
+
+        <h3>What Gets Deployed</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Service Type</th>
+                    <th>Default Port</th>
+                    <th>Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Prometheus</strong></td>
+                    <td>ClusterIP</td>
+                    <td>9090</td>
+                    <td>Metrics collection and storage</td>
+                </tr>
+                <tr>
+                    <td><strong>Grafana</strong></td>
+                    <td>ClusterIP</td>
+                    <td>80</td>
+                    <td>Dashboard and visualization</td>
+                </tr>
+                <tr>
+                    <td><strong>AlertManager</strong></td>
+                    <td>ClusterIP</td>
+                    <td>9093</td>
+                    <td>Alert routing and notifications</td>
+                </tr>
+                <tr>
+                    <td><strong>Node Exporter</strong></td>
+                    <td>DaemonSet</td>
+                    <td>9100</td>
+                    <td>Node-level metrics</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Accessing the Services</h3>
+        <div class="code-block">
+# Access Prometheus UI<br>
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090<br>
+# Open: http://localhost:9090<br><br>
+
+# Access Grafana UI<br>
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80<br>
+# Open: http://localhost:3000 (admin/admin123)<br><br>
+
+# Access AlertManager UI<br>
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-alertmanager 9093:9093<br>
+# Open: http://localhost:9093
+        </div>
+
+        <h3>Custom Values Configuration</h3>
+        <div class="yaml-block">
+# values.yaml<br>
+prometheus:<br>
+  prometheusSpec:<br>
+    retention: 30d<br>
+    storageSpec:<br>
+      volumeClaimTemplate:<br>
+        spec:<br>
+          storageClassName: standard<br>
+          accessModes: ["ReadWriteOnce"]<br>
+          resources:<br>
+            requests:<br>
+              storage: 50Gi<br><br>
+grafana:<br>
+  adminPassword: mySecurePassword<br>
+  service:<br>
+    type: LoadBalancer<br>
+  persistence:<br>
+    enabled: true<br>
+    size: 10Gi<br><br>
+alertmanager:<br>
+  alertmanagerSpec:<br>
+    storage:<br>
+      volumeClaimTemplate:<br>
+        spec:<br>
+          storageClassName: standard<br>
+          accessModes: ["ReadWriteOnce"]<br>
+          resources:<br>
+            requests:<br>
+              storage: 10Gi
+        </div>
+
+        <h3>Deploy with Custom Values</h3>
+        <div class="code-block">
+# Install with custom configuration<br>
+helm install prometheus prometheus-community/kube-prometheus-stack \<br>
+  --namespace monitoring \<br>
+  --values values.yaml<br><br>
+
+# Upgrade existing installation<br>
+helm upgrade prometheus prometheus-community/kube-prometheus-stack \<br>
+  --namespace monitoring \<br>
+  --values values.yaml
+        </div>
+
+        <div class="success-box">
+            <p><strong>Production Ready:</strong> The Helm chart provides a production-ready monitoring stack with persistent storage, proper RBAC, and pre-configured dashboards!</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 7: AlertManager Architecture and Configuration -->
+<div class="slide">
+    <div class="content">
+        <h2>AlertManager Architecture and Configuration</h2>
+        
+        <h3>What is AlertManager?</h3>
+        <div class="highlight-box">
+            <p><strong>AlertManager</strong> receives alerts from Prometheus, groups them, and routes them to the correct notification channels like email, Slack, or PagerDuty.</p>
+        </div>
+
+        <h3>AlertManager Architecture</h3>
+        <div class="architecture-diagram">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div class="component-box" style="background: #059669;">Prometheus Server</div>
+                <div style="margin: 10px 0; color: #dc2626;">↓ Sends Alerts</div>
+                <div class="component-box" style="background: #f59e0b; font-size: 1.2rem;">AlertManager</div>
+            </div>
+            
+            <div style="margin: 20px 0; display: flex; justify-content: space-around;">
+                <div style="text-align: center;">
+                    <div class="component-box" style="background: #6b7280; font-size: 0.9rem;">Grouping</div>
+                    <div style="font-size: 0.8rem; margin-top: 5px;">Similar alerts together</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="component-box" style="background: #6b7280; font-size: 0.9rem;">Inhibition</div>
+                    <div style="font-size: 0.8rem; margin-top: 5px;">Suppress related alerts</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="component-box" style="background: #6b7280; font-size: 0.9rem;">Silencing</div>
+                    <div style="font-size: 0.8rem; margin-top: 5px;">Mute during maintenance</div>
+                </div>
+            </div>
+            
+            <div style="margin: 20px 0; color: #dc2626; text-align: center;">↓ Routes to Receivers</div>
+            
+            <div style="display: flex; justify-content: space-around;">
+                <div class="component-box" style="background: #7c3aed;">Slack</div>
+                <div class="component-box" style="background: #7c3aed;">Email</div>
+                <div class="component-box" style="background: #7c3aed;">PagerDuty</div>
+                <div class="component-box" style="background: #7c3aed;">Webhook</div>
+            </div>
+        </div>
+
+        <h3>Key AlertManager Features</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Grouping</h4>
+                <p>Combines similar alerts to reduce notification spam</p>
+            </div>
+            <div class="feature-card">
+                <h4>Routing</h4>
+                <p>Sends alerts to different teams based on labels</p>
+            </div>
+            <div class="feature-card">
+                <h4>Inhibition</h4>
+                <p>Suppresses alerts when higher priority ones are active</p>
+            </div>
+            <div class="feature-card">
+                <h4>Silencing</h4>
+                <p>Temporarily mute alerts during planned maintenance</p>
+            </div>
+        </div>
+
+        <h3>Alert Flow in Kubernetes</h3>
+        <div class="workflow-diagram">
+            <div class="workflow-phase">Pod/Service</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Prometheus</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">AlertManager</div>
+            <div class="arrow">→</div>
+            <div class="workflow-phase">Slack/Email</div>
+        </div>
+
+        <h3>Basic AlertManager Configuration</h3>
+        <div class="yaml-block">
+# alertmanager.yml<br>
+global:<br>
+  smtp_smarthost: 'localhost:587'<br>
+  smtp_from: 'alerts@company.com'<br><br>
+route:<br>
+  group_by: ['alertname', 'cluster']<br>
+  group_wait: 10s<br>
+  group_interval: 10s<br>
+  repeat_interval: 1h<br>
+  receiver: 'web.hook'<br>
+  routes:<br>
+    - match:<br>
+        severity: critical<br>
+      receiver: 'critical-alerts'<br><br>
+receivers:<br>
+  - name: 'web.hook'<br>
+    webhook_configs:<br>
+      - url: 'http://127.0.0.1:5001/'<br>
+  - name: 'critical-alerts'<br>
+    email_configs:<br>
+      - to: 'admin@company.com'<br>
+        subject: 'Critical Alert: {{ .GroupLabels.alertname }}'<br>
+        body: 'Alert details: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+        </div>
+
+        <h3>Alert States</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>State</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Inactive</strong></td>
+                    <td>Alert condition is not met</td>
+                    <td>No action taken</td>
+                </tr>
+                <tr>
+                    <td><strong>Pending</strong></td>
+                    <td>Condition met but waiting for 'for' duration</td>
+                    <td>Monitoring, not yet firing</td>
+                </tr>
+                <tr>
+                    <td><strong>Firing</strong></td>
+                    <td>Condition met for specified duration</td>
+                    <td>Alert sent to AlertManager</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Creating Alert Rules</h3>
+        <div class="yaml-block">
+# prometheus-rules.yaml<br>
+apiVersion: monitoring.coreos.com/v1<br>
+kind: PrometheusRule<br>
+metadata:<br>
+  name: basic-alerts<br>
+  namespace: monitoring<br>
+spec:<br>
+  groups:<br>
+    - name: basic.rules<br>
+      rules:<br>
+        - alert: HighCPUUsage<br>
+          expr: 100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80<br>
+          for: 2m<br>
+          labels:<br>
+            severity: warning<br>
+          annotations:<br>
+            summary: "High CPU usage on {{ $labels.instance }}"<br>
+            description: "CPU usage is above 80% for more than 2 minutes"<br><br>
+        - alert: PodCrashLooping<br>
+          expr: rate(kube_pod_container_status_restarts_total[15m]) > 0<br>
+          for: 5m<br>
+          labels:<br>
+            severity: critical<br>
+          annotations:<br>
+            summary: "Pod {{ $labels.pod }} is crash looping"<br>
+            description: "Pod has restarted {{ $value }} times in the last 15 minutes"
+        </div>
+
+        <div class="success-box">
+            <p><strong>Smart Alerting:</strong> AlertManager ensures you get the right alerts to the right people at the right time, without overwhelming your team with noise.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<div class="slide">
+    <div class="content">
+        <h2>Alertmanager and SLA Thresholds</h2>
+        
+        <h3>Introduction to Alertmanager</h3>
+        <div class="highlight-box">
+            <p><strong>Alertmanager</strong> handles alerts sent by Prometheus server, taking care of deduplicating, grouping, and routing them to correct receivers like email, Slack, or PagerDuty.</p>
+        </div>
+
+        <h3>Alertmanager Features</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Grouping</h4>
+                <p>Group similar alerts to reduce noise</p>
+            </div>
+            <div class="feature-card">
+                <h4>Inhibition</h4>
+                <p>Suppress alerts when other alerts are firing</p>
+            </div>
+            <div class="feature-card">
+                <h4>Silencing</h4>
+                <p>Temporarily mute alerts during maintenance</p>
+            </div>
+            <div class="feature-card">
+                <h4>Routing</h4>
+                <p>Send alerts to different teams based on labels</p>
+            </div>
+        </div>
+
+        <h3>Creating Alerts in Prometheus</h3>
+        <div class="yaml-block">
+# prometheus-rules.yaml<br>
+groups:<br>
+  - name: example-alerts<br>
+    rules:<br>
+      - alert: HighCPUUsage<br>
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80<br>
+        for: 2m<br>
+        labels:<br>
+          severity: warning<br>
+          team: infrastructure<br>
+        annotations:<br>
+          summary: "High CPU usage detected"<br>
+          description: "CPU usage is above 80% for more than 2 minutes on {{ $labels.instance }}"<br><br>
+      - alert: HighMemoryUsage<br>
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85<br>
+        for: 5m<br>
+        labels:<br>
+          severity: critical<br>
+          team: infrastructure<br>
+        annotations:<br>
+          summary: "High memory usage detected"<br>
+          description: "Memory usage is above 85% for more than 5 minutes on {{ $labels.instance }}"
+        </div>
+
+        <h3>Example Alert Rules</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Alert</th>
+                    <th>Expression</th>
+                    <th>Threshold</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>CPU Alert</strong></td>
+                    <td>100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)</td>
+                    <td>> 80%</td>
+                </tr>
+                <tr>
+                    <td><strong>Memory Alert</strong></td>
+                    <td>(1 - node_memory_MemAvailable_bytes/node_memory_MemTotal_bytes) * 100</td>
+                    <td>> 85%</td>
+                </tr>
+                <tr>
+                    <td><strong>Disk Alert</strong></td>
+                    <td>(1 - node_filesystem_avail_bytes/node_filesystem_size_bytes) * 100</td>
+                    <td>> 90%</td>
+                </tr>
+                <tr>
+                    <td><strong>Pod Restart</strong></td>
+                    <td>increase(kube_pod_container_status_restarts_total[1h])</td>
+                    <td>> 5</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>SLA Thresholds and Use</h3>
+        <div class="highlight-box">
+            <p>Set alert thresholds based on your SLOs to ensure you're notified before SLA breaches occur.</p>
+        </div>
+
+        <h4>SLA-based Alert Strategy</h4>
+        <ul>
+            <li><strong>Error Budget Alerts:</strong> Alert when 50% of error budget is consumed</li>
+            <li><strong>Burn Rate Alerts:</strong> Alert on fast error budget consumption</li>
+            <li><strong>Availability Alerts:</strong> Alert when availability drops below SLO</li>
+            <li><strong>Latency Alerts:</strong> Alert when response times exceed SLO</li>
+        </ul>
+
+        <div class="yaml-block">
+# SLA-based alert example<br>
+- alert: ErrorBudgetBurn<br>
+  expr: (<br>
+    1 - (<br>
+      sum(rate(http_requests_total{code!~"5.."}[5m])) /<br>
+      sum(rate(http_requests_total[5m]))<br>
+    )<br>
+  ) > 0.001  # 0.1% error rate (SLO breach)<br>
+  for: 2m<br>
+  labels:<br>
+    severity: critical<br>
+  annotations:<br>
+    summary: "SLA breach: Error rate above 0.1%"
+        </div>
+
+        <h3>Creating Alerts from Grafana GUI</h3>
+        <div class="highlight-box">
+            <p>Grafana provides a user-friendly interface to create alerts directly from dashboards without writing YAML files.</p>
+        </div>
+
+        <h4>Steps to Create GUI Alerts</h4>
+        <ol class="step-list">
+            <li><strong>Open Dashboard Panel:</strong> Click on panel title → Edit</li>
+            <li><strong>Go to Alert Tab:</strong> Click "Alert" tab in panel editor</li>
+            <li><strong>Create Alert Rule:</strong> Click "Create Alert" button</li>
+            <li><strong>Set Conditions:</strong> Define query, condition, and threshold</li>
+            <li><strong>Configure Notifications:</strong> Select notification channels</li>
+            <li><strong>Save Alert:</strong> Test and save the alert rule</li>
+        </ol>
+
+        <h4>GUI Alert Configuration</h4>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Query</h4>
+                <p>Use existing panel query or create new one</p>
+            </div>
+            <div class="feature-card">
+                <h4>Condition</h4>
+                <p>IS ABOVE, IS BELOW, IS OUTSIDE RANGE</p>
+            </div>
+            <div class="feature-card">
+                <h4>Evaluation</h4>
+                <p>Set frequency and duration for alert evaluation</p>
+            </div>
+            <div class="feature-card">
+                <h4>Notifications</h4>
+                <p>Choose Slack, email, webhook channels</p>
+            </div>
+        </div>
+
+        <h4>Example GUI Alert Setup</h4>
+        <div class="yaml-block">
+# GUI Alert Configuration Example:<br>
+Query: avg(cpu_usage_percent)<br>
+Condition: IS ABOVE 80<br>
+Evaluation: every 1m for 2m<br>
+Notification: #alerts-channel<br>
+Message: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+        </div>
+
+        <div class="warning-box">
+            <p><strong>Alert Tuning:</strong> Start with conservative thresholds and adjust based on false positive rates and actual incidents.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 9: Hands-on Lab - Complete Monitoring Setup -->
+<div class="slide">
+    <div class="content">
+        <h2>Hands-on Lab: Complete Monitoring Setup</h2>
+        
+        <div class="lab-section">
+            <h3>Lab Objective</h3>
+            <p>Deploy a complete monitoring stack with Prometheus, Grafana, and AlertManager on Kubernetes using Helm, then configure alerts and dashboards.</p>
+        </div>
+
+        <h3>Lab Steps Overview</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Step 1</h4>
+                <p>Deploy monitoring stack with Helm</p>
+            </div>
+            <div class="feature-card">
+                <h4>Step 2</h4>
+                <p>Configure Slack integration</p>
+            </div>
+            <div class="feature-card">
+                <h4>Step 3</h4>
+                <p>Create custom alerts</p>
+            </div>
+            <div class="feature-card">
+                <h4>Step 4</h4>
+                <p>Build Grafana dashboard</p>
+            </div>
+        </div>
+
+        <h3>Step 1: Deploy Monitoring Stack</h3>
+        <div class="code-block">
+# Add Helm repository<br>
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts<br>
+helm repo update<br><br>
+
+# Create namespace<br>
+kubectl create namespace monitoring<br><br>
+
+# Install complete stack<br>
+helm install prometheus prometheus-community/kube-prometheus-stack \<br>
+  --namespace monitoring \<br>
+  --set grafana.adminPassword=admin123 \<br>
+  --set prometheus.prometheusSpec.retention=30d<br><br>
+
+# Verify installation<br>
+kubectl get pods -n monitoring<br>
+kubectl get svc -n monitoring
+        </div>
+
+        <h3>Step 2: Access Services</h3>
+        <div class="code-block">
+# Access Prometheus (Terminal 1)<br>
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090<br>
+# Open: http://localhost:9090<br><br>
+
+# Access Grafana (Terminal 2)<br>
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80<br>
+# Open: http://localhost:3000 (admin/admin123)<br><br>
+
+# Access AlertManager (Terminal 3)<br>
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-alertmanager 9093:9093<br>
+# Open: http://localhost:9093
+        </div>
+
+        <h3>Step 3: Configure Slack Alerts</h3>
+        <div class="yaml-block">
+# Create alertmanager-config.yaml<br>
+apiVersion: v1<br>
+kind: Secret<br>
+metadata:<br>
+  name: alertmanager-main<br>
+  namespace: monitoring<br>
+stringData:<br>
+  alertmanager.yml: |<br>
+    global:<br>
+      slack_api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'<br>
+    route:<br>
+      group_by: ['alertname']<br>
+      group_wait: 10s<br>
+      group_interval: 10s<br>
+      repeat_interval: 1h<br>
+      receiver: 'slack-notifications'<br>
+    receivers:<br>
+      - name: 'slack-notifications'<br>
+        slack_configs:<br>
+          - channel: '#monitoring'<br>
+            title: 'Alert: {{ .GroupLabels.alertname }}'<br>
+            text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+        </div>
+
+        <div class="code-block">
+# Apply configuration<br>
+kubectl apply -f alertmanager-config.yaml<br><br>
+
+# Restart AlertManager<br>
+kubectl rollout restart statefulset/alertmanager-prometheus-kube-prometheus-alertmanager -n monitoring
+        </div>
+
+        <h3>Step 4: Create Custom Alert</h3>
+        <div class="yaml-block">
+# Create custom-alert.yaml<br>
+apiVersion: monitoring.coreos.com/v1<br>
+kind: PrometheusRule<br>
+metadata:<br>
+  name: custom-alerts<br>
+  namespace: monitoring<br>
+  labels:<br>
+    prometheus: kube-prometheus<br>
+    role: alert-rules<br>
+spec:<br>
+  groups:<br>
+    - name: custom.rules<br>
+      rules:<br>
+        - alert: HighCPUUsage<br>
+          expr: 100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80<br>
+          for: 2m<br>
+          labels:<br>
+            severity: warning<br>
+          annotations:<br>
+            summary: "High CPU usage detected"<br>
+            description: "CPU usage is {{ $value }}% for more than 2 minutes"
+        </div>
+
+        <div class="code-block">
+# Apply custom alert<br>
+kubectl apply -f custom-alert.yaml<br><br>
+
+# Check if alert is loaded<br>
+kubectl get prometheusrules -n monitoring
+        </div>
+
+        <h3>Step 5: Create Grafana Dashboard</h3>
+        <ol class="step-list">
+            <li><strong>Login to Grafana:</strong> http://localhost:3000 (admin/admin123)</li>
+            <li><strong>Create Dashboard:</strong> Click "+" → "Dashboard"</li>
+            <li><strong>Add Panel:</strong> Click "Add new panel"</li>
+            <li><strong>Configure Query:</strong> 
+                <div class="code-block">
+# CPU Usage Query<br>
+100 - (avg(irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)<br><br>
+
+# Memory Usage Query<br>
+(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
+                </div>
+            </li>
+            <li><strong>Save Dashboard:</strong> Give it a name and save</li>
+        </ol>
+
+        <div class="success-box">
+            <p><strong>Lab Complete!</strong> You now have a fully functional monitoring stack with Prometheus collecting metrics, Grafana visualizing them, and AlertManager sending notifications to Slack.</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 10: Summary and Key Takeaways -->
+<div class="slide">
+    <div class="content">
+        <h2>Summary and Key Takeaways</h2>
+        
+        <h3>What We Learned</h3>
+        <div class="highlight-box">
+            <p>You now understand how to implement a complete monitoring solution using Prometheus, Grafana, and AlertManager on Kubernetes with Helm.</p>
+        </div>
+
+        <h3>Core Concepts Mastered</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Monitoring Fundamentals</h4>
+                <p>Three pillars: Metrics, Logs, Traces</p>
+            </div>
+            <div class="feature-card">
+                <h4>SLA/SLO/SLI</h4>
+                <p>Service level concepts for reliability</p>
+            </div>
+            <div class="feature-card">
+                <h4>Prometheus Architecture</h4>
+                <p>Pull-based metrics collection system</p>
+            </div>
+            <div class="feature-card">
+                <h4>Grafana Dashboards</h4>
+                <p>Visualization and alerting platform</p>
+            </div>
+        </div>
+
+        <h3>Technical Skills Gained</h3>
+        <ul>
+            <li><strong>Helm Deployment:</strong> Deploy monitoring stack with kube-prometheus-stack chart</li>
+            <li><strong>Alert Configuration:</strong> Create PrometheusRules and configure AlertManager</li>
+            <li><strong>Slack Integration:</strong> Set up notification channels for team collaboration</li>
+            <li><strong>Dashboard Creation:</strong> Build custom Grafana dashboards with PromQL queries</li>
+            <li><strong>Kubernetes Monitoring:</strong> Monitor pods, services, and cluster resources</li>
+        </ul>
+
+        <h3>Architecture Understanding</h3>
+        <div class="architecture-diagram">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div class="component-box" style="background: #dc2626;">Kubernetes Cluster</div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+                <div style="text-align: center;">
+                    <div class="component-box" style="background: #059669;">Prometheus</div>
+                    <div style="font-size: 0.8rem; margin-top: 5px;">Collects & Stores</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="component-box" style="background: #7c3aed;">Grafana</div>
+                    <div style="font-size: 0.8rem; margin-top: 5px;">Visualizes</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="component-box" style="background: #f59e0b;">AlertManager</div>
+                    <div style="font-size: 0.8rem; margin-top: 5px;">Notifies</div>
+                </div>
+            </div>
+        </div>
+
+        <h3>Production Best Practices</h3>
+        <ul>
+            <li><strong>Persistent Storage:</strong> Configure storage for metrics retention</li>
+            <li><strong>Resource Limits:</strong> Set appropriate CPU/memory limits</li>
+            <li><strong>High Availability:</strong> Deploy multiple replicas for critical components</li>
+            <li><strong>Security:</strong> Enable authentication and RBAC</li>
+            <li><strong>Backup:</strong> Regular backup of Grafana dashboards and configurations</li>
+        </ul>
+
+        <h3>Next Steps for Learning</h3>
+        <ol class="step-list">
+            <li><strong>Advanced PromQL:</strong> Learn complex queries and functions</li>
+            <li><strong>Custom Exporters:</strong> Create application-specific metrics exporters</li>
+            <li><strong>Distributed Tracing:</strong> Implement Jaeger or Zipkin for microservices</li>
+            <li><strong>Log Management:</strong> Add ELK/EFK stack for centralized logging</li>
+            <li><strong>Multi-cluster Monitoring:</strong> Federated Prometheus setup</li>
+        </ol>
+
+        <h3>Common Commands Reference</h3>
+        <div class="code-block">
+# Deploy monitoring stack<br>
+helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring<br><br>
+
+# Access services<br>
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090<br>
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80<br>
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-alertmanager 9093:9093<br><br>
+
+# Create custom alerts<br>
+kubectl apply -f prometheus-rules.yaml<br><br>
+
+# Check alert rules<br>
+kubectl get prometheusrules -n monitoring
+        </div>
+
+        <h3>Key Resources</h3>
+        <ul>
+            <li><strong>Prometheus Documentation:</strong> https://prometheus.io/docs/</li>
+            <li><strong>Grafana Documentation:</strong> https://grafana.com/docs/</li>
+            <li><strong>Helm Charts:</strong> https://prometheus-community.github.io/helm-charts/</li>
+            <li><strong>PromQL Guide:</strong> https://prometheus.io/docs/prometheus/latest/querying/basics/</li>
+        </ul>
+
+        <div class="success-box">
+            <p><strong>Congratulations!</strong> You're now equipped to implement comprehensive monitoring solutions for modern applications and infrastructure. Start monitoring your applications today!</p>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+</body>
+</html>

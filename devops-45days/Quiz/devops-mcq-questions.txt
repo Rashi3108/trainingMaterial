@@ -1,0 +1,127 @@
+Batch 4 -> MCQ Questions - Git, Jenkins & SonarQube
+================================================
+
+Question 1 What are the three types of Version Control Systems?
+a) Local, Remote, Cloud
+b) Local, Centralized, Distributed
+c) Basic, Advanced, Professional
+d) Individual, Team, Enterprise
+
+Answer: B
+
+---
+
+Question 2 What does the `git init` command do?
+a) Initializes a new Git repository
+b) Installs Git on your system
+c) Creates a new branch
+d) Commits changes to repository
+
+Answer: A
+
+---
+
+Question 3 In Git terminology, what is a "Repository (Repo)"?
+a) A backup of your files
+b) Storage location for your project
+c) A type of branch
+d) A commit message
+
+Answer: B
+
+---
+
+Question 4 What is a "Branch" in Git?
+a) A backup copy of the main code
+b) A parallel version of your repository
+c) A commit message
+d) A merge conflict
+
+Answer: B
+
+---
+
+Question 5 What does "Clone" mean in Git?
+a) Copying files manually
+b) Creating a backup
+c) Creating a local copy of a remote repository
+d) Merging two branches
+
+Answer: C
+
+---
+
+Question 6 What is SonarQube?
+a) A code editor
+b) An open-source platform for continuous inspection of code quality
+c) A version control system
+d) A deployment tool
+
+Answer: B
+
+---
+
+Question 7 What are the three main quality dimensions that SonarQube measures?
+a) Performance, Security, Scalability
+b) Reliability, Security, Maintainability
+c) Bugs, Vulnerabilities, Code Coverage
+d) Speed, Accuracy, Efficiency
+
+Answer: B
+
+---
+
+Question 8 Which component is responsible for analyzing source code locally and sending results to SonarQube Server?
+a) SonarQube Database
+b) SonarQube Web Server
+c) SonarQube Scanner
+d) SonarLint
+
+Answer: C
+
+---
+
+Question 9 [SonarQube - Code Quality]
+What does SonarQube consider as "Code Smells"?
+a) Actual bugs in the code
+b) Security vulnerabilities
+c) Code that is confusing, hard to maintain, or violates coding standards
+d) Test coverage issues
+
+Answer: C
+
+---
+
+Question 10 [Jenkins - Job Types]
+What is the main advantage of Pipeline jobs over Freestyle jobs in Jenkins?
+a) Pipeline jobs are faster to execute
+b) Pipeline jobs support version control of job configuration
+c) Pipeline jobs use less memory
+d) Pipeline jobs don't need plugins
+
+Answer: B
+
+---
+
+Question 11 [Jenkins - Pipeline Components]
+In a Jenkins Declarative Pipeline, which section runs regardless of build result for cleanup activities?
+a) stages
+b) steps
+c) post { always }
+d) environment
+
+Answer: C
+
+---
+
+Question 12 [Jenkins - Maven Integration]
+What is the correct Maven command to run SonarQube analysis in a Jenkins pipeline?
+a) sh 'mvn sonar:sonar'
+b) sh 'mvn sonarqube:analyze'
+c) sh 'sonar-scanner'
+d) sh 'mvn clean sonar'
+
+Answer: A
+
+---
+

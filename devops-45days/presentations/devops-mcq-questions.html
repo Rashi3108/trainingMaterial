@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps MCQ Questions - Git, Jenkins & SonarQube</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #4a5568;
+        }
+
+        .question {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-number {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            background: white;
+            margin: 8px 0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .options li:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .options li.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .options li.correct {
+            border-color: #48bb78;
+            background: #48bb78;
+            color: white;
+        }
+
+        .options li.incorrect {
+            border-color: #f56565;
+            background: #f56565;
+            color: white;
+        }
+
+        .answer-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e6fffa;
+            border-radius: 8px;
+            border-left: 4px solid #38b2ac;
+            display: none;
+        }
+
+        .answer-section.show {
+            display: block;
+        }
+
+        .answer-text {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .explanation {
+            color: #4a5568;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .show-answer-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .show-answer-btn:hover {
+            background: #5a67d8;
+        }
+
+        .category-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .score-section {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .score-section.show {
+            display: block;
+        }
+
+        .submit-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 20px auto;
+            display: block;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #38a169;
+        }
+
+        .reset-btn {
+            background: #718096;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: #4a5568;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 DevOps MCQ Questions</h1>
+            <p>Git, Jenkins & SonarQube - Test Your Knowledge</p>
+        </div>
+
+        <!-- Question 1 -->
+        <div class="question" data-question="1">
+            <div class="category-tag">Git</div>
+            <div class="question-number">Question 1</div>
+            <div class="question-text">Which Git command is used to create a new branch and switch to it in a single command?</div>
+            <ul class="options">
+                <li data-option="a">git branch new-feature && git checkout new-feature</li>
+                <li data-option="b">git checkout -b new-feature</li>
+                <li data-option="c">git switch -c new-feature</li>
+                <li data-option="d">Both B and C are correct</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(1)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: D) Both B and C are correct</div>
+                <div class="explanation">Both `git checkout -b new-feature` and `git switch -c new-feature` create a new branch and switch to it. The `git switch` command is newer and more intuitive for branch operations.</div>
+            </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question" data-question="2">
+            <div class="category-tag">Git</div>
+            <div class="question-number">Question 2</div>
+            <div class="question-text">What is the difference between `git merge` and `git rebase`?</div>
+            <ul class="options">
+                <li data-option="a">Merge creates a merge commit, rebase rewrites commit history</li>
+                <li data-option="b">Merge is faster than rebase</li>
+                <li data-option="c">Rebase creates a merge commit, merge rewrites history</li>
+                <li data-option="d">There is no difference between them</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(2)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: A) Merge creates a merge commit, rebase rewrites commit history</div>
+                <div class="explanation">Git merge preserves the commit history and creates a merge commit, while git rebase rewrites the commit history by replaying commits on top of another branch, creating a linear history.</div>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question" data-question="3">
+            <div class="category-tag">Git</div>
+            <div class="question-number">Question 3</div>
+            <div class="question-text">Which Git workflow strategy is best suited for continuous deployment environments?</div>
+            <ul class="options">
+                <li data-option="a">Git Flow</li>
+                <li data-option="b">GitHub Flow</li>
+                <li data-option="c">GitLab Flow</li>
+                <li data-option="d">Centralized Workflow</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(3)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: B) GitHub Flow</div>
+                <div class="explanation">GitHub Flow is ideal for continuous deployment as it's simple, has only one main branch, and supports frequent deployments. It's lightweight compared to Git Flow which has multiple long-lived branches.</div>
+            </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="question" data-question="4">
+            <div class="category-tag">Git</div>
+            <div class="question-number">Question 4</div>
+            <div class="question-text">What does `git stash` do?</div>
+            <ul class="options">
+                <li data-option="a">Permanently deletes uncommitted changes</li>
+                <li data-option="b">Temporarily saves uncommitted changes</li>
+                <li data-option="c">Creates a new branch with current changes</li>
+                <li data-option="d">Commits changes to the current branch</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(4)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: B) Temporarily saves uncommitted changes</div>
+                <div class="explanation">Git stash temporarily saves your uncommitted changes (both staged and unstaged) so you can work on something else, then come back and re-apply them later using `git stash pop` or `git stash apply`.</div>
+            </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="question" data-question="5">
+            <div class="category-tag">Jenkins</div>
+            <div class="question-number">Question 5</div>
+            <div class="question-text">What is the main advantage of Jenkins Pipeline jobs over Freestyle jobs?</div>
+            <ul class="options">
+                <li data-option="a">Pipeline jobs are faster to execute</li>
+                <li data-option="b">Pipeline jobs support version control of job configuration</li>
+                <li data-option="c">Pipeline jobs use less system resources</li>
+                <li data-option="d">Pipeline jobs don't require plugins</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(5)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: B) Pipeline jobs support version control of job configuration</div>
+                <div class="explanation">Pipeline jobs use Jenkinsfile which can be stored in version control, allowing job configuration to be versioned, reviewed, and shared. This provides better traceability and collaboration compared to GUI-based Freestyle jobs.</div>
+            </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="question" data-question="6">
+            <div class="category-tag">Jenkins</div>
+            <div class="question-number">Question 6</div>
+            <div class="question-text">In a Jenkins Declarative Pipeline, which section is used for cleanup activities regardless of build result?</div>
+            <ul class="options">
+                <li data-option="a">stages</li>
+                <li data-option="b">post { always }</li>
+                <li data-option="c">post { success }</li>
+                <li data-option="d">environment</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(6)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: B) post { always }</div>
+                <div class="explanation">The `post { always }` section in a Declarative Pipeline runs regardless of the build result (success, failure, or unstable). It's commonly used for cleanup activities like `cleanWs()` or sending notifications.</div>
+            </div>
+        </div>
+
+        <!-- Question 7 -->
+        <div class="question" data-question="7">
+            <div class="category-tag">Jenkins</div>
+            <div class="question-number">Question 7</div>
+            <div class="question-text">Which Jenkins plugin is essential for integrating with GitHub webhooks?</div>
+            <ul class="options">
+                <li data-option="a">Git Plugin</li>
+                <li data-option="b">GitHub Integration Plugin</li>
+                <li data-option="c">Pipeline Plugin</li>
+                <li data-option="d">Maven Integration Plugin</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(7)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: B) GitHub Integration Plugin</div>
+                <div class="explanation">The GitHub Integration Plugin enables Jenkins to receive webhook notifications from GitHub, allowing automatic triggering of builds when code is pushed to the repository.</div>
+            </div>
+        </div>
+
+        <!-- Question 8 -->
+        <div class="question" data-question="8">
+            <div class="category-tag">Jenkins</div>
+            <div class="question-number">Question 8</div>
+            <div class="question-text">What is the correct syntax to define tools in a Jenkins Declarative Pipeline?</div>
+            <ul class="options">
+                <li data-option="a">tools { maven 'Maven-3.8.1'; jdk 'JDK-11' }</li>
+                <li data-option="b">tools { maven: 'Maven-3.8.1', jdk: 'JDK-11' }</li>
+                <li data-option="c">tools { maven 'Maven-3.8.1' jdk 'JDK-11' }</li>
+                <li data-option="d">tools { maven('Maven-3.8.1'), jdk('JDK-11') }</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(8)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: C) tools { maven 'Maven-3.8.1' jdk 'JDK-11' }</div>
+                <div class="explanation">In Jenkins Declarative Pipeline, the tools section uses the syntax `toolType 'toolName'` with each tool on a separate line, without semicolons or commas.</div>
+            </div>
+        </div>
+
+        <!-- Question 9 -->
+        <div class="question" data-question="9">
+            <div class="category-tag">SonarQube</div>
+            <div class="question-number">Question 9</div>
+            <div class="question-text">What are the three main quality dimensions that SonarQube measures?</div>
+            <ul class="options">
+                <li data-option="a">Performance, Security, Scalability</li>
+                <li data-option="b">Reliability, Security, Maintainability</li>
+                <li data-option="c">Bugs, Vulnerabilities, Code Coverage</li>
+                <li data-option="d">Complexity, Duplication, Documentation</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(9)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: B) Reliability, Security, Maintainability</div>
+                <div class="explanation">SonarQube measures code quality across three main dimensions: Reliability (bugs), Security (vulnerabilities), and Maintainability (code smells). Each dimension has its own rating from A (best) to E (worst).</div>
+            </div>
+        </div>
+
+        <!-- Question 10 -->
+        <div class="question" data-question="10">
+            <div class="category-tag">SonarQube</div>
+            <div class="question-number">Question 10</div>
+            <div class="question-text">Which SonarQube component is responsible for analyzing source code locally?</div>
+            <ul class="options">
+                <li data-option="a">SonarQube Server</li>
+                <li data-option="b">SonarQube Database</li>
+                <li data-option="c">SonarQube Scanner</li>
+                <li data-option="d">SonarLint</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(10)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: C) SonarQube Scanner</div>
+                <div class="explanation">SonarQube Scanner analyzes the source code locally and sends the analysis results to the SonarQube Server. Different scanners exist for different build tools (Maven, Gradle, CLI).</div>
+            </div>
+        </div>
+
+        <!-- Question 11 -->
+        <div class="question" data-question="11">
+            <div class="category-tag">SonarQube</div>
+            <div class="question-number">Question 11</div>
+            <div class="question-text">What is the purpose of Quality Gates in SonarQube?</div>
+            <ul class="options">
+                <li data-option="a">To control user access to projects</li>
+                <li data-option="b">To define quality criteria that must be met before deployment</li>
+                <li data-option="c">To schedule automatic code analysis</li>
+                <li data-option="d">To manage SonarQube plugins</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(11)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: B) To define quality criteria that must be met before deployment</div>
+                <div class="explanation">Quality Gates define a set of conditions (like coverage > 80%, no critical bugs) that code must pass before it can be deployed. They act as a checkpoint in CI/CD pipelines to ensure code quality standards.</div>
+            </div>
+        </div>
+
+        <!-- Question 12 -->
+        <div class="question" data-question="12">
+            <div class="category-tag">SonarQube</div>
+            <div class="question-number">Question 12</div>
+            <div class="question-text">Which dependency is NOT required for running SonarQube?</div>
+            <ul class="options">
+                <li data-option="a">Java 11 or 17</li>
+                <li data-option="b">Elasticsearch (embedded)</li>
+                <li data-option="c">Docker</li>
+                <li data-option="d">Database (PostgreSQL recommended)</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(12)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: C) Docker</div>
+                <div class="explanation">Docker is not required to run SonarQube. While Docker simplifies deployment, SonarQube can run directly on a system with Java, embedded Elasticsearch, and a database. Docker is just one deployment option.</div>
+            </div>
+        </div>
+
+        <!-- Question 13 -->
+        <div class="question" data-question="13">
+            <div class="category-tag">Integration</div>
+            <div class="question-number">Question 13</div>
+            <div class="question-text">In a complete CI/CD pipeline, what is the typical order of operations?</div>
+            <ul class="options">
+                <li data-option="a">Deploy → Build → Test → Code Analysis</li>
+                <li data-option="b">Code Analysis → Build → Test → Deploy</li>
+                <li data-option="c">Checkout → Build → Test → Code Analysis → Deploy</li>
+                <li data-option="d">Test → Build → Code Analysis → Deploy</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(13)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: C) Checkout → Build → Test → Code Analysis → Deploy</div>
+                <div class="explanation">The typical CI/CD pipeline flow is: 1) Checkout code from repository, 2) Build the application, 3) Run tests, 4) Perform code quality analysis (SonarQube), 5) Deploy if all previous steps pass.</div>
+            </div>
+        </div>
+
+        <!-- Question 14 -->
+        <div class="question" data-question="14">
+            <div class="category-tag">Integration</div>
+            <div class="question-number">Question 14</div>
+            <div class="question-text">Which command would you use in a Jenkins pipeline to run SonarQube analysis for a Maven project?</div>
+            <ul class="options">
+                <li data-option="a">sh 'sonar-scanner'</li>
+                <li data-option="b">sh 'mvn sonar:sonar'</li>
+                <li data-option="c">sh 'mvn sonarqube:analyze'</li>
+                <li data-option="d">sh 'mvn clean sonar'</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(14)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: B) sh 'mvn sonar:sonar'</div>
+                <div class="explanation">For Maven projects, `mvn sonar:sonar` is the correct command to run SonarQube analysis. This uses the SonarQube Maven plugin to analyze the code and send results to the SonarQube server.</div>
+            </div>
+        </div>
+
+        <!-- Question 15 -->
+        <div class="question" data-question="15">
+            <div class="category-tag">Integration</div>
+            <div class="question-number">Question 15</div>
+            <div class="question-text">What is the benefit of using SonarLint in VS Code alongside SonarQube server analysis?</div>
+            <ul class="options">
+                <li data-option="a">SonarLint replaces the need for SonarQube server</li>
+                <li data-option="b">SonarLint provides real-time feedback while coding, SonarQube provides comprehensive project analysis</li>
+                <li data-option="c">SonarLint is faster than SonarQube server analysis</li>
+                <li data-option="d">SonarLint can analyze more programming languages</li>
+            </ul>
+            <button class="show-answer-btn" onclick="showAnswer(15)">Show Answer</button>
+            <div class="answer-section">
+                <div class="answer-text">Correct Answer: B) SonarLint provides real-time feedback while coding, SonarQube provides comprehensive project analysis</div>
+                <div class="explanation">SonarLint and SonarQube server complement each other: SonarLint gives immediate feedback as you write code in your IDE, while SonarQube server provides comprehensive analysis of the entire project, quality gates, and historical trends.</div>
+            </div>
+        </div>
+
+        <button class="submit-btn" onclick="calculateScore()">Calculate Score</button>
+        <button class="reset-btn" onclick="resetQuiz()">Reset Quiz</button>
+
+        <div class="score-section" id="scoreSection">
+            <h2>🎉 Quiz Results</h2>
+            <p id="scoreText"></p>
+            <p id="performanceText"></p>
+        </div>
+    </div>
+
+    <script>
+        let userAnswers = {};
+        const correctAnswers = {
+            1: 'd', 2: 'a', 3: 'b', 4: 'b', 5: 'b',
+            6: 'b', 7: 'b', 8: 'c', 9: 'b', 10: 'c',
+            11: 'b', 12: 'c', 13: 'c', 14: 'b', 15: 'b'
+        };
+
+        // Handle option selection
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'LI' && e.target.closest('.options')) {
+                const question = e.target.closest('.question');
+                const questionNum = question.dataset.question;
+                const options = question.querySelectorAll('.options li');
+                
+                // Remove previous selection
+                options.forEach(opt => opt.classList.remove('selected'));
+                
+                // Add selection to clicked option
+                e.target.classList.add('selected');
+                
+                // Store user answer
+                userAnswers[questionNum] = e.target.dataset.option;
+            }
+        });
+
+        function showAnswer(questionNum) {
+            const question = document.querySelector(`[data-question="${questionNum}"]`);
+            const answerSection = question.querySelector('.answer-section');
+            const options = question.querySelectorAll('.options li');
+            const correctOption = correctAnswers[questionNum];
+            
+            // Show answer section
+            answerSection.classList.add('show');
+            
+            // Highlight correct and incorrect answers
+            options.forEach(option => {
+                if (option.dataset.option === correctOption) {
+                    option.classList.add('correct');
+                } else if (option.classList.contains('selected') && option.dataset.option !== correctOption) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // Hide the show answer button
+            question.querySelector('.show-answer-btn').style.display = 'none';
+        }
+
+        function calculateScore() {
+            let score = 0;
+            let totalQuestions = Object.keys(correctAnswers).length;
+            
+            for (let questionNum in correctAnswers) {
+                if (userAnswers[questionNum] === correctAnswers[questionNum]) {
+                    score++;
+                }
+            }
+            
+            const percentage = Math.round((score / totalQuestions) * 100);
+            let performance = '';
+            
+            if (percentage >= 90) performance = 'Excellent! 🌟';
+            else if (percentage >= 80) performance = 'Very Good! 👍';
+            else if (percentage >= 70) performance = 'Good! 👌';
+            else if (percentage >= 60) performance = 'Fair 📚';
+            else performance = 'Keep Learning! 💪';
+            
+            document.getElementById('scoreText').textContent = `You scored ${score} out of ${totalQuestions} (${percentage}%)`;
+            document.getElementById('performanceText').textContent = performance;
+            document.getElementById('scoreSection').classList.add('show');
+            
+            // Scroll to score section
+            document.getElementById('scoreSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            
+            // Reset all selections and highlights
+            document.querySelectorAll('.options li').forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Hide all answer sections
+            document.querySelectorAll('.answer-section').forEach(section => {
+                section.classList.remove('show');
+            });
+            
+            // Show all answer buttons
+            document.querySelectorAll('.show-answer-btn').forEach(btn => {
+                btn.style.display = 'inline-block';
+            });
+            
+            // Hide score section
+            document.getElementById('scoreSection').classList.remove('show');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

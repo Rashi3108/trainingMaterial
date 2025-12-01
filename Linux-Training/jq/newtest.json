@@ -1,0 +1,16 @@
+{
+  "name": "Rashi",
+  "role": "Trainer",
+  "skills": [
+    "Linux",
+    "AWS",
+    "DevOps",
+    "AI",
+    "DevSecOps"
+  ],
+  "details": {
+    "experience": 16,
+    "location": "Delhi-NCR",
+    "email": "rashi.ranaa@gmail.com"
+  }
+}

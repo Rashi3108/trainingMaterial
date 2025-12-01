@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Managing Configurations with Ansible</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #ffffff;
+        }
+
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px 80px 80px;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide-footer {
+            position: absolute;
+            bottom: 20px;
+            right: 80px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .slide:last-child {
+            page-break-after: auto;
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .slide-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+            font-weight: 400;
+        }
+
+        .content {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .title-slide .slide-title {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .title-slide .slide-subtitle {
+            font-size: 1.5rem;
+            color: #fecaca;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #ef4444;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #374151;
+            margin-bottom: 20px;
+            margin-top: 30px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: #fef2f2;
+            border-left: 5px solid #ef4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .comparison-table th {
+            background: #ef4444;
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: #fef2f2;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 4px solid #ef4444;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .lab-section {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .lab-section h3 {
+            color: #0369a1;
+            margin-bottom: 20px;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 20px;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #0ea5e9;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.95rem;
+        }
+
+        .yaml-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .architecture-diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .architecture-component {
+            background: #ef4444;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 5px;
+            text-align: center;
+            min-width: 120px;
+            font-weight: bold;
+        }
+
+        .arrow {
+            font-size: 1.5rem;
+            color: #ef4444;
+            margin: 0 10px;
+        }
+
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .slide {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Slide 1: Title Slide -->
+<div class="slide title-slide">
+    <div class="content">
+        <h1 class="slide-title">Managing Configurations with Ansible</h1>
+        <p class="slide-subtitle">Comprehensive Guide to Configuration Management and Automation</p>
+    </div>
+    <div class="slide-footer" style="color: #fecaca;">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+<!-- Slide 2: What is Configuration Management? -->
+<div class="slide">
+    <div class="content">
+        <h2>What is Configuration Management?</h2>
+        
+        <div class="highlight-box">
+            <p><strong>Configuration Management</strong> is the practice of systematically handling changes to a system in a way that maintains integrity over time. It involves automating the deployment, configuration, and management of infrastructure and applications.</p>
+        </div>
+
+        <h3>Core Principles</h3>
+        <ul>
+            <li><strong>Consistency:</strong> Ensure all systems are configured identically across environments</li>
+            <li><strong>Repeatability:</strong> Ability to reproduce configurations reliably</li>
+            <li><strong>Traceability:</strong> Track all changes and maintain audit trails</li>
+            <li><strong>Automation:</strong> Reduce manual intervention and human errors</li>
+        </ul>
+
+        <h3>Key Benefits</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Reduced Drift</h4>
+                <p>Prevents configuration drift by maintaining desired state across all systems.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Faster Deployment</h4>
+                <p>Automated provisioning and configuration significantly reduce deployment time.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Improved Reliability</h4>
+                <p>Consistent configurations reduce system failures and unexpected behaviors.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Compliance</h4>
+                <p>Ensures systems meet security and regulatory requirements consistently.</p>
+            </div>
+        </div>
+
+        <h3>Traditional vs. Modern Approach</h3>
+        <p>Traditional configuration management relied on manual processes, shell scripts, and documentation. Modern approaches use declarative tools that define desired state and automatically enforce it.</p>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 3: Why Ansible? -->
+<div class="slide">
+    <div class="content">
+        <h2>Why Ansible?</h2>
+        
+        <h3>Ansible Overview</h3>
+        <p>Ansible is an open-source automation platform that simplifies configuration management, application deployment, and task automation through human-readable YAML syntax.</p>
+
+        <h3>Key Advantages</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Agentless Architecture</h4>
+                <p>No need to install agents on managed nodes. Uses SSH for Linux/Unix and WinRM for Windows.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Simple Syntax</h4>
+                <p>Uses YAML for playbooks, making it easy to read, write, and understand by both developers and operations teams.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Idempotent Operations</h4>
+                <p>Running the same playbook multiple times produces the same result without side effects.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Extensive Module Library</h4>
+                <p>Over 3,000+ modules for managing various systems, cloud platforms, and applications.</p>
+            </div>
+        </div>
+
+        <h3>Ansible vs. Other Tools</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Ansible</th>
+                    <th>Puppet</th>
+                    <th>Chef</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Agent Required</strong></td>
+                    <td>No</td>
+                    <td>Yes</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>Configuration Language</strong></td>
+                    <td>YAML</td>
+                    <td>Puppet DSL</td>
+                    <td>Ruby DSL</td>
+                </tr>
+                <tr>
+                    <td><strong>Learning Curve</strong></td>
+                    <td>Low</td>
+                    <td>Medium</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td><strong>Push/Pull Model</strong></td>
+                    <td>Push</td>
+                    <td>Pull</td>
+                    <td>Pull</td>
+                </tr>
+                <tr>
+                    <td><strong>Setup Complexity</strong></td>
+                    <td>Simple</td>
+                    <td>Complex</td>
+                    <td>Complex</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 4: YAML Basics -->
+<div class="slide">
+    <div class="content">
+        <h2>YAML Basics</h2>
+        
+        <h3>YAML (YAML Ain't Markup Language)</h3>
+        <p>YAML is a human-readable data serialization standard used extensively in Ansible for writing playbooks, inventory files, and configuration files.</p>
+
+        <h3>YAML Syntax Rules</h3>
+        <ul>
+            <li><strong>Indentation:</strong> Uses spaces (not tabs) for structure - typically 2 spaces</li>
+            <li><strong>Case Sensitive:</strong> Keys and values are case-sensitive</li>
+            <li><strong>Key-Value Pairs:</strong> Separated by colon and space (key: value)</li>
+            <li><strong>Lists:</strong> Items start with dash and space (- item)</li>
+            <li><strong>Comments:</strong> Start with hash symbol (#)</li>
+        </ul>
+
+        <h3>YAML Data Types</h3>
+        <div class="yaml-block">
+# Strings<br>
+name: "Apache Web Server"<br>
+description: 'Single quotes also work'<br>
+multiline: |<br>
+&nbsp;&nbsp;This is a multiline<br>
+&nbsp;&nbsp;string that preserves<br>
+&nbsp;&nbsp;line breaks<br><br>
+
+# Numbers<br>
+port: 80<br>
+timeout: 30.5<br><br>
+
+# Booleans<br>
+enabled: true<br>
+debug: false<br>
+ssl_enabled: yes<br><br>
+
+# Lists<br>
+packages:<br>
+&nbsp;&nbsp;- httpd<br>
+&nbsp;&nbsp;- php<br>
+&nbsp;&nbsp;- mysql<br><br>
+
+# Dictionaries<br>
+database:<br>
+&nbsp;&nbsp;host: localhost<br>
+&nbsp;&nbsp;port: 3306<br>
+&nbsp;&nbsp;name: webapp<br>
+&nbsp;&nbsp;user: dbuser
+        </div>
+
+        <h3>Common YAML Mistakes</h3>
+        <ul>
+            <li>Using tabs instead of spaces for indentation</li>
+            <li>Inconsistent indentation levels</li>
+            <li>Missing space after colon in key-value pairs</li>
+            <li>Incorrect list syntax (missing dash or space)</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 5: Ansible Architecture -->
+<div class="slide">
+    <div class="content">
+        <h2>Ansible Architecture</h2>
+        
+        <h3>Architecture Overview</h3>
+        <div class="architecture-diagram">
+            <div class="architecture-component">Control Node</div>
+            <div class="arrow">→</div>
+            <div class="architecture-component">Inventory</div>
+            <div class="arrow">→</div>
+            <div class="architecture-component">Playbooks</div>
+            <div class="arrow">→</div>
+            <div class="architecture-component">Managed Nodes</div>
+        </div>
+
+        <h3>Core Components</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Control Node</h4>
+                <p>The machine where Ansible is installed and from which all tasks and playbooks are executed.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Managed Nodes</h4>
+                <p>Target systems that are managed by Ansible. No agent installation required.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Inventory</h4>
+                <p>List of managed nodes with connection details, groups, and variables.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Modules</h4>
+                <p>Units of code that perform specific tasks like installing packages or managing services.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Playbooks</h4>
+                <p>YAML files containing ordered lists of tasks to be executed on managed nodes.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Roles</h4>
+                <p>Reusable collections of tasks, variables, files, and templates organized in a standard structure.</p>
+            </div>
+        </div>
+
+        <h3>Execution Flow</h3>
+        <ol>
+            <li><strong>Read Inventory:</strong> Ansible reads the inventory file to identify target hosts</li>
+            <li><strong>Parse Playbook:</strong> Playbook is parsed and tasks are identified</li>
+            <li><strong>Establish Connection:</strong> SSH connections are established to managed nodes</li>
+            <li><strong>Execute Modules:</strong> Python modules are transferred and executed on target hosts</li>
+            <li><strong>Return Results:</strong> Results are collected and reported back to the control node</li>
+        </ol>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 6: Inventory -->
+<div class="slide">
+    <div class="content">
+        <h2>Ansible Inventory</h2>
+        
+        <h3>What is Inventory?</h3>
+        <p>Inventory is a file that defines the hosts and groups of hosts upon which commands, modules, and tasks in a playbook operate.</p>
+
+        <h3>Inventory Formats</h3>
+        
+        <h4>INI Format (Default)</h4>
+        <div class="code-block">
+# Static inventory file (hosts.ini)<br>
+[webservers]<br>
+web1.example.com<br>
+web2.example.com<br>
+192.168.1.10<br><br>
+
+[databases]<br>
+db1.example.com ansible_host=192.168.1.20<br>
+db2.example.com ansible_host=192.168.1.21<br><br>
+
+[production:children]<br>
+webservers<br>
+databases<br><br>
+
+[webservers:vars]<br>
+http_port=80<br>
+max_clients=200
+        </div>
+
+        <h4>YAML Format</h4>
+        <div class="yaml-block">
+all:<br>
+&nbsp;&nbsp;children:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;webservers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hosts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;web1.example.com:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;web2.example.com:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;192.168.1.10:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vars:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http_port: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max_clients: 200<br>
+&nbsp;&nbsp;&nbsp;&nbsp;databases:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hosts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db1.example.com:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ansible_host: 192.168.1.20<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db2.example.com:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ansible_host: 192.168.1.21
+        </div>
+
+        <h3>Common Inventory Variables</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>ansible_host</strong></td>
+                    <td>IP address or hostname to connect to</td>
+                    <td>ansible_host=192.168.1.10</td>
+                </tr>
+                <tr>
+                    <td><strong>ansible_port</strong></td>
+                    <td>SSH port number</td>
+                    <td>ansible_port=2222</td>
+                </tr>
+                <tr>
+                    <td><strong>ansible_user</strong></td>
+                    <td>Username for SSH connection</td>
+                    <td>ansible_user=ubuntu</td>
+                </tr>
+                <tr>
+                    <td><strong>ansible_ssh_private_key_file</strong></td>
+                    <td>Path to SSH private key</td>
+                    <td>ansible_ssh_private_key_file=~/.ssh/id_rsa</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 7: Playbooks -->
+<div class="slide">
+    <div class="content">
+        <h2>Ansible Playbooks</h2>
+        
+        <h3>What are Playbooks?</h3>
+        <p>Playbooks are YAML files that define a series of tasks to be executed on managed nodes. They are the foundation of Ansible's configuration management and deployment capabilities.</p>
+
+        <h3>Playbook Structure</h3>
+        <div class="yaml-block">
+---<br>
+- name: Install and configure Apache<br>
+&nbsp;&nbsp;hosts: webservers<br>
+&nbsp;&nbsp;become: yes<br>
+&nbsp;&nbsp;vars:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;http_port: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;document_root: /var/www/html<br>
+&nbsp;&nbsp;tasks:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: Install Apache package<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yum:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: present<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: Start Apache service<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: started<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled: yes<br><br>
+&nbsp;&nbsp;handlers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: restart apache<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: restarted
+        </div>
+
+        <h3>Key Playbook Components</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Plays</h4>
+                <p>Top-level structure that maps hosts to tasks. Each play targets specific hosts and defines tasks to execute.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Tasks</h4>
+                <p>Individual units of work that call Ansible modules to perform specific actions on managed nodes.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Variables</h4>
+                <p>Dynamic values that can be used throughout playbooks to make them flexible and reusable.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Handlers</h4>
+                <p>Special tasks that run only when notified by other tasks, typically used for service restarts.</p>
+            </div>
+        </div>
+
+        <h3>Playbook Execution</h3>
+        <div class="code-block">
+# Run a playbook<br>
+ansible-playbook -i inventory.ini playbook.yml<br><br>
+
+# Run with specific tags<br>
+ansible-playbook -i inventory.ini playbook.yml --tags "install"<br><br>
+
+# Dry run (check mode)<br>
+ansible-playbook -i inventory.ini playbook.yml --check<br><br>
+
+# Verbose output<br>
+ansible-playbook -i inventory.ini playbook.yml -vvv
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 8: Modules -->
+<div class="slide">
+    <div class="content">
+        <h2>Ansible Modules</h2>
+        
+        <h3>What are Modules?</h3>
+        <p>Modules are discrete units of code that perform specific tasks. Ansible ships with over 3,000 modules that can manage various aspects of systems, applications, and cloud resources.</p>
+
+        <h3>Common Module Categories</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>System Modules</h4>
+                <p><strong>user, group, cron, service</strong><br>
+                Manage system users, groups, scheduled tasks, and services.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Package Modules</h4>
+                <p><strong>yum, apt, pip, npm</strong><br>
+                Install, update, and remove packages using various package managers.</p>
+            </div>
+            <div class="feature-card">
+                <h4>File Modules</h4>
+                <p><strong>copy, template, file, lineinfile</strong><br>
+                Manage files, directories, and file content on managed nodes.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Cloud Modules</h4>
+                <p><strong>ec2, azure_rm, gcp_compute</strong><br>
+                Manage cloud resources across AWS, Azure, GCP, and other providers.</p>
+            </div>
+        </div>
+
+        <h3>Popular Modules Examples</h3>
+        <div class="yaml-block">
+# Package management<br>
+- name: Install packages<br>
+&nbsp;&nbsp;yum:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name: ['httpd', 'php', 'mysql']<br>
+&nbsp;&nbsp;&nbsp;&nbsp;state: present<br><br>
+
+# File operations<br>
+- name: Copy configuration file<br>
+&nbsp;&nbsp;copy:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;src: /local/path/httpd.conf<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dest: /etc/httpd/conf/httpd.conf<br>
+&nbsp;&nbsp;&nbsp;&nbsp;backup: yes<br>
+&nbsp;&nbsp;notify: restart apache<br><br>
+
+# Service management<br>
+- name: Ensure Apache is running<br>
+&nbsp;&nbsp;service:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name: httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;state: started<br>
+&nbsp;&nbsp;&nbsp;&nbsp;enabled: yes<br><br>
+
+# Command execution<br>
+- name: Run custom script<br>
+&nbsp;&nbsp;command: /usr/local/bin/setup.sh<br>
+&nbsp;&nbsp;args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;creates: /var/log/setup.log
+        </div>
+
+        <h3>Module Documentation</h3>
+        <div class="code-block">
+# Get module documentation<br>
+ansible-doc yum<br><br>
+
+# List all modules<br>
+ansible-doc -l<br><br>
+
+# Search for modules<br>
+ansible-doc -l | grep -i mysql
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 9: Roles -->
+<div class="slide">
+    <div class="content">
+        <h2>Ansible Roles</h2>
+        
+        <h3>What are Roles?</h3>
+        <p>Roles are a way to organize playbooks and reuse code. They provide a standardized directory structure for organizing tasks, variables, files, templates, and handlers.</p>
+
+        <h3>Role Directory Structure</h3>
+        <div class="code-block">
+roles/<br>
+└── apache/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── tasks/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── main.yml<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── handlers/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── main.yml<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── templates/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── httpd.conf.j2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── files/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── index.html<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── vars/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── main.yml<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── defaults/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── main.yml<br>
+&nbsp;&nbsp;&nbsp;&nbsp;├── meta/<br>
+&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── main.yml<br>
+&nbsp;&nbsp;&nbsp;&nbsp;└── README.md
+        </div>
+
+        <h3>Role Components</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Directory</th>
+                    <th>Purpose</th>
+                    <th>File Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>tasks/</strong></td>
+                    <td>Main list of tasks to be executed</td>
+                    <td>YAML</td>
+                </tr>
+                <tr>
+                    <td><strong>handlers/</strong></td>
+                    <td>Handlers triggered by tasks</td>
+                    <td>YAML</td>
+                </tr>
+                <tr>
+                    <td><strong>templates/</strong></td>
+                    <td>Jinja2 templates for dynamic files</td>
+                    <td>.j2</td>
+                </tr>
+                <tr>
+                    <td><strong>files/</strong></td>
+                    <td>Static files to be copied</td>
+                    <td>Any</td>
+                </tr>
+                <tr>
+                    <td><strong>vars/</strong></td>
+                    <td>Role-specific variables</td>
+                    <td>YAML</td>
+                </tr>
+                <tr>
+                    <td><strong>defaults/</strong></td>
+                    <td>Default variables (lowest priority)</td>
+                    <td>YAML</td>
+                </tr>
+                <tr>
+                    <td><strong>meta/</strong></td>
+                    <td>Role metadata and dependencies</td>
+                    <td>YAML</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Using Roles in Playbooks</h3>
+        <div class="yaml-block">
+---<br>
+- name: Configure web servers<br>
+&nbsp;&nbsp;hosts: webservers<br>
+&nbsp;&nbsp;become: yes<br>
+&nbsp;&nbsp;roles:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- apache<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- php<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- mysql
+        </div>
+
+        <h3>Creating Roles</h3>
+        <div class="code-block">
+# Create role structure<br>
+ansible-galaxy init apache<br><br>
+
+# Install role from Ansible Galaxy<br>
+ansible-galaxy install geerlingguy.apache<br><br>
+
+# List installed roles<br>
+ansible-galaxy list
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 10: Lab - Writing Playbooks -->
+<div class="slide">
+    <div class="content">
+        <h2>Lab: Writing Playbooks - Tasks, Variables, Handlers</h2>
+        
+        <div class="lab-section">
+            <h3>Understanding Playbook Components</h3>
+            
+            <h4>1. Tasks</h4>
+            <p>Tasks are the basic unit of work in Ansible. Each task calls a module with specific parameters.</p>
+            <div class="yaml-block">
+tasks:<br>
+&nbsp;&nbsp;- name: Install Apache web server<br>
+&nbsp;&nbsp;&nbsp;&nbsp;yum:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: present<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tags: install<br><br>
+&nbsp;&nbsp;- name: Create document root<br>
+&nbsp;&nbsp;&nbsp;&nbsp;file:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path: "{{ document_root }}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: directory<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: '0755'
+            </div>
+
+            <h4>2. Variables</h4>
+            <p>Variables make playbooks flexible and reusable across different environments.</p>
+            <div class="yaml-block">
+vars:<br>
+&nbsp;&nbsp;http_port: 80<br>
+&nbsp;&nbsp;https_port: 443<br>
+&nbsp;&nbsp;document_root: /var/www/html<br>
+&nbsp;&nbsp;server_name: "{{ ansible_hostname }}"<br>
+&nbsp;&nbsp;packages:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- mod_ssl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- php
+            </div>
+
+            <h4>3. Handlers</h4>
+            <p>Handlers are tasks that run only when notified by other tasks, typically for service restarts.</p>
+            <div class="yaml-block">
+handlers:<br>
+&nbsp;&nbsp;- name: restart apache<br>
+&nbsp;&nbsp;&nbsp;&nbsp;service:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: restarted<br><br>
+&nbsp;&nbsp;- name: reload apache<br>
+&nbsp;&nbsp;&nbsp;&nbsp;service:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: reloaded
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 11: Hands-on - Install Ansible -->
+<div class="slide">
+    <div class="content">
+        <h2>Hands-on: Install Ansible</h2>
+        
+        <div class="lab-section">
+            <h3>Prerequisites</h3>
+            <ul>
+                <li><strong>Control Node:</strong> Linux/macOS system with Python 3.8+</li>
+                <li><strong>Managed Nodes:</strong> EC2 instances with SSH access</li>
+                <li><strong>Network:</strong> SSH connectivity between control and managed nodes</li>
+                <li><strong>Privileges:</strong> sudo access on managed nodes</li>
+            </ul>
+
+            <h3>Installation Methods</h3>
+            
+            <h4>Method 1: Using pip (Recommended)</h4>
+            <div class="code-block">
+# Update system packages<br>
+sudo apt update && sudo apt upgrade -y<br><br>
+
+# Install Python and pip<br>
+sudo apt install python3 python3-pip -y<br><br>
+
+# Install Ansible<br>
+pip3 install ansible<br><br>
+
+# Verify installation<br>
+ansible --version<br>
+ansible-playbook --version
+            </div>
+
+            <h4>Method 2: Using Package Manager (Ubuntu/Debian)</h4>
+            <div class="code-block">
+# Add Ansible PPA<br>
+sudo apt update<br>
+sudo apt install software-properties-common<br>
+sudo add-apt-repository --yes --update ppa:ansible/ansible<br><br>
+
+# Install Ansible<br>
+sudo apt install ansible<br><br>
+
+# Verify installation<br>
+ansible --version
+            </div>
+
+            <h4>Method 3: Using Package Manager (RHEL/CentOS)</h4>
+            <div class="code-block">
+# Enable EPEL repository<br>
+sudo yum install epel-release -y<br><br>
+
+# Install Ansible<br>
+sudo yum install ansible -y<br><br>
+
+# Verify installation<br>
+ansible --version
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 12: EC2 Instance Setup for Labs -->
+<div class="slide">
+    <div class="content">
+        <h2>EC2 Instance Setup for Labs</h2>
+        
+        <div class="lab-section">
+            <h3>AWS EC2 Instance Configuration</h3>
+            
+            <ol class="step-list">
+                <li><strong>Launch EC2 Instances:</strong>
+                    <ul>
+                        <li>Control Node: 1 instance (t2.micro or larger)</li>
+                        <li>Managed Nodes: 2-3 instances (t2.micro)</li>
+                        <li>AMI: Ubuntu 20.04 LTS or Amazon Linux 2</li>
+                        <li>Key Pair: Create or use existing SSH key pair</li>
+                    </ul>
+                </li>
+                
+                <li><strong>Security Group Configuration:</strong>
+                    <div class="code-block">
+# Inbound Rules<br>
+SSH (22) - Source: Your IP or 0.0.0.0/0<br>
+HTTP (80) - Source: 0.0.0.0/0<br>
+HTTPS (443) - Source: 0.0.0.0/0<br><br>
+
+# Outbound Rules<br>
+All Traffic - Destination: 0.0.0.0/0
+                    </div>
+                </li>
+                
+                <li><strong>SSH Key Setup:</strong>
+                    <div class="code-block">
+# Copy private key to control node<br>
+scp -i your-key.pem your-key.pem ubuntu@control-node-ip:~/.ssh/<br><br>
+
+# Set proper permissions<br>
+chmod 600 ~/.ssh/your-key.pem<br><br>
+
+# Test SSH connectivity<br>
+ssh -i ~/.ssh/your-key.pem ubuntu@managed-node-ip
+                    </div>
+                </li>
+                
+                <li><strong>Configure SSH Agent (Optional):</strong>
+                    <div class="code-block">
+# Start SSH agent<br>
+eval $(ssh-agent)<br><br>
+
+# Add private key<br>
+ssh-add ~/.ssh/your-key.pem<br><br>
+
+# Test passwordless SSH<br>
+ssh ubuntu@managed-node-ip
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 13: Sample Playbook - Install Apache -->
+<div class="slide">
+    <div class="content">
+        <h2>Sample Playbook: Install Apache on EC2</h2>
+        
+        <div class="lab-section">
+            <h3>Step 1: Create Inventory File</h3>
+            <div class="code-block">
+# Create inventory.ini<br>
+[webservers]<br>
+web1 ansible_host=3.15.24.156 ansible_user=ubuntu<br>
+web2 ansible_host=18.191.171.45 ansible_user=ubuntu<br><br>
+
+[webservers:vars]<br>
+ansible_ssh_private_key_file=~/.ssh/your-key.pem<br>
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+            </div>
+
+            <h3>Step 2: Create Apache Installation Playbook</h3>
+            <div class="yaml-block">
+---<br>
+- name: Install and Configure Apache Web Server<br>
+&nbsp;&nbsp;hosts: webservers<br>
+&nbsp;&nbsp;become: yes<br>
+&nbsp;&nbsp;vars:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;http_port: 80<br>
+&nbsp;&nbsp;&nbsp;&nbsp;document_root: /var/www/html<br>
+&nbsp;&nbsp;&nbsp;&nbsp;server_admin: admin@example.com<br><br>
+&nbsp;&nbsp;tasks:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: Update package cache (Ubuntu)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apt:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;update_cache: yes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when: ansible_os_family == "Debian"<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: Install Apache (Ubuntu)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;apt:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: apache2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: present<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when: ansible_os_family == "Debian"<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: Install Apache (Amazon Linux)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yum:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: present<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when: ansible_os_family == "RedHat"
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 14: Complete Apache Playbook -->
+<div class="slide">
+    <div class="content">
+        <h2>Complete Apache Playbook</h2>
+        
+        <div class="lab-section">
+            <h3>apache-install.yml (Continued)</h3>
+            <div class="yaml-block">
+&nbsp;&nbsp;&nbsp;&nbsp;- name: Create custom index.html<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;content: |<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;html&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;head&gt;&lt;title&gt;Welcome to {{ ansible_hostname }}&lt;/title&gt;&lt;/head&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;body&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Hello from {{ ansible_hostname }}&lt;/h1&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Server IP: {{ ansible_default_ipv4.address }}&lt;/p&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Managed by Ansible&lt;/p&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/body&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/html&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dest: "{{ document_root }}/index.html"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode: '0644'<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: Start and enable Apache (Ubuntu)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: apache2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: started<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled: yes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when: ansible_os_family == "Debian"<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: Start and enable Apache (Amazon Linux)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name: httpd<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: started<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled: yes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when: ansible_os_family == "RedHat"<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: Open firewall for HTTP (Amazon Linux)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;firewalld:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service: http<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;permanent: yes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state: enabled<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;immediate: yes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;when: ansible_os_family == "RedHat"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ignore_errors: yes
+            </div>
+
+            <h3>Step 3: Execute the Playbook</h3>
+            <div class="code-block">
+# Test connectivity<br>
+ansible -i inventory.ini webservers -m ping<br><br>
+
+# Run the playbook<br>
+ansible-playbook -i inventory.ini apache-install.yml<br><br>
+
+# Verify Apache installation<br>
+ansible -i inventory.ini webservers -m shell -a "systemctl status apache2"<br><br>
+
+# Test web server<br>
+curl http://&lt;server-ip&gt;
+            </div>
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 15: Practical Exercises -->
+<div class="slide">
+    <div class="content">
+        <h2>Practical Exercises</h2>
+        
+        <div class="lab-section">
+            <h3>Exercise 1: Basic Ansible Commands</h3>
+            <ol class="step-list">
+                <li><strong>Test Connectivity:</strong>
+                    <div class="code-block">
+# Ping all hosts<br>
+ansible -i inventory.ini all -m ping<br><br>
+
+# Check disk space<br>
+ansible -i inventory.ini webservers -m shell -a "df -h"<br><br>
+
+# Get system information<br>
+ansible -i inventory.ini webservers -m setup
+                    </div>
+                </li>
+                
+                <li><strong>Ad-hoc Commands:</strong>
+                    <div class="code-block">
+# Install package<br>
+ansible -i inventory.ini webservers -m apt -a "name=htop state=present" --become<br><br>
+
+# Create user<br>
+ansible -i inventory.ini webservers -m user -a "name=testuser state=present" --become<br><br>
+
+# Copy file<br>
+ansible -i inventory.ini webservers -m copy -a "src=/tmp/test.txt dest=/tmp/test.txt" --become
+                    </div>
+                </li>
+                
+                <li><strong>Gather Facts:</strong>
+                    <div class="code-block">
+# Collect system facts<br>
+ansible -i inventory.ini webservers -m setup | grep ansible_distribution<br><br>
+
+# Filter specific facts<br>
+ansible -i inventory.ini webservers -m setup -a "filter=ansible_memory_mb"
+                    </div>
+                </li>
+            </ol>
+        </div>
+
+        <h3>Exercise 2: Advanced Playbook Features</h3>
+        <ul>
+            <li>Add conditional tasks based on OS family</li>
+            <li>Use loops to install multiple packages</li>
+            <li>Implement error handling with ignore_errors</li>
+            <li>Add tags for selective execution</li>
+            <li>Use templates for configuration files</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 16: Best Practices and Troubleshooting -->
+<div class="slide">
+    <div class="content">
+        <h2>Best Practices and Troubleshooting</h2>
+        
+        <h3>Ansible Best Practices</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>Playbook Organization</h4>
+                <p>Use roles for complex configurations, maintain clear directory structure, and version control all code.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Variable Management</h4>
+                <p>Use group_vars and host_vars directories, encrypt sensitive data with Ansible Vault.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Idempotency</h4>
+                <p>Ensure tasks can be run multiple times safely, use appropriate modules and conditions.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Error Handling</h4>
+                <p>Use failed_when, ignore_errors, and rescue blocks for robust error handling.</p>
+            </div>
+        </div>
+
+        <h3>Common Issues and Solutions</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Issue</th>
+                    <th>Cause</th>
+                    <th>Solution</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>SSH Connection Failed</strong></td>
+                    <td>Wrong key, user, or host</td>
+                    <td>Verify SSH connectivity manually first</td>
+                </tr>
+                <tr>
+                    <td><strong>Permission Denied</strong></td>
+                    <td>Missing sudo privileges</td>
+                    <td>Use --become flag or become: yes in playbook</td>
+                </tr>
+                <tr>
+                    <td><strong>Module Not Found</strong></td>
+                    <td>Typo in module name</td>
+                    <td>Check module documentation with ansible-doc</td>
+                </tr>
+                <tr>
+                    <td><strong>YAML Syntax Error</strong></td>
+                    <td>Indentation or formatting issues</td>
+                    <td>Use YAML validator or ansible-playbook --syntax-check</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Debugging Commands</h3>
+        <div class="code-block">
+# Syntax check<br>
+ansible-playbook playbook.yml --syntax-check<br><br>
+
+# Dry run<br>
+ansible-playbook playbook.yml --check<br><br>
+
+# Verbose output<br>
+ansible-playbook playbook.yml -vvv<br><br>
+
+# Step through tasks<br>
+ansible-playbook playbook.yml --step
+        </div>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+<!-- Slide 17: Summary and Next Steps -->
+<div class="slide">
+    <div class="content">
+        <h2>Summary and Next Steps</h2>
+        
+        <h3>Key Concepts Covered</h3>
+        <div class="highlight-box">
+            <ul>
+                <li>Configuration Management principles and benefits</li>
+                <li>Ansible's agentless architecture and key advantages</li>
+                <li>YAML syntax fundamentals for writing playbooks</li>
+                <li>Ansible architecture: Control nodes, managed nodes, inventory, and modules</li>
+                <li>Playbook structure: tasks, variables, and handlers</li>
+                <li>Practical experience with EC2 instances and Apache installation</li>
+            </ul>
+        </div>
+
+        <h3>Practical Skills Acquired</h3>
+        <ul>
+            <li>Installing and configuring Ansible on control nodes</li>
+            <li>Setting up EC2 instances for Ansible management</li>
+            <li>Writing inventory files with host groups and variables</li>
+            <li>Creating and executing playbooks for software installation</li>
+            <li>Using ad-hoc commands for quick system management tasks</li>
+            <li>Troubleshooting common Ansible issues and errors</li>
+        </ul>
+
+        <h3>Recommended Next Steps</h3>
+        <ol>
+            <li><strong>Advanced Playbooks:</strong> Explore conditionals, loops, and error handling</li>
+            <li><strong>Ansible Roles:</strong> Create reusable roles for complex configurations</li>
+            <li><strong>Ansible Vault:</strong> Learn to encrypt sensitive data and passwords</li>
+            <li><strong>Dynamic Inventory:</strong> Integrate with cloud providers for automatic host discovery</li>
+            <li><strong>Ansible Tower/AWX:</strong> Explore enterprise features and web-based management</li>
+            <li><strong>CI/CD Integration:</strong> Incorporate Ansible into deployment pipelines</li>
+        </ol>
+
+        <h3>Additional Resources</h3>
+        <ul>
+            <li>Ansible Official Documentation: https://docs.ansible.com/</li>
+            <li>Ansible Galaxy: https://galaxy.ansible.com/ (Community roles and collections)</li>
+            <li>Ansible GitHub Repository: https://github.com/ansible/ansible</li>
+            <li>Red Hat Ansible Automation Platform: Enterprise solutions and support</li>
+        </ul>
+    </div>
+    <div class="slide-footer">Prepared By: Rashi Rana<br>Corporate Trainer</div>
+</div>
+
+</body>
+</html>

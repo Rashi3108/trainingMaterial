@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rashi
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-config
+  namespace: rashi
+data:
+  APP_COLOR: "blue"
+  APP_MODE: "production"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-service-clusterip
+  namespace: rashi
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+      targetPort: 80
+      
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: demo-secret
+  namespace: rashi
+data:
+  username: cmFzaGlyYW5h
+  password: cmFzaGlyYW5hQDMx
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: rashi
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        env:
+          - name: APP_COLOR
+            valueFrom:
+              configMapKeyRef: 
+                name: demo-config
+                key: APP_COLOR
+          - name: APP_MODE
+            valueFrom:
+              configMapKeyRef: 
+                name: demo-config
+                key: APP_MODE
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef: 
+                name: demo-secret
+                key: username
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef: 
+                name: demo-secret
+                key: password
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/demo-config
+          - name: secret-volume
+            mountPath: /etc/demo-secret
+    
+      volumes:
+        - name: config-volume
+          configMap:
+            name: demo-config
+        - name: secret-volume
+          secret:
+            secretName: demo-secret
