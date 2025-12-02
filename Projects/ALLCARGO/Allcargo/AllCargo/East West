@@ -1,0 +1,60 @@
+East West 
+	Intra VPC - no inspection
+	DX - inspection
+	Client VPN - inspection
+	S2S VPN - inspection
+
+North South
+	From internet - inspected
+	To Internet - inspected
+
+
+
+
+Charges of NATGW are waived off if ANF and NATGW are use together + fixed hour charges of NATGW + Data processing charges
+Do they need advanced inspection for deep packet inspection
+If they need 3 AZ for their workloads
+
+
+Cross account and cross region DNS will be via associating the VPC to the alal the hosted zones
+
+
+Security lake for security logs consolidation
+AWS Inspector - if they dont use Qualys
+EDR doesnt do vulnerability only does Data protection
+
+
+Deny disable security hub guardduty
+
+
+
+AWS Backup
+	Backup plan
+		EC2 instance - AWS Backup
+		Database - AWS Backup
+		API Gateway - AWS Backup
+		Kubernetes - Velero
+Disaster recovery
+	Multi region DR
+	What is the RTO/RPO -> 4hrs/30min-1hr
+Log retention for infra logs
+	Security logs - 6 Months retention -> Security team will need to confirm on the archival
+		After a month it can be pushed to instant retreival -> Instantly recoverable
+		After 6 month it will be moved to deep archive ->
+		Any data older than 6 months will be removed.
+
+Compliance policies using security hub
+S2S VPN and Direct connect
+	OpenVPN cloud connexa only for client VPN
+	
+	
+	With S2S VPN we will go with the normal AWS S2S VPN
+		
+	
+	Do we have any DX requirements??
+		We already have a direct connect, we can use that direct connect??
+		Mumbai Region
+	
+	
+	We will establish a S2S VPN connection between Data center and TGW temporarily
+	then we will configure the DX to connect to terminate to TGW

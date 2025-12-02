@@ -1,0 +1,36 @@
+Landing Zone:
+
+1. Enable control tower
+2. Create an OU structure based on the design
+3. Apply SCP on those OU based on the design
+4. Enable IAM Identity center and then delegate security-tooling account as the admin
+5. Enable Guard Duty and delegate admin to security-tooling
+6. Configure Guardduty logs to be pushed to Log-archive account
+7. Configure Security lake service for centralised log management of Cloudtrail and VPCFlow logs -  SIEM Integraiton with QRadar
+8. Configure Azure AD to IAM Identity center Integration.
+9. Deploy VPC for network account (Inspection VPC and Egress VPC)
+10.Deploy TGW and attach the VPC together
+11.Deploy AWS network firewall in Network account Inspection VPC and delegate the administration to firewall manager deployed in security-tooling account
+12.Configure the network routing across for Egress traffic with inspection and ingress traffic with inspection
+13.Privilege escalation deploy TEAMS (https://aws.amazon.com/blogs/security/temporary-elevated-access-management-with-iam-identity-center/)
+14.Create the config rules for some basic compliance (EBS encryption, Root access check)
+15.Configure security hub and delegate security-tooling account as admin for centralising the security logs
+16.Configure Client2Site VPN connection (openvpn cloud connexa)
+17.Configure a Site2Site VPN connection.
+18.Configure a Direct Connect connection.
+19. 
+
+Infrastructure:
+
+1. Deploy Dev environment of GATI using IAC
+2. create CICD using Terraform cloud
+
+Devsecops:
+
+1. Deploy Jenkins on tooling account
+2. Configure jenkins for devsecops tools like Git, JMeter, Selenium, SonarQube, Clair, selenium, JMeter, Nexus, Device Farm GIT, Container registry and AWS code commit for code commit
+
+Application:
+
+1. Configure jenkins for Application Build and Deployment
+2. CICD process in place for build and deployment
