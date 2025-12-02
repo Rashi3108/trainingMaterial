@@ -1,0 +1,12 @@
+graph LR
+    User[User/Client] -->|HTTPS Request| APIG[API Gateway<br/>REST API]
+    APIG -->|Invoke| Lambda[Lambda Function<br/>Todo Handler]
+    Lambda -->|Read/Write| DDB[(DynamoDB<br/>Todos Table)]
+    Lambda -->|VPC Integration| VPC[VPC<br/>Private Subnet]
+    S3[S3 Bucket<br/>Static Website] -->|Test UI| User
+    
+    style APIG fill:#FF9900
+    style Lambda fill:#FF9900
+    style DDB fill:#3B48CC
+    style S3 fill:#569A31
+    style VPC fill:#8C4FFF
